@@ -1,0 +1,33 @@
+@mixin flex_basic_layout(
+  $direction: row,
+  $justify-content: center,
+  $align-items: center
+) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin flex_align_layout($justify-content: center, $align-items: center) {
+  display: flex;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin grid_column_layout($template: 1fr 1fr) {
+  display: grid;
+  place-items: center;
+  grid-template-columns: $template;
+}
+
+@mixin grid_row_layout($template: 1fr 1fr) {
+  display: grid;
+  place-items: center;
+  grid-template-rows: $template;
+}
+
+@mixin create_contents_container($width_val, $height_val) {
+  width: $width_val;
+  height: $height_val;
+}

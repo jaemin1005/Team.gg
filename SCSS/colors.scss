@@ -1,0 +1,39 @@
+$color-black-bg: black;
+$color-light-gray-bg: rgb(165, 165, 165);
+$color-more-light-gray-bg: rgb(211, 211, 211);
+$color-red-bg: red;
+$color-white-bg: white;
+$color-blue-bg: blue;
+$color-pink-bg: pink;
+$color-aqua-bg: aqua;
+$color-light-red-bg: rgba(151, 50, 50, 0.589);
+
+$color-black-font: black;
+$color-light-gray-font: rgb(165, 165, 165);
+$color-more-light-gray-font: rgb(211, 211, 211);
+$color-red-font: red;
+$color-white-font: white;
+$color-blue-font: blue;
+$color-pink-font: pink;
+$color-aqua-font: aqua;
+$color-light-red-font: rgba(151, 50, 50, 0.589);
+.header_navigator {
+  background-color: $color-light-red-bg;
+}
+.form_contents_container {
+  background-color: $color-more-light-gray-bg;
+
+  .form_contents_container_first_div_select {
+    background-color: $color-more-light-gray-bg;
+  }
+
+  .form_contents_container_third_div {
+    .search_form_input {
+      background-color: $color-more-light-gray-bg;
+    }
+  }
+}
+
+.menus_container {
+  color: $color-white-font;
+}

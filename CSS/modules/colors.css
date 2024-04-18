@@ -1,0 +1,17 @@
+.header_navigator {
+  background-color: rgba(151, 50, 50, 0.589);
+}
+
+.form_contents_container {
+  background-color: rgb(211, 211, 211);
+}
+.form_contents_container .form_contents_container_first_div_select {
+  background-color: rgb(211, 211, 211);
+}
+.form_contents_container .form_contents_container_third_div .search_form_input {
+  background-color: rgb(211, 211, 211);
+}
+
+.menus_container {
+  color: white;
+}

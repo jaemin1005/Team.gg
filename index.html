@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team.gg</title>
+
+    <!-- * 브라우저 기본 값 초기화 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <link rel="stylesheet" href="./CSS/app.css" />
+  </head>
+
+  <body>
+    <div class="main_container">
+      <header class="contents_header">
+        <nav class="header_navigator">
+          <div class="main_logo_container">
+            <span class="main_logo">Team.gg</span>
+          </div>
+          <div class="menus_container">
+            <ul>
+              <li><span>TEST1</span></li>
+              <li><span>TEST2</span></li>
+              <li><span>TEST3</span></li>
+              <li><span>TEST4</span></li>
+              <li><span>TEST5</span></li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <main class="contents_main">
+        <section>
+          <form action="" name="form_userName" class="search_form">
+            <div class="form_contents_container">
+              <div class="form_contents_container_first_div">
+                <select class="form_contents_container_first_div_select">
+                  <option value="asia" selected>아시아</option>
+                  <option value="europe">유럽</option>
+                  <option value="NA">북미</option>
+                  <option value="SA">남미</option>
+                </select>
+              </div>
+
+              <div class="form_contents_container_second_div">
+                <span class="border_line">|</span>
+              </div>
+              <div class="form_contents_container_third_div">
+                <input
+                  type="text"
+                  name="userName_input"
+                  class="search_form_input"
+                  placeholder="nickname#number"
+                />
+              </div>
+              <div class="form_contents_container_fourth_div">
+                <i class="fa-solid fa-magnifying-glass search_form_icon"></i>
+              </div>
+            </div>
+          </form>
+
+          <div class="warning_message_container">
+            <p></p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+  <script
+    src="https://kit.fontawesome.com/c22cf359ff.js"
+    crossorigin="anonymous"
+  ></script>
+  <script type="module" src="./JS/app.mjs"></script>
+</html>
