@@ -10,6 +10,9 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const user = require("./Module/User.js");
+const url = require("url");
+
+const { Script } = require("vm");
 
 const app = http.createServer((req, res) => 
 {
@@ -18,23 +21,26 @@ const app = http.createServer((req, res) =>
    * * https://developer.mozilla.org/ko/docs/Web/HTTP/Status
    */
 
-  if(req.method == "connetction")
-  {
-    res.writeHead(200);
-    res.write(fs.readFileSync("ServerTest.html"));
-    res.end();  
-  }
+
+  // if(req.method == "connetction")
+  // {
+  //   res.writeHead(200);
+  //   res.write(fs.readFileSync("ServerTest.html"));
+  //   res.end();  
+  // }
 
 
+  /**
+   * * GET 요청 받았을 시 처리.
+   */
   if(req.method == "GET")
   {
-    //res.setHeader("Content-Type", "text/html");
-    //res.writeHead(200);
-    //res.write(fs.readFileSync("ServerTest.html"));
-    //res.write();
-    //res.end();   
+    SwitchPath(req, res);
   }
-
+  
+  /**
+   * * POST 요청 받았을 시 처리.
+   */
   if(req.method == "POST")
   {
     let jsonData = "";
@@ -56,4 +62,43 @@ const app = http.createServer((req, res) =>
 
 }).listen(3000, () => console.log("Server Start!!"));
 
+/**
+ * 
+ * @param {*} res 
+ * @param {*} path 
+ * @param {*} contentType 
+ * @param {*} responscode 
+ */
+function SelectDOCFile(res, path, contentType, responscode = 200)
+{
+  fs.readFile(__dirname + path, (err, data) => {
+    {
+      // * 파일을 읽지 못하였을 떄
+      if(err)
+      {
+        res.writeHead(500, {'Content-Type' : 'text/plain'});
+        return res.end('500 - Internal Error');
+      }
 
+      res.writeHead(responscode, {'Content-Type' : contentType});
+      res.end(data);
+    }
+  })
+}
+
+function SwitchPath(req, res)
+{
+  const path = req.url.replace(/\/?(?:\?.*)?%/, '').toLowerCase();
+  switch(path){
+    case '':
+    case '/':
+      SelectDOCFile(res, '/doc/ServerTest.html', 'text/html');
+      break;
+    case '/about':
+      SelectDOCFile(res, '/public/about.html', 'text/html');
+      break;
+    default:
+      SelectDOCFile(res, '/public/404.html', 'text/html', 404)
+      break;
+  }
+}
