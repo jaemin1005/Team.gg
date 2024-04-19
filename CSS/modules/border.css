@@ -14,3 +14,13 @@
   outline: none;
   border: none;
 }
+.left_section_border_line {
+  border: none;
+}
+
+.game_record .main_game_record {
+  border-radius: 0.4375rem;
+}
+.game_record .shadow_game_record {
+  border-radius: 0.4375rem;
+}
