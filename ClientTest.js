@@ -30,9 +30,9 @@ function readPOSTJSONResponse(response) {
   // * JSON값 파싱하여 객체에 넣어주기.
   response.on('end', () => {
       let obj = JSON.parse(responseData);
-      console.log("User Id : " + obj.puuId);
+      console.log("User Id : " + obj.puuid);
       console.log("USer Name : " + obj.gameName);
-      console.log("User Tag : " + obj.tag);      
+      console.log("User Tag : " + obj.tagLine);      
   });
 }
 
@@ -74,4 +74,5 @@ function TestGETRequest()
   req.end();
 }
 
-TestGETRequest();
+TestPOSTRequest();
+//TestGETRequest();
