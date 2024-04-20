@@ -19,53 +19,6 @@ const JSONCOMMAND = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');
 
 //#endregion --Require--
-
-
-//#region  --Express--
-// * 이렇게 사용하면 서버를 시작하기 전에 환경 변수를 설정해 포트를 덮어 쓸 수 있음.
-// const PORT = process.env.PORT || 3000;
-// const app = express();
-
-// /**
-//  * * app.get은 라우트를 추가하는 메서드(GET, POST etc..)
-//  * * 두 개의 매개변수를 가짐. 경로, 함수
-//  * ! 경로는 기본적으로 대소문자를 구분하지 않으며 경로 끝에 슬래시가 있든 없든 똑같 동작, 쿼리스트링 역시 무시 :)
-//  * ! 익스프레스는 기본적으로 상태 코드 200을 반환한다.  
-//  */
-// app.get('/', (req, res) => {
-//   res.type('text/plain');
-//   res.send('Meadowlark Travel');
-// })
-
-// app.get('/about', (req, res) =>{
-//   res.type('text/plain');
-//   res.send('About Meadowlark Travel');
-// })
-
-
-// app.use((req, res) => {
-//   res.type('text/plain');
-//   res.status(404);
-//   res.send('404 - Not Found');
-// })
-
-// app.use((err, req, res, next) => {
-//   console.error(err.message);
-//   res.type('text/plain');
-//   res.status(500);
-//   res.send('500 - Server Error');
-// })
-
-// app.listen(PORT, () => console.log('Express Server Start : http://localhost:${PORT}'));
-
-
-
-
-
-
-
-//#endregion --Express--
-
   /**
    * * 2024.04.18 황재민
    * * 서버 시작 하는 부분
@@ -77,7 +30,7 @@ const app = http.createServer((req, res) =>
 
   /**
    * * GET 요청 받았을 시 처리.
-   * * 서버가 처음 요청 받을 때 여러 개의 GET일 올 수 있음 => Hyperlink
+   * * 서버가 처음 요청 받을 때 여러 개의 GET일 올 수 있음 => Hyperlink 
    * * ex) html안에서 js파일을 요청할 때
    */
   if(req.method == "GET")
@@ -133,6 +86,7 @@ function SelectFile(res, path, contentType, responscode = 200)
  */
 function SwitchPath(req, res)
 {
+  // * 정규표현식으로 해당 특수문자를 찾고 빈 공백으로 바꾼다. 
   const path = req.url.replace(/\/?(?:\?.*)?%/, '').toLowerCase();
   switch(path){
     case '':
@@ -189,7 +143,7 @@ async function ProcessPOSTMethod(req, res)
     {
       case JSONCOMMAND.GET_USER_INFO:
         {
-          obj = RiotAPI.GetUserInfo(reqObj.detail, res);
+          obj = await RiotAPI.GetUserInfo(reqObj.detail, res);
           break;
         }
       case JSONCOMMAND.GET_MATCH_INFO:
