@@ -1,1 +1,3 @@
-ServerTest.html
+node_modules
+.env
+jsTest.js

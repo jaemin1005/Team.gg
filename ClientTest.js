@@ -4,7 +4,7 @@ const path = require('path');
 var clientOption = {
   host: "localhost",
   port: "3000",
-  path: "/ClientTest.html",
+  path: "/?year=2017&month=July",
   method: "POST"
 }
 
@@ -16,19 +16,32 @@ var clientOption = {
 //   res.on('end', () => console.log("Client : Res End"));
 // }
 
+/**
+ * * 2024.04.18
+ * * 황재민
+ * * 요청한 POST 통신을 통한 응답처리
+ * @param {*} response : Server로 부터 받은 값.
+ */
 function readPOSTJSONResponse(response) {
   var responseData = '';
 
   response.on('data', (data) => responseData += data);
 
+  // * JSON값 파싱하여 객체에 넣어주기.
   response.on('end', () => {
       let obj = JSON.parse(responseData);
-      console.log("User Id : " + obj.puuId);
+      console.log("User Id : " + obj.puuid);
       console.log("USer Name : " + obj.gameName);
-      console.log("User Tag : " + obj.tag);      
+      console.log("User Tag : " + obj.tagLine);      
   });
 }
 
+/**
+ * * 2024.04.18
+ * * 황재민
+ * * 요청한 GET 통신을 통한 응답처리
+ * @param {*} response 
+ */
 function readGETResponse(response)
 {
   let responseData = ""
@@ -40,7 +53,9 @@ function readGETResponse(response)
   })
 }
 
-
+/**
+ * * POST 요청 보내기
+ */
 function TestPOSTRequest()
 {
   let req = http.request(clientOption, readPOSTJSONResponse);
@@ -48,6 +63,9 @@ function TestPOSTRequest()
   req.end();
 }
 
+/**
+ * * GET 요청 보내기
+ */
 function TestGETRequest()
 {
   clientOption.method = "GET";
@@ -56,4 +74,5 @@ function TestGETRequest()
   req.end();
 }
 
-TestGETRequest();
+TestPOSTRequest();
+//TestGETRequest();

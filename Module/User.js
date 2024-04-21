@@ -26,4 +26,4 @@ class User
   }
 }
 
-module.exports = {CreateUser};
+module.exports = User;
