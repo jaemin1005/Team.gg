@@ -1,0 +1,120 @@
+@use "mixIns";
+@use "colors";
+@use "fonts";
+@use "functions";
+@use "border";
+@use "gaps";
+@use "vars";
+
+// ! 컴파일 이슈 때문에 명시적으로 적어놓은 임포트
+@import url(./modules/border.css);
+@import url(./modules/colors.css);
+@import url(./modules/fonts.css);
+@import url(./modules/functions.css);
+@import url(./modules/gaps.css);
+@import url(./modules/mixIns.css);
+@import url(./modules/vars.css);
+
+body {
+  @include mixIns.create_contents_container(100%, 100%);
+  overflow: vars.$overflow_hidden;
+}
+
+.main_container {
+  @include mixIns.create_contents_container(100%, 100%);
+
+  .contents_header {
+    @include mixIns.create_contents_container(100vw, 5vh);
+
+    .header_navigator {
+      @include mixIns.flex_basic_layout();
+      @include mixIns.create_contents_container(100%, 100%);
+
+      .main_logo_container {
+        @include mixIns.flex_basic_layout();
+        @include mixIns.create_contents_container(20%, 100%);
+
+        > span:first-child {
+          cursor: vars.$cursor_pointer;
+        }
+      }
+
+      .menus_container {
+        @include mixIns.flex_basic_layout();
+        @include mixIns.create_contents_container(80%, 100%);
+
+        > ul:first-child {
+          @include mixIns.create_contents_container(100%, 100%);
+          @include mixIns.flex_basic_layout(row, end);
+          list-style-type: vars.$list_style_type_none;
+          margin: vars.$margin0;
+          padding: vars.$padding0;
+
+          > li {
+            @include mixIns.flex_basic_layout();
+            @include mixIns.create_contents_container(10%, 100%);
+
+            > span {
+              cursor: vars.$cursor_pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .contents_main {
+    @include mixIns.flex_basic_layout(column);
+    @include mixIns.create_contents_container(100%, 95vh);
+
+    section:first-child {
+      @include mixIns.flex_basic_layout(column);
+      @include mixIns.create_contents_container(50vw, 50vh);
+      .search_form {
+        @include mixIns.flex_basic_layout();
+        @include mixIns.create_contents_container(100%, 50%);
+
+        .form_contents_container {
+          @include mixIns.flex_basic_layout();
+          @include mixIns.create_contents_container(90%, 30%);
+
+          .form_contents_container_first_div {
+            @include mixIns.flex_basic_layout();
+            @include mixIns.create_contents_container(20%, 80%);
+
+            > select:first-child {
+              @include mixIns.create_contents_container(100%, 100%);
+              cursor: vars.$cursor_pointer;
+            }
+          }
+
+          .form_contents_container_second_div {
+            @include mixIns.flex_basic_layout();
+            @include mixIns.create_contents_container(3%, 80%);
+          }
+
+          .form_contents_container_third_div {
+            @include mixIns.flex_basic_layout();
+            @include mixIns.create_contents_container(70%, 80%);
+
+            > input:first-child {
+              @include mixIns.create_contents_container(100%, 80%);
+            }
+          }
+
+          .form_contents_container_fourth_div {
+            @include mixIns.flex_basic_layout();
+            @include mixIns.create_contents_container(7%, 80%);
+
+            > i:first-child {
+              @include mixIns.flex_basic_layout();
+              @include mixIns.create_contents_container(70%, 80%);
+              cursor: vars.$cursor_pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// 994

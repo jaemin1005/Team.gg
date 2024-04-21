@@ -1,0 +1,66 @@
+@use "vars";
+
+$border_3_black: 0.1875rem solid black;
+$border_4_black: 0.025rem solid black;
+$border_5_black: 0.3125rem solid black;
+$border_6_black: 0.375rem solid black;
+$border_7_black: 0.4375rem solid black;
+$border_8_black: 0.5rem solid black;
+
+$border_none: none;
+$outline_none: none;
+
+$border_radius7: 0.4375rem;
+$border_radius8: 0.5rem;
+$border_radius9: 0.5625rem;
+$border_radius10: 0.625rem;
+$border_radius11: 0.6875rem;
+$border_radius12: 0.75rem;
+$border_radius13: 0.8125rem;
+$border_radius14: 0.875rem;
+$border_radius15: 0.9375rem;
+
+$border_radius_for_game_record: $border_radius7;
+
+.form_contents_container {
+  border: $border_none;
+  border-radius: $border_radius7;
+
+  .form_contents_container_first_div {
+    > select:first-child {
+      border: $border_none;
+      outline: $outline_none;
+
+      > option {
+        border: $border_none;
+        outline: $outline_none;
+      }
+    }
+  }
+
+  .form_contents_container_third_div {
+    > input:first-child {
+      outline: $outline_none;
+      border: none;
+    }
+  }
+
+  .form_contents_container_fourth_div {
+    > i:first-child {
+    }
+  }
+}
+
+.left_section_border_line {
+  border: $border_none;
+}
+
+.game_record {
+  .main_game_record {
+    border-radius: $border_radius_for_game_record;
+  }
+
+  .shadow_game_record {
+    border-radius: $border_radius_for_game_record;
+  }
+}

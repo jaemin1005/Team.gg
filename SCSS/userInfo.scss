@@ -1,0 +1,184 @@
+@use "mixIns";
+@use "colors";
+@use "fonts";
+@use "functions";
+@use "border";
+@use "gaps";
+@use "vars";
+
+// ! 컴파일 이슈 때문에 명시적으로 적어놓은 임포트
+@import url(./border.css);
+@import url(./colors.css);
+@import url(./fonts.css);
+@import url(./functions.css);
+@import url(./gaps.css);
+@import url(./mixIns.css);
+@import url(./vars.css);
+
+body {
+  @include mixIns.create_contents_container(100%, 100%);
+  overflow-x: vars.$overflow_hidden;
+}
+
+.main_container {
+  @include mixIns.create_contents_container(100%, 100%);
+
+  // * <header>
+  .contents_header {
+    @include mixIns.create_contents_container(100vw, 5vh);
+    .header_navigator {
+      @include mixIns.flex_basic_layout(row, start);
+      @include mixIns.create_contents_container(100%, 100%);
+
+      .main_logo_container {
+        @include mixIns.flex_basic_layout();
+        @include mixIns.create_contents_container(20%, 100%);
+
+        > span:first-child {
+          cursor: vars.$cursor_pointer;
+        }
+      }
+
+      .search_bar_container {
+        @include mixIns.flex_basic_layout();
+        @include mixIns.create_contents_container(60%, 100%);
+
+        .search_form {
+          @include mixIns.flex_basic_layout();
+          @include mixIns.create_contents_container(75%, 100%);
+
+          .form_contents_container {
+            @include mixIns.flex_basic_layout();
+            @include mixIns.create_contents_container(90%, 80%);
+
+            .form_contents_container_first_div {
+              @include mixIns.flex_basic_layout();
+              @include mixIns.create_contents_container(20%, 100%);
+
+              > select:first-child {
+                @include mixIns.create_contents_container(90%, 100%);
+                cursor: vars.$cursor_pointer;
+              }
+            }
+
+            .form_contents_container_second_div {
+              @include mixIns.flex_basic_layout();
+              @include mixIns.create_contents_container(3%, 80%);
+            }
+
+            .form_contents_container_third_div {
+              @include mixIns.flex_basic_layout();
+              @include mixIns.create_contents_container(70%, 80%);
+
+              > input:first-child {
+                @include mixIns.create_contents_container(100%, 80%);
+              }
+            }
+
+            .form_contents_container_fourth_div {
+              @include mixIns.flex_basic_layout();
+              @include mixIns.create_contents_container(7%, 80%);
+
+              > i:first-child {
+                @include mixIns.flex_basic_layout();
+                @include mixIns.create_contents_container(70%, 80%);
+                cursor: vars.$cursor_pointer;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // * <main>
+  .contents_main {
+    @include mixIns.create_contents_container(100%, 95vh);
+
+    .sections_container {
+      @include mixIns.grid_column_layout();
+      @include mixIns.create_contents_container(100%, 100%);
+
+      > section:first-child {
+        @include mixIns.flex_basic_layout(column);
+        @include mixIns.create_contents_container(100%, 100%);
+
+        .left_section_container {
+          // todo, justify-content: space-around
+          @include mixIns.flex_basic_layout(column, space-between);
+          @include mixIns.create_contents_container(90%, 100%);
+          background-color: black;
+
+          .user_name_container {
+            @include mixIns.flex_basic_layout(column);
+            @include mixIns.create_contents_container(100%, 15%);
+            background-color: rebeccapurple;
+          }
+
+          .left_section_border_line {
+            @include mixIns.create_contents_container(90%, 0.125rem);
+            margin: vars.$margin0;
+          }
+
+          .user_info_container {
+            @include mixIns.grid_column_layout();
+            @include mixIns.create_contents_container(100%, 50%);
+            background-color: green;
+          }
+
+          .board_for_user {
+            @include mixIns.create_contents_container(100%, 30%);
+            background-color: gold;
+          }
+        }
+      }
+
+      > section:nth-child(2) {
+        @include mixIns.flex_basic_layout(row, start);
+        @include mixIns.create_contents_container(100%, 100%);
+
+        .right_section_left_container {
+          @include mixIns.flex_basic_layout(column, space-between, start);
+          @include mixIns.create_contents_container(60%, 100%);
+
+          .game_record {
+            position: relative;
+            @include mixIns.flex_basic_layout(row);
+            @include mixIns.create_contents_container(100%, 19%);
+            background-color: aliceblue;
+
+            .main_game_record {
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 1;
+              @include mixIns.flex_basic_layout(row);
+              @include mixIns.create_contents_container(95%, 80%);
+              background-color: colors.$color-for-win-record;
+            }
+
+            .shadow_game_record {
+              position: absolute;
+              bottom: 0;
+              right: 0;
+              z-index: 0;
+              @include mixIns.flex_basic_layout(row);
+              @include mixIns.create_contents_container(95%, 80%);
+              background-color: rgb(175, 175, 175);
+            }
+          }
+        }
+        .right_section_right_space {
+          @include mixIns.flex_basic_layout();
+          @include mixIns.create_contents_container(40%, 100%);
+          background-color: red;
+
+          .div_for_ad {
+            @include mixIns.create_contents_container(80%, 60%);
+            background-color: white;
+          }
+        }
+      }
+    }
+  }
+}

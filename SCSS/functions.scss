@@ -1,0 +1,17 @@
+$_mainViewportWidth: 1920;
+@function widthOrHeight100($props_val) {
+  @return $props_val * 100;
+}
+
+@function gapsCalc($first_gap_val, $second_gap_val) {
+  @return $first_gap_val + second_gap_val;
+}
+
+@function TransPixelToVW($pixelValue) {
+  @if ($pixelValue == auto) {
+    @return $pixelValue;
+  } @else {
+    $calcPixel: $_mainViewportWidth * 0.01 * 1px;
+    @return ($pixelValue / $calcPixel) * 1vw;
+  }
+}

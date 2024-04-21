@@ -1,0 +1,34 @@
+@use "colors";
+
+$font-weight500: 500;
+$font-weight600: 600;
+$font-weight700: "bold";
+
+$font-size10: 0.625rem;
+$font-size15: 0.9375rem;
+$font-size20: 1.25rem;
+$font-size25: 1.5625rem;
+$font-size30: 1.875rem;
+$font-size40: 2.5rem;
+$font-size50: 3.125rem;
+$font-size60: 3.75rem;
+$font-size70: 4.375rem;
+
+$line-height25: 1.5625rem;
+
+.main_logo_container {
+  color: colors.$color-white-font;
+  font-size: $font-size25;
+  font-weight: $font-weight600;
+}
+
+.form_contents_container_first_div_select {
+  text-align: center;
+  font-size: $font-size20;
+}
+
+.form_contents_container_second_div {
+  > span:first-child {
+    font-weight: $font-weight600;
+  }
+}

@@ -1,0 +1,26 @@
+.form_contents_container {
+  border: none;
+  border-radius: 0.4375rem;
+}
+.form_contents_container .form_contents_container_first_div > select:first-child {
+  border: none;
+  outline: none;
+}
+.form_contents_container .form_contents_container_first_div > select:first-child > option {
+  border: none;
+  outline: none;
+}
+.form_contents_container .form_contents_container_third_div > input:first-child {
+  outline: none;
+  border: none;
+}
+.left_section_border_line {
+  border: none;
+}
+
+.game_record .main_game_record {
+  border-radius: 0.4375rem;
+}
+.game_record .shadow_game_record {
+  border-radius: 0.4375rem;
+}

@@ -1,0 +1,64 @@
+/* 
+todo, 색 변수를 또 가르면 ? 
+* -> h1 태그에 전부 $color-black-font로 처리했으면 다른 색으로 바꿀 때 싹 다 바꿔야됨
+? -> EX) test_h1 { color: $color-black-font } ... test_h10 { color: $color-black-font }
+* -> 갈랐을 때 ?
+? -> EX) $h1: $color-black-font -> test_h1 { color: $h1 } ... test_h10 { color: $h1 }
+
+ */
+
+$color-black-bg: black;
+$color-light-gray-bg: rgb(165, 165, 165);
+$color-more-light-gray-bg: rgb(211, 211, 211);
+$color-red-bg: red;
+$color-white-bg: white;
+$color-blue-bg: blue;
+$color-pink-bg: pink;
+$color-aqua-bg: aqua;
+$color-light-red-bg: rgba(151, 50, 50, 0.589);
+
+$color-black-font: black;
+$color-light-gray-font: rgb(165, 165, 165);
+$color-more-light-gray-font: rgb(211, 211, 211);
+$color-red-font: red;
+$color-white-font: white;
+$color-blue-font: blue;
+$color-pink-font: pink;
+$color-aqua-font: aqua;
+$color-light-red-font: rgba(151, 50, 50, 0.589);
+
+$color-for-win-record: rgb(103, 138, 235);
+$color-for-lose-record: rgb(255, 68, 68);
+
+.header_navigator {
+  background-color: $color-light-red-bg;
+}
+.form_contents_container {
+  background-color: $color-more-light-gray-bg;
+
+  .form_contents_container_first_div_select {
+    background-color: $color-more-light-gray-bg;
+  }
+
+  .form_contents_container_third_div {
+    .search_form_input {
+      background-color: $color-more-light-gray-bg;
+    }
+  }
+}
+
+.menus_container {
+  color: $color-white-font;
+}
+
+.left_section_border_line {
+  background-color: $color-light-gray-bg;
+}
+
+.class_for_win_record {
+  background-color: $color-for-win-record;
+}
+
+.class_for_lose_record {
+  background-color: $color-for-lose-record;
+}
