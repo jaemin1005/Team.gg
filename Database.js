@@ -23,6 +23,7 @@ class Manager{
       return;
     } 
   }
+
   //* 검색을 통한, 첫번째 api 호출 (puuid, gameName, taøgLine)를 받는 메서드
   summonerInsert(obj){
     const {puuid,name,tag} = obj;
@@ -83,3 +84,4 @@ let obj = {
 let mng = new Manager();
 mng.insertData(obj);
 
+module.exports = Manager;
