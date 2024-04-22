@@ -65,9 +65,13 @@ class Manager{
   //* 삭제된 계정이라면 해당 열을 삭제해야함.
   removeData(puuid){
     // ! 테이블 순회시 수정 필요함.
-    let tbl = querySQL.userTable;
-    let string = querySQL.delete("summoners",puuid);
-    let remove = this.db.prepare(string);
+    
+    // let tbl = querySQL.userTable;
+
+
+    console.log(querySQL.delete("summoners", puuid));
+    
+    let remove = this.db.prepare(querySQL.delete("summoners",puuid));
     remove.run(puuid);
 
     // for(let element of tbl){
@@ -103,6 +107,7 @@ let obj = {
 };
 
 let mng = new Manager();
+// mng.summonerInsert(obj);
 mng.removeData("testID");
 
 module.exports = Manager;
