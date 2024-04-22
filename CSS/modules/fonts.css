@@ -1,3 +1,12 @@
+@charset "UTF-8";
+/* 
+todo, 색 변수를 또 가르면 ? 
+* -> h1 태그에 전부 $color-black-font로 처리했으면 다른 색으로 바꿀 때 싹 다 바꿔야됨
+? -> EX) test_h1 { color: $color-black-font } ... test_h10 { color: $color-black-font }
+* -> 갈랐을 때 ?
+? -> EX) $h1: $color-black-font -> test_h1 { color: $h1 } ... test_h10 { color: $h1 }
+
+ */
 .header_navigator {
   background-color: rgba(151, 50, 50, 0.589);
 }
@@ -14,6 +23,18 @@
 
 .menus_container {
   color: white;
+}
+
+.left_section_border_line {
+  background-color: rgb(165, 165, 165);
+}
+
+.class_for_win_record {
+  background-color: rgb(103, 138, 235);
+}
+
+.class_for_lose_record {
+  background-color: rgb(255, 68, 68);
 }
 
 .main_logo_container {
