@@ -121,15 +121,7 @@ class Manager{
 
 }
 
-let obj = {
-  // "puuid": "testInsert",
-  "gameName": "insert",
-  "tagLine": "1231123125245223"
-};
 
 let mng = new Manager();
-
-console.log(mng.checkExistence("testInsert"));
-
 
 module.exports = Manager;
