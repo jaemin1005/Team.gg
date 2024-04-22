@@ -10,7 +10,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
     />
-    <link rel="stylesheet" href="./CSS/modules/app.css" />
+    <link rel="stylesheet" href="./CSS/app.css" />
   </head>
 
   <body>
@@ -37,7 +37,11 @@
           <form action="" name="form_userName" class="search_form">
             <div class="form_contents_container">
               <div class="form_contents_container_first_div">
-                <select class="form_contents_container_first_div_select">
+                <select
+                  class="form_contents_container_first_div_select"
+                  name="first_search_form_select"
+                  aria-label="label for the select"
+                >
                   <optgroup label="location">
                     <option value="asia" selected>Asia</option>
                     <option value="europe">EU</option>
@@ -63,10 +67,9 @@
               </div>
             </div>
           </form>
-
           <!-- todo, 메시지 작업 -->
           <div class="warning_message_container">
-            <p></p>
+            <p class="pTagForMessage"></p>
           </div>
         </section>
       </main>
@@ -76,5 +79,5 @@
     src="https://kit.fontawesome.com/c22cf359ff.js"
     crossorigin="anonymous"
   ></script>
-  <script type="module" src="./JS/protoApp.js"></script>
+  <script type="module" src="./JS/app.mjs"></script>
 </html>
