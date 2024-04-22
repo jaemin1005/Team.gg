@@ -3,27 +3,42 @@
  * * 이름 : 배성빈
  * * 설명 : 서버와 데이터베이스의 통신 구현
  */
-<<<<<<< HEAD
 
-const query_ = require("./Module/queryString.js");
+const querySQL = {
+  userTable : ["summoners","playLog","sessionTier", "mostPlay"],
+  ddragon : ["champion", "item", "rune"],
+  insertSummonerObject : `INSERT INTO summoners (puuid, gameName, tagLine) VALUES (?, ?, ?)`,
+  firstCreateSummonerTbl : `CREATE TABLE summoners (puuid TEXT PRIMARY KEY,gameName TEXT,tagLine TEXT)`, 
+  checkSummonersTbl : "SELECT COUNT(*) FROM sqlite_master WHERE name='summoners'",
+  create : "CREATE TABLE",
+  insert : "INSERT INTO",
+  select :function(tbl){
+    return `SELECT * FROM ${tbl}`
+  },
+  delete : function(puuid){
+    return `DELETE FROM ? WHERE puuid = ${puuid}`
+  },
+  update : function(keys, puuid){
+    return `UPDATE summoners SET ${keys} WHERE puuid = ${puuid}` 
+  },
+}
+
+
 const DataBase = require("better-sqlite3");
 
-
-=======
-const DataBase = require("better-sqlite3");
->>>>>>> origin/develop
 class Manager{
   constructor(){
     this.db = new DataBase("./summoner.db", { verbose: console.log });
     this.db.pragma("journal_mode = WAL");
   }
 
-<<<<<<< HEAD
+
   tableCheck(){
     let check = this.db.prepare(querySQL.checkSummonersTbl);
-    let isTrue = check.get(); 
+    let isTrue = Object.values(check.get()) * 1; 
+    console.log(isTrue);
     if(isTrue === !true){ 
-      this.db.exec(querySQL.firstCreateSummonerTable);
+      this.db.exec(querySQL.firstCreateSummonerTbl);
     }else{
       return;
     } 
@@ -70,14 +85,11 @@ class Manager{
   }
 
 
-
-  receive
-  
-
-
-
-
-
+  exportUserInfo(puuid){
+    let query = this.db.prepare(querySQL.select(`summoners`));
+    let userObj = query.get();
+    console.table(userObj);
+  }
 }
 
 let obj = {
@@ -87,56 +99,7 @@ let obj = {
 };
 
 let mng = new Manager();
-mng.insertData(obj);
+mng.tableCheck();
+// mng.summonerInsert(obj);
 
 module.exports = Manager;
-=======
-  createSummonerDB(){
-    let check = this.db.prepare("SELECT COUNT(*) FROM sqlite_master WHERE name='summoners'");
-    let canCreate = check.get();
-    if(canCreate === !true){
-      this.db.exec("CREATE TABLE summoners (puuid TEXT PRIMARY KEY,name TEXT,tag TEXT)");
-    }else{ return; } 
-  }
-  insertData(obj){
-    let insert = this.db.prepare(
-      "INSERT INTO summoners (puuid, name, tag) VALUES (?, ?, ?)"  
-    );
-    const {puuid , name, tag} = obj;
-    try{
-      insert.run(puuid, name, tag);
-    } catch(error){
-      console.error(error.message);
-    } 
-  }
-
-  removeData(puuid){
-    //* db에 저장된 데이터를 서버로 전달해 서버에서 api에 요청했지만 존재하지 않는 아이디(계정 삭제, 기타)일 경우 
-    const remove = this.db.prepare("DELETE FROM summoners WHERE puuid = ?");
-    remove.run(`${puuid}`);
-  }
-  // 이름을 입력하면 입력 단어를 포함하는(앞에 글자가 존재한다면 제외)리스트 반환
-  receiveName(str){
-    try{
-      const receive = this.db.prepare("SELECT * FROM summoners WHERE name LIKE ?");
-      const string = `${str}%`
-      let list = receive.all(`${string}`);
-      console.table(list);
-    }catch(error){
-      console.error(error.message);
-    }
-    
-  }
-  //테스트 
-  returnAll(){
-    let table = this.db.prepare("SELECT * FROM summoners");
-    let i = table.get();
-    console.table(i);
-  }
-}
-
-
-// let request = require("request");
-// let key;//환경변수 설정.
-// let id; //request 타고 오는 거/
->>>>>>> origin/develop
