@@ -3,6 +3,7 @@
  * * 이름 : 배성빈
  * * 설명 : 서버와 데이터베이스의 통신 구현
  */
+let jsTest = require("./jsTest.js");
 
 const querySQL = {
   userTable : ["summoners","playLog","sessionTier", "mostPlay"],
@@ -15,16 +16,22 @@ const querySQL = {
   select :function(tbl){
     return `SELECT * FROM ${tbl}`
   },
-  delete : function(puuid){
-    return `DELETE FROM ? WHERE puuid = ${puuid}`
+  delete : function(table, puuid){
+    return `DELETE FROM ${table} WHERE puuid =${puuid}`
   },
   update : function(keys, puuid){
     return `UPDATE summoners SET ${keys} WHERE puuid = ${puuid}` 
   },
+
+  existData(tableName, where){
+    const queryWhere = where != null ? ` WHERE ${where}` : "";
+    const query = "SELECT EXIST (SELECT * FROM " + tableName + queryWhere + " )";
+    return query;
+  }
 }
 
-
 const DataBase = require("better-sqlite3");
+const { forEachTrailingCommentRange } = require("typescript")
 
 class Manager{
   constructor(){
@@ -37,17 +44,23 @@ class Manager{
     let check = this.db.prepare(querySQL.checkSummonersTbl);
     let isTrue = Object.values(check.get()) * 1; 
     console.log(isTrue);
-    if(isTrue === !true){ 
+    if(isTrue == !true){ 
       this.db.exec(querySQL.firstCreateSummonerTbl);
     }else{
       return;
     } 
   }
 
+  summonerCheck(puuId)
+  {
+
+  }
+
+
   //* 검색을 통한, 첫번째 api 호출 (puuid, gameName, taøgLine)를 받는 메서드
   summonerInsert(obj){
     const {puuid,name,tag} = obj;
-     insert = this.db.prepare(querySQL.insertSummonerObject);
+     let insert = this.db.prepare(querySQL.insertSummonerObject);
     try{
       insert.run(puuid, name, tag);
     }catch(error){
@@ -64,11 +77,19 @@ class Manager{
   }
   //* 삭제된 계정이라면 해당 열을 삭제해야함.
   removeData(puuid){
-    let tbl = querySQL.userTable;
-    let remove = this.db.prepare(querySQL.delete(puuid));
-    for(let element of tbl){
-      remove.run(element);
-    }
+    // ! 테이블 순회시 수정 필요함.
+    
+    // let tbl = querySQL.userTable;
+
+    console.log(this.db.name);
+    console.log(querySQL.delete("summoners", puuid));
+    
+    let remove = this.db.prepare(querySQL.delete("summoners",puuid));
+    remove.run(puuid);
+
+    // for(let element of tbl){
+    //   remove.run(element);
+    // }
   }
   // 검색 자동 완성 
   nameComplete(str){
@@ -93,13 +114,12 @@ class Manager{
 }
 
 let obj = {
-  "puuid": "m1VXGEiSIiTjtPGGWGVWYg7cmi27PR-RUQN_kv_LEcuCdWiz1tFuP6Ssuc2g",
-  "name": "터검니",
-  "tag": "000"
+  "puuid": "test",
+  "name": "제발좀",
+  "tag": "123123123"
 };
 
 let mng = new Manager();
-mng.tableCheck();
 // mng.summonerInsert(obj);
-
+mng.tableCheck();
 module.exports = Manager;
