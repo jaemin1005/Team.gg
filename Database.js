@@ -101,7 +101,7 @@ class Manager{
   }
 
 
-  exportUserInfo(puuid){
+  async exportUserInfo(puuid){
     let string = querySQL.select("summoners");
     let query = this.db.prepare(string);
     let userObj = query.get(puuid);
