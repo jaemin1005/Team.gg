@@ -12,15 +12,30 @@ const querySQL = {
   checkSummonersTbl : "SELECT COUNT(*) FROM sqlite_master WHERE name='summoners'",
   create : "CREATE TABLE",
   insert : "INSERT INTO",
-  select :function(tbl){
-    return `SELECT * FROM ${tbl}`
+  
+  select : function(str){
+    switch(str){
+      case "summoners":
+        return "SELECT * FROM summoners where puuid = ?"
+      case "playLog" :
+        return "SELECT * FROM playLog where puuid = ?"
+      case "sessionTier":
+        return "SELECT * FROM sessionTier where puuid = ?"
+    }
   },
-  delete : function(table, puuid){
-    return `DELETE FROM ${table} WHERE puuid =${puuid}`
+  delete : function(str){
+    switch(str){
+      case "summoner":
+        return "DELETE FROM summoners WHERE puuid = ?"
+      case "playLog" :
+        return "DELETE FROM playLog WHERE puuid = ?"
+      case "sessionTier":
+        return "DELETE FROM sessionTier WHERE puuid = ?"
+    }
   },
-  update : function(keys, puuid){
-    return `UPDATE summoners SET ${keys} WHERE puuid = ${puuid}` 
-  },
+
+
+  update : `UPDATE summoners SET ? WHERE puuid = ?`
 }
 
 
@@ -56,27 +71,21 @@ class Manager{
   }
   summonerUpdate(puuid, obj){
     let keys = Object.keys(obj).join(" = ?, "); keys += " = ?";
+    console.log(keys);
+    let string = "UPDATE summoners SET "+keys+" Where puuid = ?"
     let values = Object.values(obj);
-    let query = this.db.query(
-     querySQL.update(keys, puuid)
-    );
-    query.run(...values);    
+    let query = this.db.prepare(string);
+    // console.log(string);
+    // console.log(...values, puuid);
+    query.run(...values, puuid);    
+    this.db.close();
   }
+  
   //* 삭제된 계정이라면 해당 열을 삭제해야함.
-  removeData(puuid){
-    // ! 테이블 순회시 수정 필요함.
-    
-    // let tbl = querySQL.userTable;
-
-    console.log(this.db.name);
-    console.log(querySQL.delete("summoners", puuid));
-    
-    let remove = this.db.prepare(querySQL.delete("summoners",puuid));
+  
+  removeData(puuid,tbl){
+    let remove = this.db.prepare(querySQL.delete(tbl));
     remove.run(puuid);
-
-    // for(let element of tbl){
-    //   remove.run(element);
-    // }
   }
   // 검색 자동 완성 
   nameComplete(str){
@@ -94,20 +103,22 @@ class Manager{
 
 
   exportUserInfo(puuid){
-    let query = this.db.prepare(querySQL.select(`summoners`));
-    let userObj = query.get();
-    console.table(userObj);
+    let string = querySQL.select("summoners");
+    let query = this.db.prepare(string);
+    let userObj = query.get(puuid);
+    return userObj;
   }
 }
 
 let obj = {
-  "puuid": "test",
-  "name": "제발좀",
-  "tag": "123123123"
+  // "puuid": "testInsert",
+  "gameName": "insert",
+  "tagLine": "1231123125245223"
 };
 
 let mng = new Manager();
-// mng.summonerInsert(obj);
-mng.removeData("test");
+
+mng.summonerUpdate("testInsert",obj);
+
 
 module.exports = Manager;
