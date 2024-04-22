@@ -17,6 +17,7 @@
 
 @mixin grid_column_layout($template: 1fr 1fr) {
   display: grid;
+  justify-content: center;
   place-items: center;
   grid-template-columns: $template;
 }

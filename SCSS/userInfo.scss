@@ -93,18 +93,18 @@ body {
 
   // * <main>
   .contents_main {
+    @include mixIns.flex_basic_layout();
     @include mixIns.create_contents_container(100%, 95vh);
 
     .sections_container {
       @include mixIns.grid_column_layout();
-      @include mixIns.create_contents_container(100%, 100%);
+      @include mixIns.create_contents_container(90%, 100%);
 
       > section:first-child {
         @include mixIns.flex_basic_layout(column);
         @include mixIns.create_contents_container(100%, 100%);
 
         .left_section_container {
-          // todo, justify-content: space-around
           @include mixIns.flex_basic_layout(column, space-between);
           @include mixIns.create_contents_container(90%, 100%);
           background-color: black;
