@@ -3,9 +3,27 @@
  * * 이름 : 배성빈
  * * 설명 : 서버와 데이터베이스의 통신 구현
  */
-
-const query_ = require("./Module/queryString.js");
-const DataBase = require("better-sqlite3");
+const querySQL = {
+  userTable : ["summoners","playLog","sessionTier", "mostPlay"],
+  ddragon : ["champion", "item", "rune"],
+  insertSummonerObject : `INSERT INTO summoners (puuid, gameName, tagLine) VALUES (?, ?, ?)`,
+  firstCreateSummonerTbl : `CREATE TABLE summoners (puuid TEXT PRIMARY KEY,gameName TEXT,tagLine TEXT)`, 
+  checkSummonersTbl : "SELECT COUNT(*) FROM sqlite_master WHERE name='summoners'",
+  create : "CREATE TABLE",
+  insert : "INSERT INTO",
+  select : function(tbl){
+    return `SELECT * FROM ${tbl}`
+  },
+  delete : function(puuid){
+    return `DELETE FROM ? WHERE puuid = ${puuid}`
+  },
+  update : function(keys, puuid){
+    return `UPDATE summoners SET ${keys} WHERE puuid = ${puuid}` 
+  },
+};
+const path = require("path");
+// let test = require("./Module/queryString.js");
+const DataBase = require("better-sqlite3");   
 
 
 class Manager{
@@ -16,9 +34,11 @@ class Manager{
 
   tableCheck(){
     let check = this.db.prepare(querySQL.checkSummonersTbl);
-    let isTrue = check.get(); 
-    if(isTrue === !true){ 
-      this.db.exec(querySQL.firstCreateSummonerTable);
+    let isTrue = Object.values(check.get());
+
+    
+    if(isTrue == !true){ 
+      this.db.exec(querySQL.firstCreateSummonerTbl);
     }else{
       return;
     } 
@@ -37,10 +57,8 @@ class Manager{
   summonerUpdate(puuid, obj){
     let keys = Object.keys(obj).join(" = ?, "); keys += " = ?";
     let values = Object.values(obj);
-    let query = this.db.query(
-     querySQL.update(keys, puuid)
-    );
-    query.run(...values);    
+    let query = this.db.query(querySQL.update(keys, puuid));
+    query.run(...values);
   }
   //* 삭제된 계정이라면 해당 열을 삭제해야함.
   removeData(puuid){
@@ -82,6 +100,7 @@ let obj = {
 };
 
 let mng = new Manager();
-mng.insertData(obj);
+mng.tableCheck();
+// mng.summonerInsert(obj);
 
 module.exports = Manager;

@@ -6,7 +6,7 @@ const querySQL = {
   checkSummonersTbl : "SELECT COUNT(*) FROM sqlite_master WHERE name='summoners'",
   create : "CREATE TABLE",
   insert : "INSERT INTO",
-  select :function(tbl){
+  select : function(tbl){
     return `SELECT * FROM ${tbl}`
   },
   delete : function(puuid){
@@ -17,8 +17,11 @@ const querySQL = {
   },
 }
 
-Object.freeze(querySQL);
-module.export = querySQL;
+
+
+                                                         
+
+
 
 
 // const querySQL = {
