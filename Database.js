@@ -12,7 +12,6 @@ const querySQL = {
   checkSummonersTbl : "SELECT COUNT(*) FROM sqlite_master WHERE name='summoners'",
   create : "CREATE TABLE",
   insert : "INSERT INTO",
-  
   select : function(str){
     switch(str){
       case "summoners":
@@ -108,17 +107,21 @@ class Manager{
     let userObj = query.get(puuid);
     return userObj;
   }
+
+  checkExistence(puuid){
+    let string = querySQL.select("summoners");
+    let query = this.db.prepare(string);
+    if(query.get(puuid) == null || query.get(puuid) == undefined){
+      return false;
+    }
+    return true;
+  }
+
+
+
 }
 
-let obj = {
-  // "puuid": "testInsert",
-  "gameName": "insert",
-  "tagLine": "1231123125245223"
-};
 
 let mng = new Manager();
-
-mng.summonerUpdate("testInsert",obj);
-
 
 module.exports = Manager;
