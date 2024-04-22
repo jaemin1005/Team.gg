@@ -3,7 +3,6 @@
  * * 이름 : 배성빈
  * * 설명 : 서버와 데이터베이스의 통신 구현
  */
-let jsTest = require("./jsTest.js");
 
 const querySQL = {
   userTable : ["summoners","playLog","sessionTier", "mostPlay"],
@@ -23,20 +22,6 @@ const querySQL = {
         return "SELECT * FROM sessionTier where puuid = ?"
     }
   },
-<<<<<<< HEAD
-  delete : function(table, puuid){
-    return `DELETE FROM ${table} WHERE puuid =${puuid}`
-  },
-  update : function(keys, puuid){
-    return `UPDATE summoners SET ${keys} WHERE puuid = ${puuid}` 
-  },
-
-  existData(tableName, where){
-    const queryWhere = where != null ? ` WHERE ${where}` : "";
-    const query = "SELECT EXIST (SELECT * FROM " + tableName + queryWhere + " )";
-    return query;
-  }
-=======
   delete : function(str){
     switch(str){
       case "summoner":
@@ -50,11 +35,10 @@ const querySQL = {
 
 
   update : `UPDATE summoners SET ? WHERE puuid = ?`
->>>>>>> origin/develop
 }
 
+
 const DataBase = require("better-sqlite3");
-const { forEachTrailingCommentRange } = require("typescript")
 
 class Manager{
   constructor(){
@@ -73,12 +57,6 @@ class Manager{
       return;
     } 
   }
-
-  summonerCheck(puuId)
-  {
-
-  }
-
 
   //* 검색을 통한, 첫번째 api 호출 (puuid, gameName, taøgLine)를 받는 메서드
   summonerInsert(obj){
@@ -103,27 +81,10 @@ class Manager{
   }
   
   //* 삭제된 계정이라면 해당 열을 삭제해야함.
-<<<<<<< HEAD
-  removeData(puuid){
-    // ! 테이블 순회시 수정 필요함.
-    
-    // let tbl = querySQL.userTable;
-
-    console.log(this.db.name);
-    console.log(querySQL.delete("summoners", puuid));
-    
-    let remove = this.db.prepare(querySQL.delete("summoners",puuid));
-    remove.run(puuid);
-
-    // for(let element of tbl){
-    //   remove.run(element);
-    // }
-=======
   
   removeData(puuid,tbl){
     let remove = this.db.prepare(querySQL.delete(tbl));
     remove.run(puuid);
->>>>>>> origin/develop
   }
   // 검색 자동 완성 
   nameComplete(str){
@@ -155,25 +116,9 @@ class Manager{
     }
     return true;
   }
-
-
-
 }
 
-<<<<<<< HEAD
-let obj = {
-  "puuid": "test",
-  "name": "제발좀",
-  "tag": "123123123"
-};
-
-let mng = new Manager();
-// mng.summonerInsert(obj);
-mng.tableCheck();
-module.exports = Manager;
-=======
 
 let mng = new Manager();
 
 module.exports = Manager;
->>>>>>> origin/develop
