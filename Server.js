@@ -14,9 +14,13 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
+const jsTest = require("./jsTest.js");
+const DataBase = require("./Database.js");
 const user = require("./Module/User.js");
 const JSONCOMMAND = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');
+
+
 
 //#endregion --Require--
   /**
@@ -78,6 +82,8 @@ function SelectFile(res, path, contentType, responscode = 200)
   })
 }
 
+
+
 /**
  * * 2024.04.19 황재민
  * * GET으로 요청받은 url에 따라 switch에서 분기하여 원하는 파일을 건네준다.
@@ -87,26 +93,50 @@ function SelectFile(res, path, contentType, responscode = 200)
 function SwitchPath(req, res)
 {
   // * 정규표현식으로 해당 특수문자를 찾고 빈 공백으로 바꾼다. 
-  const path = req.url.replace(/\/?(?:\?.*)?%/, '').toLowerCase();
-  switch(path){
-    case '':
-    case '/':
-      SelectFile(res, '/doc/ServerTest.html', 'text/html');
-      break;
-    // case '/about':
-    //   SelectDOCFile(res, '/public/about.html', 'text/html');
-    //   break;
-    case '/test.js':
-      SelectFile(res, '/test.js', 'text/javascript');
-      break;
-    case '/test.css':
-      SelectFile(res, '/doc/test.css', 'text/css');
-      break;
-    default:
-      SelectFile(res, '/doc/404.html', 'text/html', 404)
-      break;
+  const path = req.url.replace(/\/?(?:\?.*)?%/, '');
+  
+  // switch(path){
+  //   case '':
+  //   case '/':
+  //     SelectFile(res, '/doc/ServerTest.html', 'text/html');
+  //     break;
+  //   // case '/about':
+  //   //   SelectDOCFile(res, '/public/about.html', 'text/html');
+  //   //   break;
+  //   case '/test.js':
+  //     SelectFile(res, '/test.js', 'text/javascript');
+  //     break;
+  //   case '/test.css':
+  //     SelectFile(res, '/doc/test.css', 'text/css');
+  //     break;
+  //   default:
+  //     SelectFile(res, '/doc/404.html', 'text/html', 404)
+  //     break;
+  // }
+
+  // * MainHomePage
+  if(path == '' || path == '/')
+  {
+    SelectFile(res, '/doc/ServerTest.html', 'text/html');
   }
+  // * Other
+  else
+  {
+    SelectFile(res, path, 'text' + GetFileExtension(path));
+  }
+
 }
+
+function GetFileExtension(fileName)
+{
+  const arrWord = fileName.split('.');
+  let extension = arrWord[arrWord.length-1];
+  if(extension == "js" || extension == "mjs")
+    extension = "javascript";
+
+  return extension;
+}
+
 
 /**
  * * 2024.04.19 황재민

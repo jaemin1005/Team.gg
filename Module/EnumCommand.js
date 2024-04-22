@@ -5,4 +5,11 @@ const JSONCOMMAND = Object.freeze({
   GET_MATCH_INFO : "reqMatch",
 })
 
+const LOGCOOMAND = Object.freeze({
+  
+  DB_ERR : "DB Err : ",
+  CONN_ERR : "CONN ERR : ",
+  IO_ERR : "IO ERR : "
+})
+
 module.exports = JSONCOMMAND;
