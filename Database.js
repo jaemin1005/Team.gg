@@ -16,7 +16,7 @@ const querySQL = {
     return `SELECT * FROM ${tbl}`
   },
   delete : function(table, puuid){
-    return `DELETE FROM ${table} WHERE puuid = ${puuid}`
+    return `DELETE FROM ${table} WHERE puuid =${puuid}`
   },
   update : function(keys, puuid){
     return `UPDATE summoners SET ${keys} WHERE puuid = ${puuid}` 
@@ -68,7 +68,7 @@ class Manager{
     
     // let tbl = querySQL.userTable;
 
-
+    console.log(this.db.name);
     console.log(querySQL.delete("summoners", puuid));
     
     let remove = this.db.prepare(querySQL.delete("summoners",puuid));
@@ -101,13 +101,13 @@ class Manager{
 }
 
 let obj = {
-  "puuid": "testID",
-  "name": "응애",
-  "tag": "000"
+  "puuid": "test",
+  "name": "제발좀",
+  "tag": "123123123"
 };
 
 let mng = new Manager();
 // mng.summonerInsert(obj);
-mng.removeData("testID");
+mng.removeData("test");
 
 module.exports = Manager;
