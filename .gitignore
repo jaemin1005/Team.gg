@@ -1,4 +1,6 @@
 node_modules
 .env
 jsTest.js
-DB/
+log/*
+package-lock.json
+Database
