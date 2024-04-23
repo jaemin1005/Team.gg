@@ -23,12 +23,12 @@ const RiotAPI = require('./Module/Api.js');
 
 
 //#endregion --Require--
-  /**
-   * * 2024.04.18 황재민
-   * * 서버 시작 하는 부분
-   * * statusCode : HTTP 응답 상태 코드는 특정 HTTP 요청이 성공적으로 완료되었는지 알려줌
-   * * https://developer.mozilla.org/ko/docs/Web/HTTP/Status
-   */
+/**
+ * * 2024.04.18 황재민
+ * * 서버 시작 하는 부분
+ * * statusCode : HTTP 응답 상태 코드는 특정 HTTP 요청이 성공적으로 완료되었는지 알려줌
+ * * https://developer.mozilla.org/ko/docs/Web/HTTP/Status
+ */
 const app = http.createServer((req, res) => 
 {
 
@@ -72,9 +72,9 @@ function SelectFile(res, path, contentType, responscode = 200)
        */
       if(err)
       {
-        LOG("FILE READ ERR : " + path);
+        LOG("FS ERR : Failed Read File : " + PATH + path);
         res.writeHead(500, {'Content-Type' : 'text/plain'});
-        return res.end('500 - Internal Error');
+        res.end('500 - Internal Error');
       }
 
       res.writeHead(responscode, {'Content-Type' : contentType});
@@ -96,26 +96,8 @@ function SwitchPath(req, res)
   // * 정규표현식으로 해당 특수문자를 찾고 빈 공백으로 바꾼다. 
   const path = req.url.replace(/\/?(?:\?.*)?%/, '');
   LOG("GET Url : " + path);
-  // switch(path){
-  //   case '':
-  //   case '/':
-  //     SelectFile(res, '/doc/ServerTest.html', 'text/html');
-  //     break;
-  //   // case '/about':
-  //   //   SelectDOCFile(res, '/public/about.html', 'text/html');
-  //   //   break;
-  //   case '/test.js':
-  //     SelectFile(res, '/test.js', 'text/javascript');
-  //     break;
-  //   case '/test.css':
-  //     SelectFile(res, '/doc/test.css', 'text/css');
-  //     break;
-  //   default:
-  //     SelectFile(res, '/doc/404.html', 'text/html', 404)
-  //     break;
-  // }
 
-  // * MainHomePage
+    // * MainHomePage
   if(path == '' || path == '/')
   {
     SelectFile(res, '/index.html', GetFileExtension(path));
@@ -143,9 +125,6 @@ function GetFileExtension(fileName)
     contentType = "text/css";
   else
     contentType = "Multipart/related";
-
-
-
   return contentType;
 }
 
@@ -186,6 +165,18 @@ async function ProcessPOSTMethod(req, res)
       case JSONCOMMAND.GET_USER_INFO:
         {
           obj = await RiotAPI.GetUserInfo(reqObj.detail, res);
+           
+          if(obj != null)
+          {
+            /**
+            * *  2024.04.23 황재민
+            * *  asnyc 함수는 항상 promise를 반환한다.
+            * *  async function의 반환값이 암묵적으로 Promise.resolve로 감싸지기 때문이다.
+            */
+            const promise1 = RiotAPI.GetUserChampMastery(obj);
+            const promise2 = RiotAPI.GetMatchInfo(obj);
+            await Promise.all([promise1, promise2]).catch(() => obj = null);
+          }
           break;
         }
       case JSONCOMMAND.GET_MATCH_INFO:

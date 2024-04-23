@@ -42,7 +42,7 @@ const DataBase = require("better-sqlite3");
 
 class Manager{
   constructor(){
-    this.db = new DataBase("./summoner.db", { verbose: console.log });
+    this.db = new DataBase("../../Database/summoner.db", { verbose: console.log });
     this.db.pragma("journal_mode = WAL");
   }
 
