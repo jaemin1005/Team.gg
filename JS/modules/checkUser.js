@@ -25,9 +25,9 @@ export const checkUser = (userName) => {
     classList.funcForSetClass(pTag);
     // !
     // * 일단 이 로직에서 유효한 검색이 됐다 치고, 로케이션 설정
-    location.href = `../HTML/userInfo.html`;
+    location.href = `public/HTML/userInfo.html`;
   } else {
-    location.href = `../HTML/userInfo.html`;
+    location.href = `public/HTML/userInfo.html`;
   }
   // todo, 메세지 "자체만" 전달, -> ../app.mjs에서 메세지 처리 작업,
   // todo, 클래스 리스트에는 p태그를 전달해서 처리

@@ -3,6 +3,10 @@ const LOG_STATE = process.env.LOG;
 
 const fs = require("fs");
 const Queue = require("./queue.js");
+const Time = require("./Time.js");
+const Title = "INFO\n";
+
+
 
 /**
  * * 2024.04.22 황재민
@@ -37,12 +41,9 @@ function WriteLog()
    * * isWrite : 현재 작성중인지 확인
    */
   let date = new Date();
-  let filePath = "log/" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + ".txt";
   let queue = new Queue();
   let isWrite = false;
   const title = "LOG START\n";
-
-  CreateLogFile(filePath, title)
 
   /**
    * * 클로져
@@ -62,10 +63,11 @@ function WriteLog()
         isWrite = true;
         while( queue.peek() != null && isWrite == true)
         {
+          CreateLogFile(Time.GetLogFileName(), Title);
           if(LOG_STATE === "DEBUG")
             console.log(text);
-          let strText = queue.dequeue() + "\n";
-          fs.appendFileSync(filePath, strText);
+          let strText = Time.GetLogline() + queue.dequeue() + "\n";
+          fs.appendFileSync(Time.GetLogFileName(), strText);
         }
         isWrite = false;
      });

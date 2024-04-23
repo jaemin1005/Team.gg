@@ -7,13 +7,13 @@
 @use "vars";
 
 // ! 컴파일 이슈 때문에 명시적으로 적어놓은 임포트
-@import url(./modules/border.css);
-@import url(./modules/colors.css);
-@import url(./modules/fonts.css);
-@import url(./modules/functions.css);
-@import url(./modules/gaps.css);
-@import url(./modules/mixIns.css);
-@import url(./modules/vars.css);
+@import url(./border.css);
+@import url(./colors.css);
+@import url(./fonts.css);
+@import url(./functions.css);
+@import url(./gaps.css);
+@import url(./mixIns.css);
+@import url(./vars.css);
 
 body {
   @include mixIns.create_contents_container(100%, 100%);

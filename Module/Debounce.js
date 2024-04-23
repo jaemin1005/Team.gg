@@ -1,7 +1,10 @@
-function GetTime()
-{
-  return Date.now() || new Date.GetTime();
-}
+// function GetTime()
+// {
+//   return Date.now() || new Date.GetTime();
+// }
+
+const Time = require("./Time");
+
 /**
  * * 2024.04.20 황재민
  * * Debounce 란, 짧은 시간 간격으로 이벤트가 연속해서 발생하면 
@@ -31,7 +34,7 @@ function Debounce(func, waitTime){
    * * 시간이 경과하면 apply를 통해 해당 함수를 실행한다. 
    */
   let lazyExecute = function(){
-    let calcTimer = GetTime() - time;
+    let calcTimer = Time.GetTime() - time;
     let isPass = calcTimer >= waitTime 
 
     if(isPass)
@@ -60,7 +63,7 @@ function Debounce(func, waitTime){
     return function(..._args){
       context = this;
       args = _args;
-      time = GetTime();
+      time = Time.GetTime();
       if(funcId == null)
       {
         funcId = setTimeout(lazyExecute, waitTime);
