@@ -1,5 +1,3 @@
-import * as app from "../app.mjs";
-
 class SetClassList {
   constructor() {}
 

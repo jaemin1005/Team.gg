@@ -14,8 +14,8 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
-const jsTest = require("./jsTest.js");
-const DataBase = require("./Database.js");
+const LOG =require("./Module/Log.js");
+//const DataBase = require("./Database.js");
 const user = require("./Module/User.js");
 const JSONCOMMAND = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');
@@ -72,6 +72,7 @@ function SelectFile(res, path, contentType, responscode = 200)
        */
       if(err)
       {
+        LOG("FILE READ ERR : " + path);
         res.writeHead(500, {'Content-Type' : 'text/plain'});
         return res.end('500 - Internal Error');
       }
@@ -94,7 +95,7 @@ function SwitchPath(req, res)
 {
   // * 정규표현식으로 해당 특수문자를 찾고 빈 공백으로 바꾼다. 
   const path = req.url.replace(/\/?(?:\?.*)?%/, '');
-  
+  LOG("GET Url : " + path);
   // switch(path){
   //   case '':
   //   case '/':
@@ -117,24 +118,35 @@ function SwitchPath(req, res)
   // * MainHomePage
   if(path == '' || path == '/')
   {
-    SelectFile(res, '/doc/ServerTest.html', 'text/html');
-  }
-  // * Other
-  else
-  {
-    SelectFile(res, path, 'text' + GetFileExtension(path));
+    SelectFile(res, '/index.html', GetFileExtension(path));
   }
 
+  else
+  {
+    SelectFile(res, path, GetFileExtension(path));
+  }
 }
 
 function GetFileExtension(fileName)
 {
   const arrWord = fileName.split('.');
   let extension = arrWord[arrWord.length-1];
-  if(extension == "js" || extension == "mjs")
-    extension = "javascript";
+  let contentType = null;
 
-  return extension;
+  if(extension == "js" || extension == "mjs")
+    contentType = "text/javascript";
+  else if(extension == "ico")
+    contentType = "image/x-icon";
+  else if(extension == "html" || extension == '/' || extension == '')
+    contentType = "text/html";
+  else if(extension == "css")
+    contentType = "text/css";
+  else
+    contentType = "Multipart/related";
+
+
+
+  return contentType;
 }
 
 

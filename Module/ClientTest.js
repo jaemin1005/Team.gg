@@ -1,7 +1,7 @@
 var http = require('http');
 const path = require('path');
 
-var clientOption = {
+let clientOption = {
   host: "localhost",
   port: "3000",
   path: "/?year=2017&month=July",
