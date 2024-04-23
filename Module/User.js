@@ -14,11 +14,11 @@ let CreateUser = (function(){
 
 class User
 {
-  constructor(puuId, gameName, tag)
+  constructor(obj)
   {
-    this.puuId = puuId;
-    this.gameName = gameName;
-    this.tag = tag;
+    this.puuId = obj.puuid;
+    this.gameName = obj.gameName;
+    this.tag = obj.tagLine;
   }  
   
   fullName(){

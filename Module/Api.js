@@ -3,6 +3,8 @@ require('dotenv').config();
 const PATH = process.env.DirPATH || __dirname;
 const API_KEY = process.env.API_KEY;
 
+const Log = require("./Log.js");
+
 /** 
  * * 날짜 : 2024.04.15
  * * 이름 : 황재민
@@ -34,8 +36,8 @@ let func = {
    * @param {*} strName : 닉테임 + #태그 되있는 문자열
    * @returns API 결과 
    */
-  async GetUserInfo(strName){
-
+  async GetUserInfo(strName)
+  {
     /**
      * * strName은 예시로 터검니#000 
      * * 특수문자가 불가능하기 때문에 #으로 구분하여 닉네임과 태그를 분리한다. 
@@ -51,14 +53,56 @@ let func = {
     let encodingName = encodeURI(userId[0]);
 
     try{
-      const res = await fetch(`https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`)    
+      const res = await fetch(`https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`);    
       const returnObj = await res.json();  
       return returnObj;  
     }catch(err)
     {
-      return false;
+      Log(`API ERR : Failed Get User Info ${err}`);
+      return null;
+    }
+  },
+
+  async GetUserChampMastery(obj)
+  {
+    try{
+      const res = await fetch(`https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${obj.puuid}?api_key=${API_KEY}`);
+      const returnObj = await res.json();
+      obj.champInfo = returnObj;
+    }catch(err)
+    {
+      Log(`API ERR : Failed Get Champion Mastery ${err}`);
+      throw new Error();
+    }
+  },
+
+  async GetMatchInfo(obj,nCall = 1)
+  {
+    let startNum = 20 * (nCall - 1);
+    let endNum = 20 * (nCall);
+    obj.matchInfo = [];
+    try{
+      let res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${API_KEY}`);
+      let returnObj = await res.json();
+      for(const item of returnObj)
+      {
+        // * 정규표현식 양쪽 끝 따옴표, 끝따옴표 자르기 :)
+        //let matchNum = item.replace(/['"]+/g, ''); 
+        // * 배열로 자르기 :)
+        //let matchNum = item.substring(1, item.length -1);
+
+        res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/${item}?api_key=${API_KEY}`);
+        returnObj = await res.json();
+        obj.matchInfo[obj.matchInfo.length] = returnObj; 
+      }
+    }catch(err)
+    {
+      Log(`API ERR : Failed Get Match Info ${err}`);
+      throw new Error();
     }
   }
+  
 }
 
 module.exports = func
+
