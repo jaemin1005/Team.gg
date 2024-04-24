@@ -1,3 +1,15 @@
+//#region * Access Database 
+const ExportPlayLog = require('./Module/DB/ExportPlayLog.js');
+const CheckUser = require('./Module/DB/CheckUser.js');
+const IoDebounce = require('./Module/DB/DebounceOutput.js');
+const ExportChampionInfo = require('./Module/DB/ExportChampionInfo.js');
+const ExportIconInfo = require('./Module/DB/ExportIconInfo.js');
+const ExportUser = require('./Module/DB/ExportUser.js');
+const InsertPlayLog = require('./Module/DB/InsertPlayLog.js');
+const InsertUser = require('./Module/DB/InsertUser.js');
+const RemoveUser = require('./Module/DB/RemoveUser.js');
+const SummonersUpdate = require('./Module/DB/UpdateUser.js');
+//#endregion
 
 require('dotenv').config();
 const PATH = process.env.DirPATH || __dirname;
