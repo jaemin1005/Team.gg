@@ -7,6 +7,11 @@ const JSONCOMMAND = Object.freeze({
   MORE_MATCH_INFO : "reqMoreMatchInfo"
 })
 
+const HTMLCOMMAND = Object.freeze({
+  SUMMONERS : "summoner"
+})
+
+
 const LOGCOOMAND = Object.freeze({
   
   DB_ERR : "DB Err : ",
@@ -14,4 +19,4 @@ const LOGCOOMAND = Object.freeze({
   IO_ERR : "IO ERR : "
 })
 
-module.exports = JSONCOMMAND;
+module.exports = {JSONCOMMAND, HTMLCOMMAND};

@@ -17,21 +17,23 @@ const url = require("url");
 const LOG =require("./Module/Log.js");
 //const DataBase = require("./Database.js");
 const user = require("./Module/User.js");
-const JSONCOMMAND = require('./Module/EnumCommand.js');
+const {JSONCOMMAND, HTMLCOMMAND} = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');
+const { checkPrime } = require('crypto');
+//const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
 
 
 // * Access Database 
-const { default: ExportPlayLog } = require('./Module/DB/ExportPlayLog.js');
-const { default: CheckUser } = require('./Module/DB/CheckUser.js');
-const { default: IoDebounce } = require('./Module/DB/DebounceOutput.js');
-const { default: ExportChampionInfo } = require('./Module/DB/ExportChampionInfo.js');
-const { default: ExportIconInfo } = require('./Module/DB/ExportIconInfo.js');
-const { default: ExportUser } = require('./Module/DB/ExportUser.js');
-const { default: InsertPlayLog } = require('./Module/DB/InsertPlayLog.js');
-const { default: InsertUser } = require('./Module/DB/InsertUser.js');
-const { default: RemoveUser } = require('./Module/DB/RemoveUser.js');
-const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
+//const { default: ExportPlayLog } = require('./Module/DB/ExportPlayLog.js');
+// const { default: CheckUser } = require('./Module/DB/CheckUser.js');
+// const { default: IoDebounce } = require('./Module/DB/DebounceOutput.js');
+// const { default: ExportChampionInfo } = require('./Module/DB/ExportChampionInfo.js');
+// const { default: ExportIconInfo } = require('./Module/DB/ExportIconInfo.js');
+// const { default: ExportUser } = require('./Module/DB/ExportUser.js');
+// const { default: InsertPlayLog } = require('./Module/DB/InsertPlayLog.js');
+// const { default: InsertUser } = require('./Module/DB/InsertUser.js');
+// const { default: RemoveUser } = require('./Module/DB/RemoveUser.js');
+// const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
 
 
 
@@ -93,6 +95,7 @@ function SelectFile(res, path, contentType, responscode = 200)
         LOG("FS ERR : Failed Read File : " + PATH + path);
         res.writeHead(500, {'Content-Type' : 'text/plain'});
         res.end('500 - Internal Error');
+        return;
       }
 
       res.writeHead(responscode, {'Content-Type' : contentType});
@@ -112,20 +115,65 @@ function SelectFile(res, path, contentType, responscode = 200)
 function SwitchPath(req, res)
 {
   // * 정규표현식으로 해당 특수문자를 찾고 빈 공백으로 바꾼다. 
-  const path = req.url.replace(/\/?(?:\?.*)?%/, '');
+  //const path = req.url.replace(/\/?(?:\?.*)?%/, '');
+  //let path = req.url.replace(/[/]+/g, ''); 
+  const path = req.url;
   LOG("GET Url : " + path);
 
-    // * MainHomePage
+  // * MainHomePage
   if(path == '' || path == '/')
   {
-    SelectFile(res, '/index.html', GetFileExtension(path));
+    SelectFile(res, '/index.html', "text/html");
+  }
+
+  else if(GetExtension(path) == null)
+  {
+    const htmlCommand = path.split('/');
+    GetHTML(res,htmlCommand[1]);
   }
 
   else
   {
-    SelectFile(res, path, GetFileExtension(path));
+    SelectFile(res, path, GetContentType(path));
   }
 }
+
+function CheckFile(fileName)
+{
+  const arrWord = fileName.split('.');
+  let extension = arrWord[arrWorld.length - 1];
+}
+
+function GetExtension(fileName)
+{
+  const arrWord = fileName.split('.');
+  if(arrWord.length == 0)
+    return null;
+  let extension = arrWord[arrWord.length-1]
+  if(extension == "js" || extension == "mjs" || extension == "ico" || extension == "html" || extension == "css")
+  {
+    return extension;
+  }
+
+  else
+  {
+    return null;
+  }
+}
+
+function GetHTML(res, name)
+{
+  switch(name)
+  {
+    case HTMLCOMMAND.SUMMONERS:
+    {
+      const path = "/public/HTML/userInfo.html"
+      SelectFile(res, path, GetContentType(path));
+    }
+  }
+}
+
+
 
 /**
  * * 2024.04.23 황재민
@@ -133,10 +181,9 @@ function SwitchPath(req, res)
  * @param {*} fileName : 파일 이름
  * @returns : Content-Type
  */
-function GetFileExtension(fileName)
+function GetContentType(fileName)
 {
-  const arrWord = fileName.split('.');
-  let extension = arrWord[arrWord.length-1];
+  let extension = GetExtension(fileName);
   let contentType = null;
 
   if(extension == "js" || extension == "mjs")
@@ -225,7 +272,7 @@ async function ProcessPOSTMethod(req, res)
       case JSONCOMMAND.MORE_MATCH_INFO:
         {
           obj = reqObj.detail;
-            
+
           await RiotAPI.GetMatchInfo(obj, obj.call).catch(() => obj = null);
         }
     }

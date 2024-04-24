@@ -40,12 +40,12 @@
 
       <main class="contents_main">
         <section>
-          <form action="" name="form_userName" class="search_form">
+          <form action="" name="form_userName" class="search_form" onsubmit="return false" method="get">
             <div class="form_contents_container">
               <div class="form_contents_container_first_div">
                 <select
                   class="form_contents_container_first_div_select"
-                  name="Hello"
+                  name="first_search_form_select"
                   aria-label="label for the select"
                 >
                   <optgroup label="location">
@@ -85,8 +85,8 @@
     src="https://kit.fontawesome.com/c22cf359ff.js"
     crossorigin="anonymous"
   ></script>
-  <script src="/JS/modules/checkUser.js"></script>
+  <!-- <script src="/JS/modules/checkUser.js"></script>
   <script src="/JS/modules/classList.js"></script>
-  <script src="/JS/modules/saveUser.js"></script>
-  <script src="/JS/app.js"></script>
+  <script src="/JS/modules/saveUser.js"></script> -->
+  <script src="/JS/app.js" type="module"></script>
 </html>

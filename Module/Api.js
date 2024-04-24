@@ -109,8 +109,8 @@ let func = {
         //let matchNum = item.substring(1, item.length -1);
 
         res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/${item}?api_key=${API_KEY}`);
-        returnObj = await res.json();
-        obj.matchInfo[obj.matchInfo.length] = returnObj; 
+        let matchObj = await res.json();
+        obj.matchInfo[obj.matchInfo.length] = matchObj; 
       }
     }catch(err)
     {

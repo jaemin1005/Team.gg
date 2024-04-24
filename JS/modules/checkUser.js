@@ -1,34 +1,44 @@
-import * as app from "../app.mjs";
-import * as classList from "./classList.js";
+// * 인풋 값 유효성 검사 후, 메시지가 나올 p 태그
+const pTag_for_warning_message = document.querySelector(
+  `.warning_message_container > p:first-child`
+);
 
-/*
- * 2024.04.22/12:54PM 이종수
- * ../app.mjs파일에서 값을 전달받아 처리
- * ./classList.js에 값 전달해서 CSS입히거나 벗기는 작업
- */
+const $form = document.querySelector("form");
 
-// ! DB에서 값 비교하고 조건에 맞는 처리 무조건 해야됨
-export const checkUser = (userName) => {
-  if (userName == ``) {
-    // * 입력값이 없을 때
-    let pTag = app.pTag_for_warning_message;
-    let nullMessage = `아이디를 입력해주세요.`;
-    pTag.innerHTML = nullMessage;
-    app.warningMessage(nullMessage);
-    classList.funcForSetClass(pTag);
-  } else if (userName !== null) {
-    // * 입력 값이 있지만, 일치하는 데이터를 찾지 못 했을 때
-    let pTag = app.pTag_for_warning_message;
-    let unfoundedMessage = `${userName}는(은) 존재하지 않는 아이디입니다.`;
-    pTag.innerText = unfoundedMessage;
-    app.warningMessage(unfoundedMessage);
-    classList.funcForSetClass(pTag);
-    // !
-    // * 일단 이 로직에서 유효한 검색이 됐다 치고, 로케이션 설정
-    location.href = `public/HTML/userInfo.html`;
+// todo, a#qwekr1, asdk#r1
+// ? 연관검색 뜨면 경고문 안 보이는 거
+
+export const checkUser = (inputValue) => {
+  const inputValueArr = [...inputValue];
+  let hashTagCount = 0;
+
+  let userName = inputValue.split(`#`)[0];
+  let userCode = inputValue.split(`#`)[1];
+
+  inputValueArr.forEach((hashTag) => {
+    if (hashTag == `#`) {
+      hashTagCount++;
+    } else {
+    }
+  });
+
+  if (inputValue == ``) {
+    console.log(userName, userCode);
+    pTag_for_warning_message.classList.add(`class_for_red_message`);
+    pTag_for_warning_message.textContent = `입력 값이 없습니다.`;
+  } else if (
+    !inputValue.includes(`#`) ||
+    hashTagCount !== 1 ||
+    userName == `` ||
+    userCode == ``
+  ) {
+    hashTagCount = 0;
+    pTag_for_warning_message.classList.add(`class_for_red_message`);
+    pTag_for_warning_message.textContent = `${inputValue}는(은)잘못된 형식입니다.`;
   } else {
-    location.href = `public/HTML/userInfo.html`;
+    console.dir($form);
+    //$form.action = "./public/HTML/userInfo.html";
+    $form.action = "summoner/"
+    $form.submit();
   }
-  // todo, 메세지 "자체만" 전달, -> ../app.mjs에서 메세지 처리 작업,
-  // todo, 클래스 리스트에는 p태그를 전달해서 처리
 };
