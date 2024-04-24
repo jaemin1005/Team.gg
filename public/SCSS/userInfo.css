@@ -1,0 +1,322 @@
+@charset "UTF-8";
+@import url(./border.css);
+@import url(./colors.css);
+@import url(./fonts.css);
+@import url(./functions.css);
+@import url(./gaps.css);
+@import url(./mixIns.css);
+@import url(./vars.css);
+/* 
+todo, 색 변수를 또 가르면 ? 
+* -> h1 태그에 전부 $color-black-font로 처리했으면 다른 색으로 바꿀 때 싹 다 바꿔야됨
+? -> EX) test_h1 { color: $color-black-font } ... test_h10 { color: $color-black-font }
+* -> 갈랐을 때 ?
+? -> EX) $h1: $color-black-font -> test_h1 { color: $h1 } ... test_h10 { color: $h1 }
+
+ */
+.header_navigator {
+  background-color: rgba(151, 50, 50, 0.589);
+}
+
+.form_contents_container {
+  background-color: rgb(211, 211, 211);
+}
+.form_contents_container .form_contents_container_first_div_select {
+  background-color: rgb(211, 211, 211);
+}
+.form_contents_container .form_contents_container_third_div .search_form_input {
+  background-color: rgb(211, 211, 211);
+}
+
+.menus_container {
+  color: white;
+}
+
+.left_section_border_line {
+  background-color: rgb(165, 165, 165);
+}
+
+.class_for_win_record {
+  background-color: rgb(103, 138, 235);
+}
+
+.class_for_lose_record {
+  background-color: rgb(255, 68, 68);
+}
+
+.main_logo_container {
+  color: white;
+  font-size: 1.5625rem;
+  font-weight: 600;
+}
+
+.form_contents_container_first_div_select {
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.form_contents_container_second_div > span:first-child {
+  font-weight: 600;
+}
+
+.form_contents_container {
+  border: none;
+  border-radius: 0.4375rem;
+}
+.form_contents_container .form_contents_container_first_div > select:first-child {
+  border: none;
+  outline: none;
+}
+.form_contents_container .form_contents_container_first_div > select:first-child > option {
+  border: none;
+  outline: none;
+}
+.form_contents_container .form_contents_container_third_div > input:first-child {
+  outline: none;
+  border: none;
+}
+.left_section_border_line {
+  border: none;
+}
+
+.game_record .main_game_record {
+  border-radius: 0.4375rem;
+}
+.game_record .shadow_game_record {
+  border-radius: 0.4375rem;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.main_container {
+  width: 100%;
+  height: 100%;
+}
+.main_container .contents_header {
+  width: 100vw;
+  height: 5vh;
+}
+.main_container .contents_header .header_navigator {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.main_container .contents_header .header_navigator .main_logo_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 100%;
+}
+.main_container .contents_header .header_navigator .main_logo_container > span:first-child {
+  cursor: pointer;
+}
+.main_container .contents_header .header_navigator .search_bar_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 100%;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
+  height: 100%;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form .form_contents_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 80%;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form .form_contents_container .form_contents_container_first_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 100%;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form .form_contents_container .form_contents_container_first_div > select:first-child {
+  width: 90%;
+  height: 100%;
+  cursor: pointer;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form .form_contents_container .form_contents_container_second_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 3%;
+  height: 80%;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form .form_contents_container .form_contents_container_third_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  height: 80%;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form .form_contents_container .form_contents_container_third_div > input:first-child {
+  width: 100%;
+  height: 80%;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form .form_contents_container .form_contents_container_fourth_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 7%;
+  height: 80%;
+}
+.main_container .contents_header .header_navigator .search_bar_container .search_form .form_contents_container .form_contents_container_fourth_div > i:first-child {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  height: 80%;
+  cursor: pointer;
+}
+.main_container .contents_main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 95vh;
+}
+.main_container .contents_main .sections_container {
+  display: grid;
+  justify-content: center;
+  place-items: center;
+  grid-template-columns: 1fr 1fr;
+  width: 90%;
+  height: 100%;
+}
+.main_container .contents_main .sections_container > section:first-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.main_container .contents_main .sections_container > section:first-child .left_section_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  height: 100%;
+  background-color: black;
+}
+.main_container .contents_main .sections_container > section:first-child .left_section_container .user_name_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 15%;
+  background-color: rebeccapurple;
+}
+.main_container .contents_main .sections_container > section:first-child .left_section_container .left_section_border_line {
+  width: 90%;
+  height: 0.125rem;
+  margin: 0;
+}
+.main_container .contents_main .sections_container > section:first-child .left_section_container .user_info_container {
+  display: grid;
+  justify-content: center;
+  place-items: center;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 50%;
+  background-color: green;
+}
+.main_container .contents_main .sections_container > section:first-child .left_section_container .board_for_user {
+  width: 100%;
+  height: 30%;
+  background-color: gold;
+}
+.main_container .contents_main .sections_container > section:nth-child(2) {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.main_container .contents_main .sections_container > section:nth-child(2) .right_section_left_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  width: 60%;
+  height: 100%;
+}
+.main_container .contents_main .sections_container > section:nth-child(2) .right_section_left_container .game_record {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 19%;
+  background-color: aliceblue;
+}
+.main_container .contents_main .sections_container > section:nth-child(2) .right_section_left_container .game_record .main_game_record {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 80%;
+  background-color: rgb(103, 138, 235);
+}
+.main_container .contents_main .sections_container > section:nth-child(2) .right_section_left_container .game_record .shadow_game_record {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 80%;
+  background-color: rgb(175, 175, 175);
+}
+.main_container .contents_main .sections_container > section:nth-child(2) .right_section_right_space {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 100%;
+  background-color: red;
+}
+.main_container .contents_main .sections_container > section:nth-child(2) .right_section_right_space .div_for_ad {
+  width: 80%;
+  height: 60%;
+  background-color: white;
+}/*# sourceMappingURL=userInfo.css.map */

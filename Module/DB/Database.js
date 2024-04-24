@@ -4,7 +4,23 @@
  * * 설명 : 서버와 데이터베이스의 통신 구현
  */
 
+
+const path = require('path');
+const DataBase = require("better-sqlite3");
+require("dotenv").config();
+
+console.log(process.env.PATH);
+
+
+
 const querySQL = {
+  gameType : {
+    ranked : "0",
+    nomal : "1",
+    tourney : "2",
+  },
+  insertPlayLog : "INSERT INTO playLog (puuid, gameId, gameType) VALUES (?, ?, ?)",
+  updatePlayLog : "UPDATE playLog SET gameId = ?, gameType = ? Where puuid = ?", 
   userTable : ["summoners","playLog","sessionTier", "mostPlay"],
   ddragon : ["champion", "item", "rune"],
   insertSummonerObject : `INSERT INTO summoners (puuid, gameName, tagLine) VALUES (?, ?, ?)`,
@@ -12,6 +28,8 @@ const querySQL = {
   checkSummonersTbl : "SELECT COUNT(*) FROM sqlite_master WHERE name='summoners'",
   create : "CREATE TABLE",
   insert : "INSERT INTO",
+  
+
   select : function(str){
     switch(str){
       case "summoners":
@@ -20,6 +38,11 @@ const querySQL = {
         return "SELECT * FROM playLog where puuid = ?"
       case "sessionTier":
         return "SELECT * FROM sessionTier where puuid = ?"
+      case "champion" : 
+        return "SELECT * FROM champion where key = ?"
+      case "icon":
+        return "SELECT * FROM icon where iconId = ?"
+      default : break;
     }
   },
   delete : function(str){
@@ -32,20 +55,17 @@ const querySQL = {
         return "DELETE FROM sessionTier WHERE puuid = ?"
     }
   },
-
-
   update : `UPDATE summoners SET ? WHERE puuid = ?`
 }
 
 
-const DataBase = require("better-sqlite3");
 
 class Manager{
   constructor(){
-    this.db = new DataBase("./summoner.db", { verbose: console.log });
+    // this.db = new DataBase("Database/summoner.db", { verbose: console.log });
+    this.db = new DataBase("../../Database/summoner.db", { verbose: console.log });
     this.db.pragma("journal_mode = WAL");
   }
-
 
   tableCheck(){
     let check = this.db.prepare(querySQL.checkSummonersTbl);
@@ -60,14 +80,16 @@ class Manager{
 
   //* 검색을 통한, 첫번째 api 호출 (puuid, gameName, taøgLine)를 받는 메서드
   summonerInsert(obj){
-    const {puuid,name,tag} = obj;
+    const {puuid,gameName,tagLine} = obj;
      let insert = this.db.prepare(querySQL.insertSummonerObject);
     try{
-      insert.run(puuid, name, tag);
+      insert.run(puuid, gameName, tagLine);
     }catch(error){
       console.error(error.message);
     } 
   }
+  // *특정 정보를 업데이트 , 객체의 형태로 사용 가능
+
   summonerUpdate(puuid, obj){
     let keys = Object.keys(obj).join(" = ?, "); keys += " = ?";
     console.log(keys);
@@ -80,6 +102,16 @@ class Manager{
     this.db.close();
   }
   
+  insertPlayLog(puuid, arr, gameType){
+    let string = querySQL.insertPlayLog;
+    let query = this.db.prepare(string);
+    for(let ele of arr){
+      query.run(puuid, ele, gameType);
+    }
+    this.db.close();
+  }
+
+
   //* 삭제된 계정이라면 해당 열을 삭제해야함.
   
   removeData(puuid,tbl){
@@ -93,19 +125,45 @@ class Manager{
         `${querySQL.select("summoners")} WHERE gameName LIKE ?`);
       const string = `${str}%`
       let list = receive.all(`${string}`);
-    }catch(error)
-    { 
+    }catch(error){ 
       console.error(error.message);
     }
     return list;
   }
 
 
+  // ! Export용 SELECT 문 리팩토링 때 함수로 빼두기
+
   async exportUserInfo(puuid){
     let string = querySQL.select("summoners");
     let query = this.db.prepare(string);
     let userObj = query.get(puuid);
     return userObj;
+  }
+
+  exportBattleLog(puuid){
+    let string = querySQL.select("playLog");
+    let query = this.db.prepare(string);
+    let logObj = query.all(puuid);
+    let arr =[];
+    for(let ele of logObj){
+      arr.push(ele.gameId);
+    }
+    return arr;
+  }
+
+  exportChampionInfo(key){
+    let string = querySQL.select("champion");
+    let query = this.db.prepare(string);
+    let champObj = query.get(key);
+    return champObj;
+  }
+
+  exportIconInfo(iconId){
+    let string = querySQL.select("icon");
+    let query = this.db.prepare(string);
+    let iconObj = query.get(iconId);
+    return iconObj;
   }
 
   checkExistence(puuid){
@@ -120,5 +178,10 @@ class Manager{
 
 
 let mng = new Manager();
+
+// console.log(mng.exportIconInfo("1"));
+console.log(mng.exportBattleLog("m1VXGEiSIiTjtPGGWGVWYg7cmi27PR-RUQN_kv_LnHrAZLRt-IPFmZYTBZEcuCdWiz1tFuP6Ssuc2g"));
+
+
 
 module.exports = Manager;
