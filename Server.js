@@ -21,6 +21,24 @@ const JSONCOMMAND = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');
 
 
+// * Access Database 
+const { default: ExportPlayLog } = require('./Module/DB/ExportPlayLog.js');
+const { default: CheckUser } = require('./Module/DB/CheckUser.js');
+const { default: IoDebounce } = require('./Module/DB/DebounceOutput.js');
+const { default: ExportChampionInfo } = require('./Module/DB/ExportChampionInfo.js');
+const { default: ExportIconInfo } = require('./Module/DB/ExportIconInfo.js');
+const { default: ExportUser } = require('./Module/DB/ExportUser.js');
+const { default: InsertPlayLog } = require('./Module/DB/InsertPlayLog.js');
+const { default: InsertUser } = require('./Module/DB/InsertUser.js');
+const { default: RemoveUser } = require('./Module/DB/RemoveUser.js');
+const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
+
+
+
+
+
+
+
 
 //#endregion --Require--
 /**
@@ -171,7 +189,6 @@ async function ProcessPOSTMethod(req, res)
       case JSONCOMMAND.GET_USER_INFO:
         {
           obj = await RiotAPI.GetUserInfo(reqObj.detail, res);
-           
           if(obj != null)
           {
             /**

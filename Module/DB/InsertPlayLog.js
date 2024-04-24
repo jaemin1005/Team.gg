@@ -14,3 +14,5 @@ class InsertPlayLog{
   }
 
 }
+
+export default InsertPlayLog;
