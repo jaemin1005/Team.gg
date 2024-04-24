@@ -1,0 +1,11 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "summoner.db",
+      "database": "${workspaceFolder:teamgg}/Database/summoner.db"
+    }
+  ],
+  "sqltools.useNodeRuntime": true  
+}

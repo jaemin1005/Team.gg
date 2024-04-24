@@ -53,7 +53,20 @@ let func = {
      * * 특수문자가 불가능하기 때문에 #으로 구분하여 닉네임과 태그를 분리한다. 
      */
     let userId = strName.split('#');
+
+    //! #DB_TEST_WITH_API.JS
+    //! 확인 된다면  블록 내부의 아래 코드를코드를 else문에 담아야한다.
+    const checkUser = new CheckUser();
+    let userObj = checkUser.checkExistenceName(userId);
+
+    if(userObj !== null && userObj !== undefined){
+      return obj;
+    }
+
     
+    
+    
+
     if(userId.length != 2 && UserId[0] < 2)
     {
       return false;
@@ -64,9 +77,12 @@ let func = {
 
     try{
       const res = await fetch(`https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`);    
-      const insertTbl = new InsertUser();
+      
       const returnObj = await res.json();
-      insertTbl.summonerInsert(returnObj);  
+      
+      //! #DB_TEST_WITH_API.JS
+      // const insertTbl = new InsertUser();
+      // insertTbl.summonerInsert(returnObj);  
       return returnObj;  
     }catch(err){
       Log(`API ERR : Failed Get User Info ${err}`);
@@ -111,6 +127,10 @@ let func = {
       let res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${API_KEY}`);
       let returnObj = await res.json();
       
+      //! #DB_TEST_WITH_API.JS
+      // const insertMatchArr = new InsertPlayLog();
+      // insertMatchArr.insertPlayLog(returnObj);
+
       // * matchId 를 배열로 하나씩 꺼내와서 API를 이용하여 정보를 꺼내온다.
       for(const item of returnObj)
       {
@@ -118,7 +138,7 @@ let func = {
         //let matchNum = item.replace(/['"]+/g, ''); 
         // * 배열로 자르기 :)
         //let matchNum = item.substring(1, item.length -1);
-
+        //! #DB_TEST_WITH_API.JS  - UPDATE DB
         res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/${item}?api_key=${API_KEY}`);
         returnObj = await res.json();
         obj.matchInfo[obj.matchInfo.length] = returnObj; 
