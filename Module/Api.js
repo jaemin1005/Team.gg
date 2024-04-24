@@ -60,7 +60,7 @@ let func = {
     let userObj = checkUser.checkExistenceName(userId);
 
     if(userObj !== null && userObj !== undefined){
-      return obj;
+      return await obj.json;
     }
 
     
