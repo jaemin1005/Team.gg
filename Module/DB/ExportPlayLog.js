@@ -18,4 +18,4 @@ class ExportPlayLog {
   }
 }
 
-export default ExportPlayLog;
+module.exports = ExportPlayLog;

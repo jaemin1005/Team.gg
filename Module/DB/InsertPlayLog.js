@@ -1,8 +1,10 @@
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
 
 class InsertPlayLog{
   constructor(){
     this.insertPlayLog = "INSERT INTO playLog (puuid, gameId, gameType) VALUES (?, ?, ?)";
+    this.db = new Database("./summoner.db", { verbose: console.log });
+    this.db.pragma("journal_mode = WAL");
   }
 
   insertPlayLog(puuid, arr, gameType){
@@ -15,4 +17,4 @@ class InsertPlayLog{
 
 }
 
-export default InsertPlayLog;
+module.exports = InsertPlayLog;

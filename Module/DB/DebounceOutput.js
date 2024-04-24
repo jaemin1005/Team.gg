@@ -1,5 +1,6 @@
 // * 단위테스트 O
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
+
 class IoDebounce {
   constructor() {
     this.CheckQuery = "SELECT * FROM summoners WHERE gameName LIKE ?";
@@ -20,4 +21,4 @@ class IoDebounce {
   }
 }
 
-export default IoDebounce;
+module.exports = IoDebounce;

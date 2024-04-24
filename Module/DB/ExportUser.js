@@ -1,6 +1,7 @@
 // * 단위 테스트 O
 
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
+
 class ExportUser{
   constructor(params) {
     this.findQuery = "SELECT * FROM summoners where puuid = ?";
@@ -15,4 +16,4 @@ class ExportUser{
   }
 }
 
-export default ExportUser;
+module.exports = ExportUser;

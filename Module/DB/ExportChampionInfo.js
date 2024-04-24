@@ -1,5 +1,6 @@
 // * 단위테스트 * 
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
+
 class ExportChampionInfo{
   constructor() {
    this.champQuery = "SELECT * FROM champion where key = ?"; 
@@ -14,4 +15,4 @@ class ExportChampionInfo{
     return champObj;
   }
 }
-export default ExportChampionInfo;
+module.exports = ExportChampionInfo;

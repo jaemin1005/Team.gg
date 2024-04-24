@@ -22,16 +22,16 @@ const RiotAPI = require('./Module/Api.js');
 
 
 //#region * Access Database 
-const { default: ExportPlayLog } = require('./Module/DB/ExportPlayLog.js');
-const { default: CheckUser } = require('./Module/DB/CheckUser.js');
-const { default: IoDebounce } = require('./Module/DB/DebounceOutput.js');
-const { default: ExportChampionInfo } = require('./Module/DB/ExportChampionInfo.js');
-const { default: ExportIconInfo } = require('./Module/DB/ExportIconInfo.js');
-const { default: ExportUser } = require('./Module/DB/ExportUser.js');
-const { default: InsertPlayLog } = require('./Module/DB/InsertPlayLog.js');
-const { default: InsertUser } = require('./Module/DB/InsertUser.js');
-const { default: RemoveUser } = require('./Module/DB/RemoveUser.js');
-const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
+const ExportPlayLog = require('./Module/DB/ExportPlayLog.js');
+const CheckUser = require('./Module/DB/CheckUser.js');
+const IoDebounce = require('./Module/DB/DebounceOutput.js');
+const ExportChampionInfo = require('./Module/DB/ExportChampionInfo.js');
+const ExportIconInfo = require('./Module/DB/ExportIconInfo.js');
+const ExportUser = require('./Module/DB/ExportUser.js');
+const InsertPlayLog = require('./Module/DB/InsertPlayLog.js');
+const InsertUser = require('./Module/DB/InsertUser.js');
+const RemoveUser = require('./Module/DB/RemoveUser.js');
+const SummonersUpdate = require('./Module/DB/UpdateUser.js');
 //#endregion
 
 

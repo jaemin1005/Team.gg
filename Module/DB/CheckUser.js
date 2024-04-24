@@ -1,5 +1,5 @@
 // *  단위 테스트 O
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
 class CheckUser {
   constructor(params) {
     this.checkQuery = "SELECT * FROM summoners where puuid = ?";
@@ -21,4 +21,4 @@ class CheckUser {
   }
 }
 
-export default CheckUser;
+module.exports = CheckUser;

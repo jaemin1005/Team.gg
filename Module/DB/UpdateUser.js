@@ -1,4 +1,5 @@
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
+
 class SummonersUpdate{
   constructor(){
     this.db = new Database("./summoner.db", { verbose: console.log });
@@ -17,4 +18,4 @@ class SummonersUpdate{
   }
 }
 
-export default SummonersUpdate;
+module.exports = SummonersUpdate;
