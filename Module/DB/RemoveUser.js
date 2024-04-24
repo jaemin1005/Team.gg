@@ -9,6 +9,8 @@ class RemoveUser{
   removeData(puuid,tbl){
     let remove = this.db.prepare(this.deleteQuery);
     remove.run(puuid);
+    this.db.close();
   }
 }
+
 export default RemoveUser;

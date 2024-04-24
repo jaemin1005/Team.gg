@@ -9,6 +9,7 @@ class ExportIconInfo {
   exportIconInfo(iconId) {
     let query = this.db.prepare(this.iconQuery);
     let iconObj = query.get(iconId);
+    this.db.close();
     return iconObj;
   }
 }

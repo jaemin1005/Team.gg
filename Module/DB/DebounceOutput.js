@@ -11,8 +11,10 @@ class IoDebounce {
       const receive = this.db.prepare(this.CheckQuery);
       const string = `${str}%`
       let list = receive.all(`${string}`);
+      this.db.close();
       return list;
     } catch (error) {
+      this.db.close();
       console.error(error.message);
     }
   }

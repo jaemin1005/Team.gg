@@ -10,6 +10,7 @@ class ExportChampionInfo{
     let string = this.champQuery;
     let query = this.db.prepare(string);
     let champObj = query.get(key);
+    this.db.close();
     return champObj;
   }
 }

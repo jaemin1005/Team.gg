@@ -13,6 +13,7 @@ class ExportPlayLog {
     for (let ele of logObj) {
       arr.push(ele.gameId);
     }
+    this.db.close();
     return arr;
   }
 }

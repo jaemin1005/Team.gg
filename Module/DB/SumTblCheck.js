@@ -11,7 +11,9 @@ class SummonerTableCheck{
     console.log(isTrue);
     if(isTrue == !true){ 
       this.db.exec(querySQL.firstCreateSummonerTbl);
+      this.db.close();
     }else{
+      this.db.close();
       return;
     } 
   }

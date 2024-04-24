@@ -10,6 +10,7 @@ class ExportUser{
   async exportUserInfo(puuid){
     let query = this.db.prepare(this.findQuery);
     let userObj = query.get(puuid);
+    this.db.close();
     return userObj;
   }
 }
