@@ -17,3 +17,5 @@ class InsertUser{
   }
 
 }
+
+export default InsertUser;
