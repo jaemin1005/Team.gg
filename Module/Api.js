@@ -14,7 +14,6 @@ const SummonersUpdate = require('../Module/DB/UpdateUser.js');
 require('dotenv').config();
 const PATH = process.env.DirPATH || __dirname;
 const API_KEY = process.env.API_KEY;
-
 const Log = require("./Log.js");
 
 /** 
@@ -22,7 +21,7 @@ const Log = require("./Log.js");
  * * 이름 : 황재민
  * * 설명 : 비동기로 API를 fech로 이용하여 해당 정보를 json으로 처리한다. 
 */
-const getData = async () => {
+const getRotations = async () => {
   try{
     const res = await fetch("https://kr.api.riotgames.com/lol/platform/v3/champion-rotations?api_key=" + riotKey);
     const returnObj = await res.json();
@@ -39,7 +38,6 @@ const getData = async () => {
  * TODO : 직관성있는 방법 생각해보기. 
  */
 let func = {
-
   /**
    * * 2024.04.19 황재민
    * * 매개변수 strName을 이용. strName은 URI로 인코딩해야 된다.
@@ -56,7 +54,7 @@ let func = {
      */
     let userId = strName.split('#');
     
-    if(userId.length != 2)
+    if(userId.length != 2 && UserId[0] < 2)
     {
       return false;
     }
@@ -66,10 +64,11 @@ let func = {
 
     try{
       const res = await fetch(`https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`);    
-      const returnObj = await res.json();  
+      const insertTbl = new InsertUser();
+      const returnObj = await res.json();
+      insertTbl.summonerInsert(returnObj);  
       return returnObj;  
-    }catch(err)
-    {
+    }catch(err){
       Log(`API ERR : Failed Get User Info ${err}`);
       return null;
     }
@@ -101,12 +100,12 @@ let func = {
    * * matchId를 가져오면 해당 id를 가져와서, match의 상세정보를 가져온다. 
    * * 해당 매치정보를 matchInfo 프로퍼티를 생성하여 배열로 넣는다.
    * @param {*} obj : GetUserInfo에서 만든 객체
-   * @param {*} nCall : 프론트엔드에서 전적 더 보기를 클릭했을 떄, nCall이 늘어나면서 다음 20개의 정보를 불러온다.
-   */
+   * @param {*} nCall : 프론트엔드에서 전적 더 보기를 클릭했을 떄, nCall이 늘어나면서 다음 10개의 정보를 불러온다.
+  */
   async GetMatchInfo(obj,nCall = 0)
   {
-    let startNum = 20 * (nCall);
-    let endNum = 20 * (nCall + 1);
+    let startNum = 10 * (nCall);
+    let endNum = 10 * (nCall + 1);
     obj.matchInfo = [];
     try{
       let res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${API_KEY}`);
