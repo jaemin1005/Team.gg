@@ -189,7 +189,6 @@ async function ProcessPOSTMethod(req, res)
       case JSONCOMMAND.GET_USER_INFO:
         {
           obj = await RiotAPI.GetUserInfo(reqObj.detail, res);
-           
           if(obj != null)
           {
             /**
