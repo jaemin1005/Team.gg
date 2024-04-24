@@ -21,7 +21,7 @@ const JSONCOMMAND = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');
 
 
-// * Access Database 
+//#region * Access Database 
 const { default: ExportPlayLog } = require('./Module/DB/ExportPlayLog.js');
 const { default: CheckUser } = require('./Module/DB/CheckUser.js');
 const { default: IoDebounce } = require('./Module/DB/DebounceOutput.js');
@@ -32,7 +32,7 @@ const { default: InsertPlayLog } = require('./Module/DB/InsertPlayLog.js');
 const { default: InsertUser } = require('./Module/DB/InsertUser.js');
 const { default: RemoveUser } = require('./Module/DB/RemoveUser.js');
 const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
-
+//#endregion
 
 
 
@@ -81,7 +81,6 @@ const app = http.createServer((req, res) =>
  */
 function SelectFile(res, path, contentType, responscode = 200)
 {
-  
   fs.readFile(PATH + path, (err, data) => {
     {
       /**
@@ -158,10 +157,11 @@ function GetFileExtension(fileName)
  * * 요청받은 POST 처리 
  * * jsonData에 require의 jsonData가 쌓인다.
  * * jsonData를 객체로 변환하여 swich문에 따라 분기가 되어 데이터 처리.
- * TODO : 데이터 베이스 처리 해야됨.
+ *  - 2024 _ 04 _ 24 v 배성빈 TODO : 데이터 베이스 처리 해야됨. 
  * @param {*} req : requst의 Body는 { command : value , detail : value } JSON으로 구성되어 있다.
  * @param {*} res : response(응답)
  */
+
 async function ProcessPOSTMethod(req, res)
 {
   let jsonData = "";
@@ -189,6 +189,7 @@ async function ProcessPOSTMethod(req, res)
       case JSONCOMMAND.GET_USER_INFO:
         {
           obj = await RiotAPI.GetUserInfo(reqObj.detail, res);
+          console.log(obj);
           if(obj != null)
           {
             /**
@@ -207,8 +208,7 @@ async function ProcessPOSTMethod(req, res)
        * * User 정보 갱신
        * * req.detail에 User.js의 클래스 User를 보내주면 될 듯 합니다.
        */
-      case JSONCOMMAND.UPDATE_USER_INFO:
-        {
+      case JSONCOMMAND.UPDATE_USER_INFO:{
           obj = reqObj.detail;
           
           const promise1 = RiotAPI.GetUserChampMastery(obj);
@@ -222,8 +222,7 @@ async function ProcessPOSTMethod(req, res)
        * * Match 정보를 더 요청한다. ex) (0 ~ 20) => (0 ~ 40) 개를 더 요청할 때.
        * * req.detail User.js의 클래스 User에 property에 call을 추가하여 호출횟수를 보내 주었으면 함. 
        */
-      case JSONCOMMAND.MORE_MATCH_INFO:
-        {
+      case JSONCOMMAND.MORE_MATCH_INFO:{
           obj = reqObj.detail;
           
           await RiotAPI.GetMatchInfo(obj, obj.call).catch(() => obj = null);
@@ -234,14 +233,12 @@ async function ProcessPOSTMethod(req, res)
      * * 제대로된 데이터를 못가져왔을 경우
      * * Status Code 204 : 이 요청에 대해 보낼 콘텐츠는 없지만 헤더가 유용 
      */
-    if(obj === null)
-    {
+    if(obj === null){
       res.writeHead(204);
       res.end();
     }
 
-    else
-    {
+    else{
       res.writeHead(200);
       res.end(JSON.stringify(obj));
     }
