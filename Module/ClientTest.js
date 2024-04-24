@@ -70,7 +70,6 @@ function TestGETRequest()
 {
   clientOption.method = "GET";
   var req = http.request(clientOption, readGETResponse);
-
   req.end();
 }
 

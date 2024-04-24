@@ -1,5 +1,5 @@
 // * 단위 테스트 O
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
 class ExportIconInfo {
   constructor() {
     this.iconQuery = "SELECT * FROM icon where iconId = ?";
@@ -9,8 +9,9 @@ class ExportIconInfo {
   exportIconInfo(iconId) {
     let query = this.db.prepare(this.iconQuery);
     let iconObj = query.get(iconId);
+    this.db.close();
     return iconObj;
   }
 }
 
-export default ExportIconInfo;
+module.exports = ExportIconInfo;

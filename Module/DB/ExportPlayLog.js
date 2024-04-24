@@ -1,5 +1,5 @@
 // * 단위 테스트 O
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
 class ExportPlayLog {
   constructor() {
     this.logQuery = "SELECT * FROM playLog where puuid = ?";
@@ -13,8 +13,9 @@ class ExportPlayLog {
     for (let ele of logObj) {
       arr.push(ele.gameId);
     }
+    this.db.close();
     return arr;
   }
 }
 
-export default ExportPlayLog;
+module.exports = ExportPlayLog;
