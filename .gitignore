@@ -5,4 +5,8 @@ jsTest.js
 log/*
 package-lock.json
 Database
+<<<<<<< HEAD
 
+=======
+img
+>>>>>>> origin/master
