@@ -8,8 +8,7 @@ class CheckUser {
   }
 
   checkExistence(puuid) {
-    let string = "SELECT * FROM summoners WHERE puuid = ?";
-    let query = this.db.prepare(string);
+    let query = this.db.prepare(this.checkQuery);
     let result = query.get(puuid);
     this.db.close();
     try{
