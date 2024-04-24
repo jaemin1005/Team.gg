@@ -109,6 +109,12 @@ function SwitchPath(req, res)
   }
 }
 
+/**
+ * * 2024.04.23 황재민
+ * * 각 파일의 확장자에 맞게 Content-Type을 수정한다.
+ * @param {*} fileName : 파일 이름
+ * @returns : Content-Type
+ */
 function GetFileExtension(fileName)
 {
   const arrWord = fileName.split('.');
@@ -179,15 +185,39 @@ async function ProcessPOSTMethod(req, res)
           }
           break;
         }
-      case JSONCOMMAND.GET_MATCH_INFO:
+      /**
+       * * 2024.04.24 황재민
+       * * User 정보 갱신
+       * * req.detail에 User.js의 클래스 User를 보내주면 될 듯 합니다.
+       */
+      case JSONCOMMAND.UPDATE_USER_INFO:
+        {
+          obj = reqObj.detail;
+          
+          const promise1 = RiotAPI.GetUserChampMastery(obj);
+          const promise2 = RiotAPI.GetMatchInfo(obj);
+          await Promise.all([promise1, promise2]).catch(() => obj = null);
+        }
         break;
+      
+      /**
+       * * 2024.04.24 황재민
+       * * Match 정보를 더 요청한다. ex) (0 ~ 20) => (0 ~ 40) 개를 더 요청할 때.
+       * * req.detail User.js의 클래스 User에 property에 call을 추가하여 호출횟수를 보내 주었으면 함. 
+       */
+      case JSONCOMMAND.MORE_MATCH_INFO:
+        {
+          obj = reqObj.detail;
+          
+          await RiotAPI.GetMatchInfo(obj, obj.call).catch(() => obj = null);
+        }
     }
 
     /**
      * * 제대로된 데이터를 못가져왔을 경우
      * * Status Code 204 : 이 요청에 대해 보낼 콘텐츠는 없지만 헤더가 유용 
      */
-    if(obj === false)
+    if(obj === null)
     {
       res.writeHead(204);
       res.end();

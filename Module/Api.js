@@ -63,6 +63,13 @@ let func = {
     }
   },
 
+  /**
+   * * 2024.04.23 황재민
+   * * 챔프 숙련도를 가져온다.
+   * * API를 가져온 정보를 역직렬화 하여, champInfo 프로퍼티 추가후 해당 데이터를 넣는다.
+   * * err가 날 경우 throw 해서 Promise.all 에서 캐치할 수 있도록 함.
+   * @param {} obj : GetUserInfo에서 만든 객체.
+   */
   async GetUserChampMastery(obj)
   {
     try{
@@ -76,14 +83,24 @@ let func = {
     }
   },
 
-  async GetMatchInfo(obj,nCall = 1)
+  /**
+   * * 2024.04.23 황재민
+   * * 처음에 유저 번호를 불러왔을떄, startNum~endNum까지 matchId를 가지고온다.
+   * * matchId를 가져오면 해당 id를 가져와서, match의 상세정보를 가져온다. 
+   * * 해당 매치정보를 matchInfo 프로퍼티를 생성하여 배열로 넣는다.
+   * @param {*} obj : GetUserInfo에서 만든 객체
+   * @param {*} nCall : 프론트엔드에서 전적 더 보기를 클릭했을 떄, nCall이 늘어나면서 다음 20개의 정보를 불러온다.
+   */
+  async GetMatchInfo(obj,nCall = 0)
   {
-    let startNum = 20 * (nCall - 1);
-    let endNum = 20 * (nCall);
+    let startNum = 20 * (nCall);
+    let endNum = 20 * (nCall + 1);
     obj.matchInfo = [];
     try{
       let res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${API_KEY}`);
       let returnObj = await res.json();
+      
+      // * matchId 를 배열로 하나씩 꺼내와서 API를 이용하여 정보를 꺼내온다.
       for(const item of returnObj)
       {
         // * 정규표현식 양쪽 끝 따옴표, 끝따옴표 자르기 :)

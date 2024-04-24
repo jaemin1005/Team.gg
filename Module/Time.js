@@ -21,7 +21,7 @@ class Time {
 
   /**
    * * 년도 - 월 - 일을 이용하여 Log파일을 생성, 접근한다.
-   * @returns 로그 파일 이름 년-월-일-LOG.txt
+   * @returns 로그 파일 이름 : 년-월-일-LOG.txt
    */
   GetLogFileName()
   {
