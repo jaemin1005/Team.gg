@@ -1,5 +1,5 @@
 // * 단위 테스트 O
-import Database from 'better-sqlite3';
+const Database = require("better-sqlite3");
 class ExportPlayLog {
   constructor() {
     this.logQuery = "SELECT * FROM playLog where puuid = ?";
