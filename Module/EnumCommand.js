@@ -3,7 +3,8 @@ const JSONCOMMAND = Object.freeze({
   // API Command
   GET_USER_INFO : "reqUser",
   GET_MATCH_INFO : "reqMatch",
-  UPDATE_USER_INFO : "reqUpdateUserInfo"
+  UPDATE_USER_INFO : "reqUpdateUserInfo",
+  MORE_MATCH_INFO : "reqMoreMatchInfo"
 })
 
 const LOGCOOMAND = Object.freeze({

@@ -208,7 +208,7 @@ async function ProcessPOSTMethod(req, res)
       case JSONCOMMAND.MORE_MATCH_INFO:
         {
           obj = reqObj.detail;
-          
+            
           await RiotAPI.GetMatchInfo(obj, obj.call).catch(() => obj = null);
         }
     }

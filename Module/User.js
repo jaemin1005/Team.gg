@@ -1,9 +1,11 @@
+let fullName = require("./FullName");
+
 let CreateUser = (function(){
   function User(puuId, gameName, tag)
   {
-    this.puuId = puuId;
+    this.puuid = puuId;
     this.gameName = gameName;
-    this.tag = tag;
+    this.tagLine = tag;
   }
   User.prototype.FullName = () => {
     return (this.name + "#" + this.tag);
@@ -16,14 +18,8 @@ class User
 {
   constructor(obj)
   {
-    this.puuId = obj.puuid;
+    this.puuid = obj.puuid;
     this.gameName = obj.gameName;
-    this.tag = obj.tagLine;
+    this.tagLine = obj.tagLine;
   }  
-  
-  fullName(){
-    return this.gameName + '#' + this.tag;
-  }
 }
-
-module.exports = User;
