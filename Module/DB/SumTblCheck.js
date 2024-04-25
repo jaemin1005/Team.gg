@@ -1,5 +1,16 @@
-const Database = require("better-sqlite3");
+/*
+ * 날짜 : 2024-04-24
+ * 작성자 : 배성빈
+ * 설명 : Database.js를 리팩토링하여 모듈로 분할
+ * 테이블 체크 후 존재하지 않는 테이블을 생성.
+ ? @ member : summoner db에 접근. 
+ ? @ param {*}: 해당 User의 puuid와 객체화된 데이터를 매개변수로 받음.
+ ? @ return : -
+ * - 예비용, 메인이 되는 스크립트인 api.js에서 사용하지 않는다.
+*/
 
+
+const Database = require("better-sqlite3");
 class SummonerTableCheck{
   constructor(){
     this.checkSummonersTbl = "SELECT COUNT(*) FROM sqlite_master WHERE name='summoners'";
