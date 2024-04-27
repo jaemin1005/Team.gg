@@ -1,4 +1,13 @@
-// *  단위 테스트 O
+/*
+ * 날짜 : 2024-04-24
+ * 작성자 : 배성빈
+ * 설명 : Database.js를 리팩토링하여 모듈로 분할
+ * 해당 소환사의 존재 유무를 bool 형태로 반환
+ ? @ member : summoner db에 접근, 쿼리문 작성
+ ? @ param {*}: 해당 User의 puuid
+ ? @ return : boolean
+ *
+*/
 const Database = require("better-sqlite3");
 class CheckUser {
   constructor(params) {
