@@ -138,12 +138,12 @@ function SwitchPath(req, res)
   }
 }
 
-function CheckFile(fileName)
-{
-  const arrWord = fileName.split('.');
-  let extension = arrWord[arrWorld.length - 1];
-}
-
+/**
+ * * 2024-04-24 황재민
+ * * 파일의 확장자를 통해, 해당 GET 요청이 파일인지 아닌지 구분 하기 위해 만들었다.
+ * @param {*} fileName 파일 이름
+ * @returns 파일일 경우 해당 확장자를 반환. 아니면 null 반환 :)
+ */
 function GetExtension(fileName)
 {
   const arrWord = fileName.split('.');
@@ -161,6 +161,14 @@ function GetExtension(fileName)
   }
 }
 
+/**
+ * * 2024-04-24 황재민
+ * * 클라이언트의 요청에 따라, 해당 url를 보내준다
+ * * ex) http://localhost:3000/summoner/
+ * * summoner만 잘라서 매개변수로 :) 
+ * @param {*} res 응답
+ * @param {*} name 요청한 url을 split한 부분
+ */
 function GetHTML(res, name)
 {
   switch(name)
