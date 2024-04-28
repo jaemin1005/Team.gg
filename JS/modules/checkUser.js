@@ -9,6 +9,7 @@ const $form = document.querySelector("form");
 // ? 연관검색 뜨면 경고문 안 보이는 거
 
 export const checkUser = (inputValue) => {
+  console.log(inputValue);
   const inputValueArr = [...inputValue];
   let hashTagCount = 0;
 
@@ -39,6 +40,6 @@ export const checkUser = (inputValue) => {
     console.dir($form);
     //$form.action = "./public/HTML/userInfo.html";
     $form.action = "summoner/"
-    $form.submit();
+   // $form.submit();
   }
 };

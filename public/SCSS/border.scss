@@ -22,22 +22,28 @@ $border_radius15: 0.9375rem;
 
 $border_radius_for_game_record: $border_radius7;
 
+// * .form_contents_container에 적용될 border 스타일과 그의 자손들에 대한 스타일 지정
 .form_contents_container {
   border: $border_none;
   border-radius: $border_radius7;
 
+  // * .form_contents_container의 모든 자손 .form_contents_container_frist_div의 스타일 지정
   .form_contents_container_first_div {
+
+    // * .form_contents_container_first_div의 <select> 태그 중 첫번째 자식.
     > select:first-child {
       border: $border_none;
       outline: $outline_none;
 
+      //* 해당 <select>의 자식들 <option>의 스타일 지정
       > option {
         border: $border_none;
         outline: $outline_none;
       }
     }
   }
-
+  
+  // * .form_contents_container의 모든 자손 .form contents_containder_third_div의 자식 <input>의 첫번 째 자식에 대한 스타일 지정
   .form_contents_container_third_div {
     > input:first-child {
       outline: $outline_none;
@@ -51,10 +57,13 @@ $border_radius_for_game_record: $border_radius7;
   }
 }
 
+//* 해당 .left_section_border_line 클래스에 대한 스타일 지정.
 .left_section_border_line {
   border: $border_none;
 }
 
+
+//* .game_record 자손 중에 .main_game_recode, .shadow_game_record에 대한 스타일 지정
 .game_record {
   .main_game_record {
     border-radius: $border_radius_for_game_record;

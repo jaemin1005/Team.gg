@@ -1,3 +1,7 @@
+/**
+* * pixel 단위를 vw로 바꾸는 함수.
+*/
+
 $_mainViewportWidth: 1920;
 @function widthOrHeight100($props_val) {
   @return $props_val * 100;

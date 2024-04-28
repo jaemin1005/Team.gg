@@ -26,31 +26,39 @@ body {
   // * <header>
   .contents_header {
     @include mixIns.create_contents_container(100vw, 5vh);
+
+    // * header_navigator justify-content를 start로 설정.
     .header_navigator {
       @include mixIns.flex_basic_layout(row, start);
       @include mixIns.create_contents_container(100%, 100%);
 
+      // * TEAMGG의 Logo 크기를 20% 차지한다.
       .main_logo_container {
         @include mixIns.flex_basic_layout();
         @include mixIns.create_contents_container(20%, 100%);
-
+        
+        //* TeamGG의 LOGO선택시 포인터 변겅.
         > span:first-child {
           cursor: vars.$cursor_pointer;
         }
       }
 
+      //* 아이디 검색창은 총 헤더의 60%를 차지한다.
       .search_bar_container {
         @include mixIns.flex_basic_layout();
         @include mixIns.create_contents_container(60%, 100%);
 
+        //* search 레이아웃 Wrapper부분.
         .search_form {
           @include mixIns.flex_basic_layout();
           @include mixIns.create_contents_container(75%, 100%);
 
+          //* 실질적인 search에 관한 Container. dirction의 row이며 가운데 정렬이 되도록함.
           .form_contents_container {
             @include mixIns.flex_basic_layout();
             @include mixIns.create_contents_container(90%, 80%);
 
+            // * 국가 선택 창에 해당됨. 부모의 20%의 너비를 차지하고 높이는 100%을 차지
             .form_contents_container_first_div {
               @include mixIns.flex_basic_layout();
               @include mixIns.create_contents_container(20%, 100%);
@@ -61,11 +69,13 @@ body {
               }
             }
 
+            //* 서버 선택 창과 아이디 검색 창의 구분선
             .form_contents_container_second_div {
               @include mixIns.flex_basic_layout();
               @include mixIns.create_contents_container(3%, 80%);
             }
 
+            //* 아이디 검색 창.
             .form_contents_container_third_div {
               @include mixIns.flex_basic_layout();
               @include mixIns.create_contents_container(70%, 80%);
@@ -75,6 +85,7 @@ body {
               }
             }
 
+            //* 돋보기 아이콘
             .form_contents_container_fourth_div {
               @include mixIns.flex_basic_layout();
               @include mixIns.create_contents_container(7%, 80%);
@@ -96,30 +107,36 @@ body {
     @include mixIns.flex_basic_layout();
     @include mixIns.create_contents_container(100%, 95vh);
 
+    //* .sections_container는 열을 2개 가진다. 1fr, 1fr ( 유저 정보, 매칭 )
     .sections_container {
       @include mixIns.grid_column_layout();
       @include mixIns.create_contents_container(90%, 100%);
 
+      //* 유저 정보에 해당. dicrection column으로 설정.
       > section:first-child {
         @include mixIns.flex_basic_layout(column);
         @include mixIns.create_contents_container(100%, 100%);
 
+        //* 유저 정보를 한번 더 감싼다, 정렬 방식을 space-between으로 설정.
         .left_section_container {
           @include mixIns.flex_basic_layout(column, space-between);
           @include mixIns.create_contents_container(90%, 100%);
           background-color: black;
 
+          //* user_name_container
           .user_name_container {
             @include mixIns.flex_basic_layout(column);
             @include mixIns.create_contents_container(100%, 15%);
             background-color: rebeccapurple;
           }
 
+          //* user_name 과 user_infor의 구분선.
           .left_section_border_line {
             @include mixIns.create_contents_container(90%, 0.125rem);
             margin: vars.$margin0;
           }
 
+          //* User_info
           .user_info_container {
             @include mixIns.grid_column_layout();
             @include mixIns.create_contents_container(100%, 50%);
@@ -133,20 +150,25 @@ body {
         }
       }
 
+      // * 오른쪽 구역.
       > section:nth-child(2) {
         @include mixIns.flex_basic_layout(row, start);
         @include mixIns.create_contents_container(100%, 100%);
 
+        //* space-between으로 설정 align-item을 start로 설정하여 Left 영역과 간격을 줄암.
         .right_section_left_container {
           @include mixIns.flex_basic_layout(column, space-between, start);
           @include mixIns.create_contents_container(60%, 100%);
 
+          //* 매치 정보
           .game_record {
             position: relative;
             @include mixIns.flex_basic_layout(row);
             @include mixIns.create_contents_container(100%, 19%);
             background-color: aliceblue;
 
+            //* position을 absolute로 설정하여, 부모 기준으로 top, left를 0으로 설정 왼쪽 위 모서리에 위치하게 한다. 
+            //* z-index를 1로 설정하여 .shadow_game_record보다 앞에 쌓이게 한다.
             .main_game_record {
               position: absolute;
               top: 0;
@@ -157,6 +179,8 @@ body {
               background-color: colors.$color-for-win-record;
             }
 
+            //* position을 absolute를 설정하여, 부모 기준으로 bottom, right를 0으로 설정하여 오른쪽 아래 모서리에 위치하게 한다.
+            //* z-index를 0로 설정하여 .main_game_record의 밑에 있게 한다.
             .shadow_game_record {
               position: absolute;
               bottom: 0;

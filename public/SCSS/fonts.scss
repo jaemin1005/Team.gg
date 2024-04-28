@@ -16,17 +16,20 @@ $font-size70: 4.375rem;
 
 $line-height25: 1.5625rem;
 
+//* .main_log_container의 폰트 색상, 사이즈, 굵기를 지정
 .main_logo_container {
   color: colors.$color-white-font;
   font-size: $font-size25;
   font-weight: $font-weight600;
 }
 
+//* .form_contents_container_first_div_select의 
 .form_contents_container_first_div_select {
   text-align: center;
   font-size: $font-size20;
 }
 
+// * .form_contents_container_second_div의 자식들 중 <span> 첫 번쨰, 폰트 굵기 지정
 .form_contents_container_second_div {
   > span:first-child {
     font-weight: $font-weight600;
