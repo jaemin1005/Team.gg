@@ -14,7 +14,7 @@ const SummonersUpdate = require('../Module/DB/UpdateUser.js');
 require('dotenv').config();
 const PATH = process.env.DirPATH || __dirname;
 const API_KEY = process.env.API_KEY;
-const Log = require("./Log.js");
+const Log = require("./log.js");
 
 /** 
  * * 날짜 : 2024.04.15
