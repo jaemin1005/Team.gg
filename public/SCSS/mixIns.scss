@@ -1,4 +1,3 @@
-
 /**
 * * flex_basic_layout
 * * direction이 row 인(=>) flex의 구조이며, 매개변수가 없을시 justify, align-items를 통해 가운데 정렬을 한다.
@@ -10,13 +9,6 @@
 ) {
   display: flex;
   flex-direction: $direction;
-  justify-content: $justify-content;
-  align-items: $align-items;
-}
-
-//* direction이 column인 flex 구조, justify-cotnent, aligh-itmes을 배개변수로 받아 설정한다.
-@mixin flex_align_layout($justify-content: center, $align-items: center) {
-  display: flex;
   justify-content: $justify-content;
   align-items: $align-items;
 }

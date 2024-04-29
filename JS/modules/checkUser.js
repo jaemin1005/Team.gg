@@ -9,7 +9,6 @@ const $form = document.querySelector("form");
 // ? 연관검색 뜨면 경고문 안 보이는 거
 
 export const checkUser = (inputValue) => {
-  console.log(inputValue);
   const inputValueArr = [...inputValue];
   let hashTagCount = 0;
 
@@ -24,7 +23,6 @@ export const checkUser = (inputValue) => {
   });
 
   if (inputValue == ``) {
-    console.log(userName, userCode);
     pTag_for_warning_message.classList.add(`class_for_red_message`);
     pTag_for_warning_message.textContent = `입력 값이 없습니다.`;
   } else if (
@@ -37,9 +35,8 @@ export const checkUser = (inputValue) => {
     pTag_for_warning_message.classList.add(`class_for_red_message`);
     pTag_for_warning_message.textContent = `${inputValue}는(은)잘못된 형식입니다.`;
   } else {
-    console.dir($form);
     //$form.action = "./public/HTML/userInfo.html";
-    $form.action = "summoner/"
-   // $form.submit();
+    $form.action = "summoner/";
+    // $form.submit();
   }
 };
