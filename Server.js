@@ -14,7 +14,7 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
-const LOG =require("./Module/Log.js");
+//const LOG =require("./Module/Log.js");
 const user = require("./Module/User.js");
 const {JSONCOMMAND, HTMLCOMMAND} = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');

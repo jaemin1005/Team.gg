@@ -37,6 +37,6 @@ export const checkUser = (inputValue) => {
   } else {
     //$form.action = "./public/HTML/userInfo.html";
     $form.action = "summoner/";
-    // $form.submit();
+    $form.submit();
   }
 };

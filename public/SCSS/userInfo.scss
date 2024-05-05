@@ -14,6 +14,7 @@
 @import url(./gaps.css);
 @import url(./mixIns.css);
 @import url(./vars.css);
+@import url(./gaps.css);
 
 body {
   @include mixIns.create_contents_container(100%, 100%);
@@ -105,7 +106,8 @@ body {
   // * <main>
   .contents_main {
     @include mixIns.flex_basic_layout();
-    @include mixIns.create_contents_container(100%, 95vh);
+    @include mixIns.create_contents_container(100%, 92vh);
+    margin-top: 3vh;
 
     //* .sections_container는 열을 2개 가진다. 1fr, 1fr ( 유저 정보, 매칭 )
     .sections_container {
@@ -121,13 +123,76 @@ body {
         .left_section_container {
           @include mixIns.flex_basic_layout(column, space-between);
           @include mixIns.create_contents_container(90%, 100%);
-          background-color: black;
+        
 
-          //* user_name_container
+
+            /**
+            * * 2024.05.05 황재민
+            * * User Profile 작업
+            */
           .user_name_container {
-            @include mixIns.flex_basic_layout(column);
-            @include mixIns.create_contents_container(100%, 15%);
-            background-color: rebeccapurple;
+            @include mixIns.flex_basic_layout(row,start);
+            @include mixIns.create_contents_container(90%, 15%);
+            
+            margin : auto;
+
+            //* Profile 이미지 영역
+            //* UserProfile이미지를 위한 Wrapper입니다.
+            > div:first-child{
+              @include mixIns.create_contents_container(auto, 90%);
+              box-sizing: border-box;
+              aspect-ratio: 1 / 1;
+              padding: gaps.$gap20;
+
+              > img:first-child{
+                background-color: white;
+                width: 100%;
+                height: 100%;
+              }
+            }
+
+            //* 전시즌 티어, 유저이름 + 태그, 갱신시간 표시를 위한 영역
+            > div:last-child{
+              @include mixIns.create_contents_container(50, 90%);
+              @include mixIns.flex_basic_layout(column,start,start);
+
+              > div:nth-child(1){
+                @include mixIns.create_contents_container(auto,25%); 
+                @include mixIns.flex_basic_layout(row, start);
+                
+                //* 티어 정보를 표시하는 레이아웃
+                > .tier_info{
+                    @include mixIns.create_contents_container(auto, 60%);
+                    @include mixIns.flex_basic_layout();
+
+                    background-color: colors.$color-rank-tier-gold;
+        
+                  > p {
+                    margin: 0;
+                    margin-block-start: 0.1rem;
+                    margin-block-end: 0;
+                    margin-inline-start: 0.5rem;
+                    margin-inline-end: 0.5rem;
+                    font-size: fonts.$font-size10;
+                  }
+                }
+              }
+
+              //* 유저이름과 갱신시간 영역, 첫 번째 p는 유저이름과 태그, 두 번째 p는 갱신시간을 표시한다.
+              > div:nth-child(2){
+                @include mixIns.create_contents_container(auto,64%);
+                @include mixIns.flex_basic_layout(column, start, start);
+                > p:first-child {
+                  margin: 0;
+                  font-size: fonts.$font-size30;
+                }
+                > p:last-child {
+                  margin: 0;
+                  font-size: fonts.$font-size10;
+                }
+              }
+            }
+            
           }
 
           //* user_name 과 user_infor의 구분선.
@@ -139,8 +204,8 @@ body {
           //* User_info
           .user_info_container {
             @include mixIns.grid_column_layout();
-            @include mixIns.create_contents_container(100%, 50%);
-            background-color: green;
+            @include mixIns.create_contents_container(90%, 50%);
+            margin: auto;
           }
 
           .board_for_user {

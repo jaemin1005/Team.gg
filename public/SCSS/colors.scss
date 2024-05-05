@@ -30,6 +30,11 @@ $color-light-red-font: rgba(151, 50, 50, 0.589);
 $color-for-win-record: rgb(103, 138, 235);
 $color-for-lose-record: rgb(255, 68, 68);
 
+$color-user-profile-background: #D8D6D6;
+$color-user-profile-detail-background: #A7A7A7;
+
+$color-rank-tier-gold : #E6DF8D;
+
 // * .header_navigator에 대한 배경 컬러 지정
 .header_navigator {
   background-color: $color-light-red-bg;
@@ -58,9 +63,9 @@ $color-for-lose-record: rgb(255, 68, 68);
 }
 
 //* .left_section_border_line의 배경 색 지정
-.left_section_border_line {
-  background-color: $color-light-gray-bg;
-}
+// .left_section_border_line {
+//   background-color: $color-light-gray-bg;
+// }
 
 //* .class_for_win_record의 배경 색 지정
 .class_for_win_record {
@@ -70,4 +75,17 @@ $color-for-lose-record: rgb(255, 68, 68);
 //* .class_for_lose_record의 배경 색 지정
 .class_for_lose_record {
   background-color: $color-for-lose-record;
+}
+
+
+/**
+* * 2024.05.05 황재민
+* * L-2 User 레이아웃 색깔 지정
+*/
+.user_name_container{
+  background-color: $color-user-profile-background;
+}
+
+.user_info_container{
+  background-color: $color-user-profile-detail-background;
 }
