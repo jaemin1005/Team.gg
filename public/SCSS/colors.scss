@@ -30,10 +30,12 @@ $color-light-red-font: rgba(151, 50, 50, 0.589);
 $color-for-win-record: rgb(103, 138, 235);
 $color-for-lose-record: rgb(255, 68, 68);
 
-$color-user-profile-background: #D8D6D6;
+$color-user-profile-background: #31313C;
 $color-user-profile-detail-background: #A7A7A7;
 
 $color-rank-tier-gold : #E6DF8D;
+$color-contents-main : #1C1C1F;
+
 
 // * .header_navigator에 대한 배경 컬러 지정
 .header_navigator {
@@ -82,10 +84,13 @@ $color-rank-tier-gold : #E6DF8D;
 * * 2024.05.05 황재민
 * * L-2 User 레이아웃 색깔 지정
 */
-.user_name_container{
-  background-color: $color-user-profile-background;
+
+.main_container{
+  background-color: $color-contents-main;
 }
 
-.user_info_container{
-  background-color: $color-user-profile-detail-background;
+.left_section_container{
+  > div {
+    background-color: $color-user-profile-background;
+  }
 }

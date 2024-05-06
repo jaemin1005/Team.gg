@@ -119,12 +119,13 @@ body {
         @include mixIns.flex_basic_layout(column);
         @include mixIns.create_contents_container(100%, 100%);
 
-        //* 유저 정보를 한번 더 감싼다, 정렬 방식을 space-between으로 설정.
+        //* 유저 정보를 한번 더 감싼다
         .left_section_container {
-          @include mixIns.flex_basic_layout(column, space-between);
+          @include mixIns.flex_basic_layout(column, start, center);
           @include mixIns.create_contents_container(90%, 100%);
-        
-
+          > div {
+            margin: gaps.$gap10;
+          }
 
             /**
             * * 2024.05.05 황재민
@@ -133,16 +134,14 @@ body {
           .user_name_container {
             @include mixIns.flex_basic_layout(row,start);
             @include mixIns.create_contents_container(90%, 15%);
-            
-            margin : auto;
-
+    
             //* Profile 이미지 영역
             //* UserProfile이미지를 위한 Wrapper입니다.
             > div:first-child{
               @include mixIns.create_contents_container(auto, 90%);
               box-sizing: border-box;
               aspect-ratio: 1 / 1;
-              padding: gaps.$gap20;
+              padding: gaps.$gap10;
 
               > img:first-child{
                 background-color: white;
@@ -185,27 +184,129 @@ body {
                 > p:first-child {
                   margin: 0;
                   font-size: fonts.$font-size30;
+                  white-space: nowrap;
                 }
                 > p:last-child {
                   margin: 0;
                   font-size: fonts.$font-size10;
                 }
               }
+            }            
+          }
+
+          // //* user_name 과 user_infor의 구분선.
+          // .left_section_border_line {
+          //   @include mixIns.create_contents_container(90%, 0.125rem);
+          //   margin: vars.$margin0;
+          // }
+          
+          //* User의 Tier정보와 승률이 적혀있는 Container
+          .user_tier_container{
+            @include mixIns.create_contents_container(90%, 15%);
+            @include mixIns.flex_basic_layout(row,start);
+
+            //* Tier Image Wrapper
+            > div:first-child{
+              @include mixIns.create_contents_container(auto, 90%);
+              box-sizing: border-box;
+              aspect-ratio: 1 / 1;
+              padding: gaps.$gap10;
+
+              > img:first-child{
+                src: "../../resouces/tier/dummy.png";
+                background-color: colors.$color-contents-main;
+                width: 100%;
+                height: 100%;
+              }
             }
-            
+
+            //* 티어점수와 승률이 적혀있는 영역
+            > div:last-child{
+              @include mixIns.create_contents_container(50%, 90%);
+              @include mixIns.flex_basic_layout(column,center,start);
+              
+              //* 티어, 티어점수.
+              div{
+                > div {
+                  display: inline;
+                }
+                //* 현재 티어
+                > div:first-child{
+                  font-size: fonts.$font-size30;
+                }
+                //* 티어 점수
+                > div:last-child{
+                  margin-inline-start: gaps.$gap10;
+                  font-size: fonts.$font-size15;
+                }
+                
+              }
+
+              //* 승률
+              div{
+                font-size: fonts.$font-size10;
+              }
+            }
           }
 
-          //* user_name 과 user_infor의 구분선.
-          .left_section_border_line {
-            @include mixIns.create_contents_container(90%, 0.125rem);
-            margin: vars.$margin0;
-          }
+          //* 모스트 챔피언 리스르 
+          .user_champion_list{
+            @include mixIns.create_contents_container(90%, auto);
+            // @include mixIns.flex_basic_layout(column);
+            display: inline-block;
 
-          //* User_info
-          .user_info_container {
-            @include mixIns.grid_column_layout();
-            @include mixIns.create_contents_container(90%, 50%);
-            margin: auto;
+            > div{
+              @include mixIns.create_contents_container(auto,60px);
+              @include mixIns.flex_basic_layout(row, start,center);
+
+              //* Image Wrapper , Champion Image
+              > div:first-child{
+                @include mixIns.create_contents_container(auto,100%);
+                box-sizing: border-box;
+                padding: gaps.$gap10;
+                flex-grow: 0;
+                //* Champion Image
+                > Img:first-child{
+                  height: 100%;
+                  aspect-ratio: 1/1;
+                  background-color: colors.$color-contents-main;
+                  object-fit: contain;
+                }
+              }
+              
+              > div:nth-child(2){
+                @include mixIns.create_contents_container(auto, 100%);
+                @include mixIns.flex_basic_layout();
+                flex-grow: 1;
+              }
+
+              //* Kda 평점
+              > div:nth-child(3){
+                @include mixIns.create_contents_container(auto, 100%);
+                @include mixIns.flex_basic_layout(column,center,center);
+                margin: 0 auto;
+                flex-grow: 1;
+                > div:first-child{
+
+                }
+                > div:last-child{
+
+                }
+              }
+              
+              //* 승률
+              > div:nth-child(4){
+                @include mixIns.flex_basic_layout(column,center,center);
+                @include mixIns.create_contents_container(auto, 100%);
+                flex-grow: 1;
+                > div::first-child{
+
+                }
+                > div:last-child{
+
+                }
+              }         
+            }
           }
 
           .board_for_user {

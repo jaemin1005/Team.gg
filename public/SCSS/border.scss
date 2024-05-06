@@ -1,4 +1,5 @@
 @use "vars";
+@use "colors";
 
 $border_3_black: 0.1875rem solid black;
 $border_4_black: 0.025rem solid black;
@@ -19,6 +20,7 @@ $border_radius12: 0.75rem;
 $border_radius13: 0.8125rem;
 $border_radius14: 0.875rem;
 $border_radius15: 0.9375rem;
+$border_circle : 50%;
 
 $border_radius_for_game_record: $border_radius7;
 
@@ -78,10 +80,20 @@ $border_radius_for_game_record: $border_radius7;
   border-radius: $border_radius7;
 }
 
-.user_name_container{
-  border-radius: $border_radius10;
+.left_section_container{
+  > div {
+    border-radius: $border_radius10;
+  }
+
+  img {
+    border-radius: $border_circle;
+  }
 }
 
-.user_info_container{
-  border-radius: $border_radius10;
+.user_champion_list{
+  > div{
+    border-color: colors.$color-contents-main;
+    border-bottom-width: 1px;
+    border-style: solid;
+  }
 }
