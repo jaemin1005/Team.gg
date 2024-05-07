@@ -14,7 +14,7 @@ const SummonersUpdate = require('../Module/DB/UpdateUser.js');
 require('dotenv').config();
 const PATH = process.env.DirPATH || __dirname;
 const API_KEY = process.env.API_KEY;
-const Log = require("./log.js");
+const Log = require("./Log.js");
 
 /** 
  * * 날짜 : 2024.04.15
@@ -46,30 +46,28 @@ let func = {
    * @param {*} strName : 닉테임 + #태그 되있는 문자열
    * @returns API 결과 
    */
-  async GetUserInfo(strName)
-  {
+  async GetUserInfo(strName){
     /**
      * * strName은 예시로 터검니#000 
      * * 특수문자가 불가능하기 때문에 #으로 구분하여 닉네임과 태그를 분리한다. 
      */
     let userId = strName.split('#');
+    
+    if(userId.length != 2 && UserId[0] < 2){
+      return false;
+    }
 
-    //! #DB_TEST_WITH_API.JS
-    //! 확인 된다면  블록 내부의 아래 코드를코드를 else문에 담아야한다.
+
+    // * 2024.05.05 배성빈 
+    // * 입력 받은 유저 이름이 데이터 베이스에 존재하는 지 확인 후 없다면 api호출
+    // * 존재한다면 쿼리문을 통해서 객체로 변환하는 작업을 거친 후 반환한다.
+
     const checkUser = new CheckUser();
+
     let userObj = checkUser.checkExistenceName(userId);
 
     if(userObj !== null && userObj !== undefined){
-      return await obj.json;
-    }
-
-    
-    
-    
-
-    if(userId.length != 2 && UserId[0] < 2)
-    {
-      return false;
+      return await userObj.json;
     }
 
     // * gameName 부분은 URI로 인코딩하여 넣어줘야된다.
@@ -80,9 +78,8 @@ let func = {
       
       const returnObj = await res.json();
       
-      //! #DB_TEST_WITH_API.JS
-      // const insertTbl = new InsertUser();
-      // insertTbl.summonerInsert(returnObj);  
+      const insertTbl = new InsertUser();
+      insertTbl.summonerInsert(returnObj);  
       return returnObj;  
     }catch(err){
       Log(`API ERR : Failed Get User Info ${err}`);
