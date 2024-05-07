@@ -59,15 +59,14 @@ const app = http.createServer(async(req, res) =>
    * * ex) html안에서 js파일을 요청할 때
    */
   if(req.method == "GET"){
-
-    if(req.url.includes("summoner")){
-
+    console.log(req.url)
+    if(req.url.includes("summoner/")){
+      console.log("inSummoner")
       let i = req.url.split("_input=");
       
       let dec = decodeURIComponent(i[1]);
       
       let uobj = await RiotAPI.GetUserInfo(dec);
-      
 
       const data = await fs.promises.readFile("public/HTML/userInfo.html", "utf8");
       const uobjJson = JSON.stringify(uobj);
@@ -78,9 +77,7 @@ const app = http.createServer(async(req, res) =>
               let uobj = ${uobjJson};
               let userNameContainers = document.getElementsByClassName("user_name_container");
               console.log(userNameContainers.length);
-              for (let i = 0; i < userNameContainers.length; i++) {
-                userNameContainers[0].innerHTML = uobj.gameName; // Assuming userName is a property of uobj
-              }
+              userNameContainers[0].innerHTML = uobj.gameName;
             };
           </script>`);
         // ssr ajax xml

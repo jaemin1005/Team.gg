@@ -11,11 +11,12 @@
  * * Server에서 받아온 정보를 이용히여 DOM Element를 수정한다.
  * @param {*} obj : Server에서 받아온 객체
  */
-function SetUserInfoDOM(obj){ 
+
+
+window.onload = ()=>{
+
   let $userInfoContainer = document.getElementById("user_name_container");
   let $userTierContainer = document.getElementById("user_tier_container");
-
-
 
   let $userProfileImg = $userInfoContainer.children[0].children[0]; 
 
@@ -35,6 +36,6 @@ function SetUserInfoDOM(obj){
     $userName.children[1].textContent = "최근업데이트 9999년전"
     $userTierContainer.children[0].children[0].src = "../../resources/tier/dummy.png";
   }
-}
 
-SetUserInfoDOM(null);
+};
+
