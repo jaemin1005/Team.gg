@@ -13,7 +13,7 @@ class CheckUser {
   constructor(params) {
     this.checkQuery = "SELECT * FROM summoners where puuid = ?";
     this.checkName =  "SELECT * FROM summoners where gameName = ? AND tagLine = ?";
-    this.db = new Database("./summoner.db", { verbose: console.log });
+    this.db = new Database("DataBase/summoner.db", { verbose: console.log });
     this.db.pragma("journal_mode = WAL");
   }
 
