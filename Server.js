@@ -59,38 +59,6 @@ const app = http.createServer(async(req, res) =>
    * * ex) html안에서 js파일을 요청할 때
    */
   if(req.method == "GET"){
-    console.log(req.url)
-    if(req.url.includes("summoner/")){
-      console.log("inSummoner")
-      let i = req.url.split("_input=");
-      
-      let dec = decodeURIComponent(i[1]);
-      
-      let uobj = await RiotAPI.GetUserInfo(dec);
-
-      const data = await fs.promises.readFile("public/HTML/userInfo.html", "utf8");
-      const uobjJson = JSON.stringify(uobj);
-      
-      const html_ = data.replace('<!-- uobj -->', `
-          <script>
-            window.onload = function() {
-              let uobj = ${uobjJson};
-              let userNameContainers = document.getElementsByClassName("user_name_container");
-              console.log(userNameContainers.length);
-              userNameContainers[0].innerHTML = uobj.gameName;
-            };
-          </script>`);
-        // ssr ajax xml
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(html_);
-        
-    ;
-
-      return;
-    };
-
-
-
     
     SwitchPath(req, res);
     // ProcessPOSTMethod(req, res); 
@@ -290,8 +258,8 @@ async function ProcessPOSTMethod(req, res)
             * *  async function의 반환값이 암묵적으로 Promise.resolve로 감싸지기 때문이다.
             */
             const promise1 = RiotAPI.GetUserChampMastery(obj);
-            const promise2 = RiotAPI.GetMatchInfo(obj);
-            await Promise.all([promise1, promise2]).catch(() => obj = null);
+            const promise2 = await RiotAPI.GetMatchInfo(obj);
+            //await Promise.all(promise1, promise2).catch(() => obj = null);
           }
           break;
         }

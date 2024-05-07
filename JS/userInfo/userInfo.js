@@ -1,41 +1,36 @@
-// //var http = require('http');
-// // const { userInfo } = require('os');
+//var http = require('http');
+// const { userInfo } = require('os');
+//const func = require("../../Module/FullName");
+// document.querySelector(`.main_logo`).onclick = () =>
+//   (location.href = `../index.html`);
+let url = "http://localhost:3000";
 
-// // document.querySelector(`.main_logo`).onclick = () =>
-// //   (location.href = `../index.html`);
+let queryParams = getQueryParams();
+let reqObj = {
+  command : "reqUser",
+  detail : queryParams["userName_input"]
+}
+
+// POST 요청 보내기
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(reqObj)
+})
+.then(response => response.json())
+.then(data => console.dir(data))
+.catch(error => console.error('Error:', error));
 
 
-
-// /**
-//  * * 2024.05.05 황재민
-//  * * Server에서 받아온 정보를 이용히여 DOM Element를 수정한다.
-//  * @param {*} obj : Server에서 받아온 객체
-//  */
-
-
-// window.onload = ()=>{
-
-//   let $userInfoContainer = document.getElementById("user_name_container");
-//   let $userTierContainer = document.getElementById("user_tier_container");
-
-//   let $userProfileImg = $userInfoContainer.children[0].children[0]; 
-
-//   let $userInfo = $userInfoContainer.children[1];
-//   let $userName = $userInfo.children[1];
-
-//   if(obj != null && obj != undefined){
-//     $userProfileImg = obj.icon;
-//     $userName.children[0].textContent = obj.gameName + " " + obj.tagLine;
-//     $userName.children[1].textContent = obj.refresh;
-//   }
-
-//   else
-//   {
-//     $userProfileImg.src = "../../resources/profile/dummy.png";
-//     $userName.children[0].textContent = "TEAMGG #000"
-//     $userName.children[1].textContent = "최근업데이트 9999년전"
-//     $userTierContainer.children[0].children[0].src = "../../resources/tier/dummy.png";
-//   }
-
-// };
-
+function getQueryParams() {
+  const queryParams = {};
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  // URLSearchParams를 사용하여 모든 쿼리스트링 파라미터를 객체에 저장
+  for (const [key, value] of urlParams.entries()) {
+    queryParams[key] = value;
+  }
+  return queryParams;
+}

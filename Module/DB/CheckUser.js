@@ -12,7 +12,7 @@ const Database = require("better-sqlite3");
 class CheckUser {
   constructor(params) {
     this.checkQuery = "SELECT * FROM summoners where puuid = ?";
-    this.checkName =  "SELECT * FROM summoners where gameName = ? AND tagLine = ?";
+    this.checkName =  "SELECT * FROM summoners where gameName = ? and tagLine = ?";
     this.db = new Database("DataBase/summoner.db", { verbose: console.log });
     this.db.pragma("journal_mode = WAL");
   }

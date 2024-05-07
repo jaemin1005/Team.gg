@@ -73,18 +73,18 @@ let func = {
     // * gameName 부분은 URI로 인코딩하여 넣어줘야된다.
     let encodingName = encodeURI(userId[0]);
 
-    // try{
-    //   const res = await fetch(`https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`);    
+    try{
+      const res = await fetch(`https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`);    
       
-    //   const returnObj = await res.json();
+      const returnObj = await res.json();
       
-    //   const insertTbl = new InsertUser();
-    //   insertTbl.summonerInsert(returnObj);  
-    //   return returnObj;  
-    // }catch(err){
-    //   Log(`API ERR : Failed Get User Info ${err}`);
-    //   return null;
-    // }
+      const insertTbl = new InsertUser();
+      insertTbl.summonerInsert(returnObj);  
+      return returnObj;  
+    }catch(err){
+      Log(`API ERR : Failed Get User Info ${err}`);
+      return null;
+    }
   },
 
   /**
