@@ -14,7 +14,7 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
-//const LOG =require("./Module/Log.js");
+const LOG =require("./Module/Log.js");
 const user = require("./Module/User.js");
 const {JSONCOMMAND, HTMLCOMMAND} = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');
@@ -50,17 +50,53 @@ const { checkPrime } = require('crypto');
  * * statusCode : HTTP 응답 상태 코드는 특정 HTTP 요청이 성공적으로 완료되었는지 알려줌
  * * https://developer.mozilla.org/ko/docs/Web/HTTP/Status
  */
-const app = http.createServer((req, res) => 
+const app = http.createServer(async(req, res) => 
 {
-
+  
   /**
    * * GET 요청 받았을 시 처리.
    * * 서버가 처음 요청 받을 때 여러 개의 GET일 올 수 있음 => Hyperlink 
    * * ex) html안에서 js파일을 요청할 때
    */
-  if(req.method == "GET")
-  {
+  if(req.method == "GET"){
+
+    if(req.url.includes("summoner")){
+
+      let i = req.url.split("_input=");
+      
+      let dec = decodeURIComponent(i[1]);
+      
+      let uobj = await RiotAPI.GetUserInfo(dec);
+      
+
+      const data = await fs.promises.readFile("public/HTML/userInfo.html", "utf8");
+      const uobjJson = JSON.stringify(uobj);
+      
+      const html_ = data.replace('<!-- uobj -->', `
+          <script>
+            window.onload = function() {
+              let uobj = ${uobjJson};
+              let userNameContainers = document.getElementsByClassName("user_name_container");
+              console.log(userNameContainers.length);
+              for (let i = 0; i < userNameContainers.length; i++) {
+                userNameContainers[0].innerHTML = uobj.gameName; // Assuming userName is a property of uobj
+              }
+            };
+          </script>`);
+        // ssr ajax xml
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(html_);
+        
+    ;
+
+      return;
+    };
+
+
+
+    
     SwitchPath(req, res);
+    // ProcessPOSTMethod(req, res); 
   }
   
   /**
@@ -123,6 +159,7 @@ function SwitchPath(req, res)
   // * MainHomePage
   if(path == '' || path == '/')
   {
+    
     SelectFile(res, '/index.html', "text/html");
   }
 
@@ -221,8 +258,9 @@ function GetContentType(fileName)
 async function ProcessPOSTMethod(req, res)
 {
   let jsonData = "";
+  
   req.on('data',  (data) => jsonData += data );
-
+  
   /**
    * * GetUserInfo가 끝날때 까지 대기.
    * * 대기가 끝나면(데이터 완성) res를 통해 응답.
@@ -246,6 +284,7 @@ async function ProcessPOSTMethod(req, res)
         {
           obj = await RiotAPI.GetUserInfo(reqObj.detail, res);
           console.log(obj);
+
           if(obj != null)
           {
             /**
