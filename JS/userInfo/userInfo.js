@@ -13,6 +13,10 @@
  */
 function SetUserInfoDOM(obj){ 
   let $userInfoContainer = document.getElementById("user_name_container");
+  let $userTierContainer = document.getElementById("user_tier_container");
+
+
+
   let $userProfileImg = $userInfoContainer.children[0].children[0]; 
 
   let $userInfo = $userInfoContainer.children[1];
@@ -29,11 +33,8 @@ function SetUserInfoDOM(obj){
     $userProfileImg.src = "../../resources/profile/dummy.png";
     $userName.children[0].textContent = "TEAMGG #000"
     $userName.children[1].textContent = "최근업데이트 9999년전"
+    $userTierContainer.children[0].children[0].src = "../../resources/tier/dummy.png";
   }
 }
 
 SetUserInfoDOM(null);
-
-/**
- * 
- */
