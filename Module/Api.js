@@ -1,14 +1,14 @@
 //#region * Access Database 
-const ExportPlayLog = require('./DB/ExportPlayLog.js');
-const CheckUser = require('./DB/CheckUser.js');
-const IoDebounce = require('./DB/DebounceOutput.js');
-const ExportChampionInfo = require('./DB/ExportChampionInfo.js');
-const ExportIconInfo = require('./DB/ExportIconInfo.js');
-const ExportUser = require('./DB/ExportUser.js');
-const InsertPlayLog = require('./DB/InsertPlayLog.js');
-const InsertUser = require('./DB/InsertUser.js');
-const RemoveUser = require('./DB/RemoveUser.js');
-const SummonersUpdate = require('./DB/UpdateUser.js');
+const ExportPlayLog = require('../Module/DB/ExportPlayLog.js');
+const CheckUser = require('../Module/DB/CheckUser.js');
+const IoDebounce = require('../Module/DB/DebounceOutput.js');
+const ExportChampionInfo = require('../Module/DB/ExportChampionInfo.js');
+const ExportIconInfo = require('../Module/DB/ExportIconInfo.js');
+const ExportUser = require('../Module/DB/ExportUser.js');
+const InsertPlayLog = require('../Module/DB/InsertPlayLog.js');
+const InsertUser = require('../Module/DB/InsertUser.js');
+const RemoveUser = require('../Module/DB/RemoveUser.js');
+const SummonersUpdate = require('../Module/DB/UpdateUser.js');
 //#endregion
 
 require('dotenv').config();
@@ -53,7 +53,7 @@ let func = {
      */
     let userId = strName.split('#');
     
-    if(userId.length != 2 && UserId[0] < 2){
+    if(userId.length != 2 && userId[0] < 2){
       return false;
     }
 
