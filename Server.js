@@ -258,7 +258,7 @@ async function ProcessPOSTMethod(req, res)
             * *  async function의 반환값이 암묵적으로 Promise.resolve로 감싸지기 때문이다.
             */
             const promise1 = RiotAPI.GetUserChampMastery(obj);
-            const promise2 = await RiotAPI.GetMatchInfo(obj);
+            //const promise2 = await RiotAPI.GetMatchInfo(obj);
             //await Promise.all(promise1, promise2).catch(() => obj = null);
           }
           break;
