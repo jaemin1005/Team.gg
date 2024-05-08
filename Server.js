@@ -61,7 +61,6 @@ const app = http.createServer(async(req, res) =>
   if(req.method == "GET"){
     
     SwitchPath(req, res);
-    // ProcessPOSTMethod(req, res); 
   }
   
   /**
@@ -258,8 +257,15 @@ async function ProcessPOSTMethod(req, res)
             * *  async function의 반환값이 암묵적으로 Promise.resolve로 감싸지기 때문이다.
             */
             const promise1 = RiotAPI.GetUserChampMastery(obj);
-            const promise2 = await RiotAPI.GetMatchInfo(obj);
-            //await Promise.all(promise1, promise2).catch(() => obj = null);
+            const promise2 = RiotAPI.GetMatchInfo(obj);
+            const promise3 = null ;
+            /**
+            * * 2024.05.08 배성빈
+            * * 시즌 데이터 + 모스트 챔피언 데이터 호출 후 promise all에 추가하여 하나의 obj로 반환하기.
+            * 
+            */
+
+            await Promise.all(promise1, promise2).catch(() => obj = null);
           }
           break;
         }
