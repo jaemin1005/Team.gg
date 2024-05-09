@@ -8,7 +8,6 @@ const spells = {}
 
 let ReturnObj = async () => { 
   await ReadJSON(SPELL_JSON_DATA, CreateSpellObj);
-  return spells;
 }
 
 function CreateSpellObj(obj){
@@ -22,4 +21,5 @@ function CreateSpellObj(obj){
   spells[spell.id] = spell;
 }
 
-module.exports = ReturnObj();
+ReturnObj();
+module.exports = spells;

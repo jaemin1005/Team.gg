@@ -9,7 +9,6 @@ const items = {};
 
 let ReturnObj = async () => { 
   await ReadJSON(ITEM_JSON_DATA, CreateItemObj);
-  return items;
 }
 
 function CreateItemObj(obj, key){
@@ -23,4 +22,5 @@ function CreateItemObj(obj, key){
   items[item.key] = item;
 }
 
-module.exports = ReturnObj();
+ReturnObj();
+module.exports = items;

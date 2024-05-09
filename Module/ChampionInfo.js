@@ -10,7 +10,6 @@ const champions = {};
 
 let ReturnObj = async () => { 
   await ReadJSON(CHAMPION_JSON_DATA, CreateChampionsObj);
-  return champions;
 }
 
 function CreateChampionsObj(obj){
@@ -24,7 +23,7 @@ function CreateChampionsObj(obj){
   champion.imgSrc = CHAMPION_SMALL_PORTRAIT_PATH + `${champion.id}` + ".png";
 
   champions[champion.key] = champion;
-  console.log(champion.name);
 }
 
-module.exports = ReturnObj();
+ReturnObj();
+module.exports = champions;

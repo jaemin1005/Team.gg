@@ -1,36 +1,45 @@
-//var http = require('http');
-// const { userInfo } = require('os');
-//const func = require("../../Module/FullName");
-// document.querySelector(`.main_logo`).onclick = () =>
+
+
 //   (location.href = `../index.html`);
-let url = "http://localhost:3000";
+let url = "http://localhost:3000/summoner/";
+let championData = null;
+let itemData = null;
+let spellData = null;
 
-let queryParams = getQueryParams();
-let reqObj = {
-  command : "reqUser",
-  detail : queryParams["userName_input"]
+
+/**
+ * * 2024.05.09 황재민
+ * * JSON 데이터 요청하기 (챔피언, 아이템, 스펠)에 관한 정보
+ */
+let RequestJSONData = async function(){
+  
+  let res = await fetch(url + "Data.json", {method: 'GET'});
+  let jsonData = await res.json();
+  
+  /**
+   * * 챔피언 정보
+   * * 아이템 정보
+   * * 스펠 정보
+   */
+  championData = jsonData.champions;
+  itemData = jsonData.items;
+  spellData = jsonData.spells;
+  
+  //* 각 JSON 데이터의 이미지를 요청해준다.
+  GetFatchImgData(championData);
+  GetFatchImgData(itemData);
+  GetFatchImgData(spellData);
 }
 
-// POST 요청 보내기
-fetch(url, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(reqObj)
-})
-.then(response => response.json())
-.then(data => console.dir(data))
-.catch(error => console.error('Error:', error));
-
-
-function getQueryParams() {
-  const queryParams = {};
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  // URLSearchParams를 사용하여 모든 쿼리스트링 파라미터를 객체에 저장
-  for (const [key, value] of urlParams.entries()) {
-    queryParams[key] = value;
-  }
-  return queryParams;
+/**
+ * * 2024.05.09 황재민
+ * * JSON 데이터를 다 받으면 해당 이미지를 요청하는 함수
+ * @param {*} obj 
+ */
+function GetFatchImgData(obj){
+  Object.keys(obj).forEach((key) => {
+    fetch(obj[key].imgSrc,{method: "GET"});
+  })
 }
+
+ReqestJSONData();
