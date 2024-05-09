@@ -1,15 +1,19 @@
 //#region * Access Database 
-const ExportPlayLog = require('../Module/DB/ExportPlayLog.js');
-const CheckUser = require('../Module/DB/CheckUser.js');
-const IoDebounce = require('../Module/DB/DebounceOutput.js');
-const ExportChampionInfo = require('../Module/DB/ExportChampionInfo.js');
-const ExportIconInfo = require('../Module/DB/ExportIconInfo.js');
-const ExportUser = require('../Module/DB/ExportUser.js');
-const InsertPlayLog = require('../Module/DB/InsertPlayLog.js');
-const InsertUser = require('../Module/DB/InsertUser.js');
-const RemoveUser = require('../Module/DB/RemoveUser.js');
-const SummonersUpdate = require('../Module/DB/UpdateUser.js');
+// const ExportPlayLog = require('../Module/DB/ExportPlayLog.js');
+// const CheckUser = require('../Module/DB/CheckUser.js');
+// const IoDebounce = require('../Module/DB/DebounceOutput.js');
+// const ExportChampionInfo = require('../Module/DB/ExportChampionInfo.js');
+// const ExportIconInfo = require('../Module/DB/ExportIconInfo.js');
+// const ExportUser = require('../Module/DB/ExportUser.js');
+// const InsertPlayLog = require('../Module/DB/InsertPlayLog.js');
+// const InsertUser = require('../Module/DB/InsertUser.js');
+// const RemoveUser = require('../Module/DB/RemoveUser.js');
+// const SummonersUpdate = require('../Module/DB/UpdateUser.js');
+const UserTier = require("../Module/DB/TierDB.js");
+
 //#endregion
+
+
 
 require('dotenv').config();
 const PATH = process.env.DirPATH || __dirname;
@@ -46,6 +50,8 @@ let func = {
    * @param {*} strName : 닉테임 + #태그 되있는 문자열
    * @returns API 결과 
    */
+
+  
   async GetUserInfo(strName){
     /**
      * * strName은 예시로 터검니#000 
@@ -53,22 +59,23 @@ let func = {
      */
     let userId = strName.split('#');
     
-    if(userId.length != 2 && userId[0].length < 2){
-      return false;
-    }
+    // if(userId.length != 2 && userId[0].length < 2){
+    //   return false;
+    // }
 
 
     // * 2024.05.05 배성빈 
     // * 입력 받은 유저 이름이 데이터 베이스에 존재하는 지 확인 후 없다면 api호출
     // * 존재한다면 쿼리문을 통해서 객체로 변환하는 작업을 거친 후 반환한다.
+    // ! 20240508 issue 16번 방식의 변경으로 주석 처리
 
-    const checkUser = new CheckUser();
+    // const checkUser = new CheckUser();
 
-    let userObj = await checkUser.checkExistenceName(userId);
+    // let userObj = await checkUser.checkExistenceName(userId);
 
-    if(userObj !== null && userObj !== undefined){
-      return userObj;
-    }
+    // if(userObj !== null && userObj !== undefined){
+    //   return userObj;
+    // }
 
     // * gameName 부분은 URI로 인코딩하여 넣어줘야된다.
     let encodingName = encodeURI(userId[0]);
@@ -78,8 +85,6 @@ let func = {
       
       const returnObj = await res.json();
       
-      const insertTbl = new InsertUser();
-      insertTbl.summonerInsert(returnObj);  
       return returnObj;  
     }catch(err){
       Log(`API ERR : Failed Get User Info ${err}`);
@@ -105,6 +110,64 @@ let func = {
       Log(`API ERR : Failed Get Champion Mastery ${err}`);
       throw new Error();
     }
+  },
+
+  
+  /**
+   * * 2024.05.08 배성빈
+   * * 조회하기 전 summonerID 가 필요함으로 Summoner-V4 에서 id키를 요청한다.
+   * * 해당 유저의 티어를 가져온다. 지난 시즌에 해당하는 티어들은 조회가 불가능하니 db에 저장하여 보관하는 방식.
+   * * UserTier를 저장하는 새 DB Table을 제작하여야한다. -- V
+   * @param {} obj : GetUserInfo에서 만든 객체.
+   */
+  
+  async GetSummonerId(puuid){
+    const idObject = await fetch(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`)
+  
+    const id = await idObject.json()
+  
+    return id.id
+  },
+
+
+  async GetUserTier(obj){
+  
+    const id = await GetSummonerId(obj.puuid)
+    
+    try{
+      
+      const callTier = await fetch(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`)
+  
+      const tierObj = await callTier.json()
+  
+      let isTrue = false;
+      let index = 0;
+  
+      while(!isTrue){
+        if(tierObj[index].queueType != "RANKED_SOLO_5x5"){
+          index++
+          continue
+        }
+  
+        let destructuring = {summonerId, tier, rank, leaguePoints} = tierObj[index]
+        
+        let tierDb = new UserTier()
+  
+        tierDb.tierInsert(destructuring)
+  
+        for(let ele in destructuring){
+          obj[ele] = destructuring[ele]
+        }
+  
+        isTrue = true
+      }
+  
+    }catch(error){
+      console.error(error);
+      // throw new Error();
+      
+    }
+  
   },
 
   /**
