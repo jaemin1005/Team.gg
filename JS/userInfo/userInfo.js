@@ -47,12 +47,9 @@ function GetFatchImgData(obj){
   })
 }
 
-<<<<<<< HEAD
 async function Start(){
   RequestJSONData();
 }
 
 Start();
-=======
-// ReqestJSONData();  
->>>>>>> origin/develop
+
