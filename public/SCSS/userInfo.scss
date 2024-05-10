@@ -379,6 +379,20 @@ body {
   background-color:transparent;
   width: 50vw;
   height: 20vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+ 
+  >:nth-child(1){
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-areas: "a b";
+    >#mainSec1{
+      grid-area: a;
+    }
+    >#mainSec2{
+      grid-area: b;
+    }
+  }
 }
 
 #recordContainer{
@@ -390,3 +404,4 @@ body {
 #innerCon {
   margin: 5vh;
 }
+
