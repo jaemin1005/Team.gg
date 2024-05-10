@@ -16,13 +16,13 @@
 @import url(./vars.css);
 
 body {
-  @include mixIns.create_contents_container(100%, 100%);
+  @include mixIns.create_contents_container(100%, 500vh);
   overflow: vars.$overflow_hidden;
 }
 
 //* 현재 페이지의 container
 .main_container {
-  @include mixIns.create_contents_container(100%, 100%);
+  @include mixIns.create_contents_container(100%, 500vh);
 
   //* Header 영역.
   .contents_header {

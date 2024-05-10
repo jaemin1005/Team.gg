@@ -22,11 +22,33 @@ const SpellInfo = require("./Module/SpellInfo");
 const ItemInfo = require("./Module/ItemInfo");
 
 
+<<<<<<< HEAD
 
 http.createServer((req,res) => {
 
   if(req.method == "GET"){
     ProcessGETMethod(req,res);
+=======
+//#endregion --Require--
+/**
+ * * 2024.04.18 황재민
+ * * 서버 시작 하는 부분
+ * * statusCode : HTTP 응답 상태 코드는 특정 HTTP 요청이 성공적으로 완료되었는지 알려줌
+ * * https://developer.mozilla.org/ko/docs/Web/HTTP/Status
+ */
+const app = http.createServer(async(req, res) => 
+{
+  
+  /**
+   * * GET 요청 받았을 시 처리.
+   * * 서버가 처음 요청 받을 때 여러 개의 GET일 올 수 있음 => Hyperlink 
+   * * ex) html안에서 js파일을 요청할 때
+   */
+  console.log(req.url);
+  
+  if(req.method == "GET"){
+    SwitchPath(req, res);
+>>>>>>> origin/develop
   }
 })
 .listen(3000, () => {
@@ -140,6 +162,89 @@ function SelectFile(res, path, contentType, responscode = 200)
   })
 }
 
+<<<<<<< HEAD
+=======
+
+
+/**
+ * * 2024.04.19 황재민
+ * * GET으로 요청받은 url에 따라 switch에서 분기하여 원하는 파일을 건네준다.
+ * @param {*} req : request (요청)
+ * @param {*} res : response (응답)
+ */
+function SwitchPath(req, res)
+{
+  // * 정규표현식으로 해당 특수문자를 찾고 빈 공백으로 바꾼다. 
+  //const path = req.url.replace(/\/?(?:\?.*)?%/, '');
+  //let path = req.url.replace(/[/]+/g, ''); 
+  const path = req.url;
+  LOG("GET Url : " + path);
+
+  // * MainHomePage
+  if(path == '' || path == '/')
+  {
+
+    SelectFile(res, '/index.html', "text/html");
+  }
+
+  else if(GetExtension(path) == null)
+  {
+    const htmlCommand = path.split('/');
+    GetHTML(res,htmlCommand[1]);
+  }
+
+  else
+  {
+    SelectFile(res, path, GetContentType(path));
+  }
+}
+
+/**
+ * * 2024-04-24 황재민
+ * * 파일의 확장자를 통해, 해당 GET 요청이 파일인지 아닌지 구분 하기 위해 만들었다.
+ * @param {*} fileName 파일 이름
+ * @returns 파일일 경우 해당 확장자를 반환. 아니면 null 반환 :)
+ */
+function GetExtension(fileName)
+{
+  const arrWord = fileName.split('.');
+  if(arrWord.length == 0)
+    return null;
+  let extension = arrWord[arrWord.length-1]
+  if(extension == "js" || extension == "mjs" || extension == "ico" || extension == "html" || extension == "css")
+  {
+    return extension;
+  }
+
+  else
+  {
+    return null;
+  }
+}
+
+/**
+ * * 2024-04-24 황재민
+ * * 클라이언트의 요청에 따라, 해당 url를 보내준다
+ * * ex) http://localhost:3000/summoner/
+ * * summoner만 잘라서 매개변수로 :) 
+ * @param {*} res 응답
+ * @param {*} name 요청한 url을 split한 부분
+ */
+function GetHTML(res, name)
+{
+  switch(name)
+  {
+    case HTMLCOMMAND.SUMMONERS:
+    {
+      const path = "/public/HTML/userInfo.html"
+      SelectFile(res, path, GetContentType(path));
+    }
+  }
+}
+
+
+
+>>>>>>> origin/develop
 /**
  * * 2024.04.23 황재민
  * * 각 파일의 확장자에 맞게 Content-Type을 수정한다.
