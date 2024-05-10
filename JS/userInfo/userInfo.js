@@ -18,6 +18,8 @@ let RequestJSONData = async function(){
   let res = await fetch(currentUrl, {method: 'GET'});
   let jsonData = await res.json();
   
+ console.dir(jsonData);
+
   /**
    * * 챔피언 정보
    * * 아이템 정보
