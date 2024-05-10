@@ -23,7 +23,7 @@
 
 
     <!-- Test 2024 / 05 Version -->
-    <link rel="stylesheet" href="../SCSS/userInfo.css">
+    <link rel="stylesheet" href="/public/SCSS/userInfo.css">
 
 
 
@@ -93,8 +93,8 @@
                     </div>
                   </div>
                   <div>
-                    <p>터검니 #000</p>
-                    <p>최근 업데이트 n분전</p>
+                    <p id = "playerName"></p>
+                    <p id = "update"></p>
                   </div>
                 </div>
               </div>
@@ -132,30 +132,15 @@
               <div class="board_for_user"></div>
             </div>
           </section>
-          <section class="right_section">
-            <div class="right_section_left_container">
-              <div class="game_record">
+          <section class="right_section" id = "recordContainer">
+            <!-- <div class="right_section_left_container", id="innerCon">
+              <div class="game_record", id="logLabel">
                 <div class="main_game_record"></div>
-                <div class="shadow_game_record"></div>
-              </div>
-              <div class="game_record">
-                <div class="main_game_record"></div>
-                <div class="shadow_game_record"></div>
-              </div>
-              <div class="game_record">
-                <div class="main_game_record"></div>
-                <div class="shadow_game_record"></div>
-              </div>
-              <div class="game_record">
-                <div class="main_game_record"></div>
-                <div class="shadow_game_record"></div>
-              </div>
-              <div class="game_record">
-                <div class="main_game_record"></div>
-                <div class="shadow_game_record"></div>
+                <div class="shadow_game_record"></div> -->
               </div>
             </div>
           </section>
+
         </div>
       </main>
     </div>
@@ -166,6 +151,6 @@
     crossorigin="anonymous"
   ></script>
   <script src="../JS/userInfo/userInfo.js" defer></script>
-
+  <script src="../../test.js" defer></script>
   <!-- uobj -->
 </html>

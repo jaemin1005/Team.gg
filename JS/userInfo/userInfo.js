@@ -25,6 +25,8 @@ let RequestJSONData = async function(){
   itemData = jsonData.items;
   spellData = jsonData.spells;
   
+  
+
   //* 각 JSON 데이터의 이미지를 요청해준다.
   GetFatchImgData(championData);
   GetFatchImgData(itemData);
@@ -42,4 +44,4 @@ function GetFatchImgData(obj){
   })
 }
 
-ReqestJSONData();
+// ReqestJSONData();  

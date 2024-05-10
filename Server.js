@@ -22,27 +22,6 @@ const { checkPrime } = require('crypto');
 //const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
 
 
-
-// * Access Database 
-//const { default: ExportPlayLog } = require('./Module/DB/ExportPlayLog.js');
-// const { default: CheckUser } = require('./Module/DB/CheckUser.js');
-// const { default: IoDebounce } = require('./Module/DB/DebounceOutput.js');
-// const { default: ExportChampionInfo } = require('./Module/DB/ExportChampionInfo.js');
-// const { default: ExportIconInfo } = require('./Module/DB/ExportIconInfo.js');
-// const { default: ExportUser } = require('./Module/DB/ExportUser.js');
-// const { default: InsertPlayLog } = require('./Module/DB/InsertPlayLog.js');
-// const { default: InsertUser } = require('./Module/DB/InsertUser.js');
-// const { default: RemoveUser } = require('./Module/DB/RemoveUser.js');
-// const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
-
-
-
-
-
-
-
-
-
 //#endregion --Require--
 /**
  * * 2024.04.18 황재민
@@ -58,8 +37,9 @@ const app = http.createServer(async(req, res) =>
    * * 서버가 처음 요청 받을 때 여러 개의 GET일 올 수 있음 => Hyperlink 
    * * ex) html안에서 js파일을 요청할 때
    */
+  console.log(req.url);
+  
   if(req.method == "GET"){
-    
     SwitchPath(req, res);
   }
   
@@ -123,7 +103,7 @@ function SwitchPath(req, res)
   // * MainHomePage
   if(path == '' || path == '/')
   {
-    
+
     SelectFile(res, '/index.html', "text/html");
   }
 

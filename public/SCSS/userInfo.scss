@@ -17,12 +17,13 @@
 @import url(./gaps.css);
 
 body {
-  @include mixIns.create_contents_container(100%, 100%);
+  @include mixIns.create_contents_container(100%, auto);
   overflow-x: vars.$overflow_hidden;
+  background-color: #1C1C1F;
 }
 
 .main_container {
-  @include mixIns.create_contents_container(100%, 100%);
+  // @include mixIns.create_contents_container(100%, 100%);
 
   // * <header>
   .contents_header {
@@ -111,11 +112,12 @@ body {
 
     //* .sections_container는 열을 2개 가진다. 1fr, 1fr ( 유저 정보, 매칭 )
     .sections_container {
-      @include mixIns.grid_column_layout();
+      display: flex;
       @include mixIns.create_contents_container(90%, 100%);
 
       //* 유저 정보에 해당. dicrection column으로 설정.
       > section:first-child {
+        
         @include mixIns.flex_basic_layout(column);
         @include mixIns.create_contents_container(100%, 100%);
 
@@ -296,14 +298,9 @@ body {
               //* 승률
               > div:nth-child(4){
                 @include mixIns.flex_basic_layout(column,center,center);
-                @include mixIns.create_contents_container(auto, 100%);
+                @include mixIns.create_contents_container(auto, auto);
                 flex-grow: 1;
-                > div::first-child{
-
-                }
-                > div:last-child{
-
-                }
+          
               }         
             }
           }
@@ -317,8 +314,9 @@ body {
 
       // * 오른쪽 구역.
       > section:nth-child(2) {
-        @include mixIns.flex_basic_layout(row, start);
-        @include mixIns.create_contents_container(100%, 100%);
+        
+        // @include mixIns.flex_basic_layout(row, start);
+        @include mixIns.create_contents_container(100%, auto);
 
         //* space-between으로 설정 align-item을 start로 설정하여 Left 영역과 간격을 줄암.
         .right_section_left_container {
@@ -370,4 +368,25 @@ body {
       }
     }
   }
+}
+
+
+
+
+
+
+#logLabel{
+  background-color:transparent;
+  width: 50vw;
+  height: 20vh;
+}
+
+#recordContainer{
+  display: flex;
+  flex-direction: column;
+}
+
+
+#innerCon {
+  margin: 5vh;
 }
