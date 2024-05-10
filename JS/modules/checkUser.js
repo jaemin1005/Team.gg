@@ -36,7 +36,7 @@ export const checkUser = (inputValue) => {
     pTag_for_warning_message.textContent = `${inputValue}는(은)잘못된 형식입니다.`;
   } else {
     //$form.action = "./public/HTML/userInfo.html";
-    $form.action = "summoner/";
+    $form.action = "/summoner/";
     $form.submit();
   }
 };

@@ -7,7 +7,6 @@
 // * 환경 변수의 값이 있으면 해당 변수들에게 환경변수에 적힌 값이 적용된다. 
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
-const PATH = process.env.DirPATH || __dirname;
 
 const http = require("http");
 const fs = require("fs");
@@ -15,13 +14,21 @@ const path = require("path");
 const url = require("url");
 
 const LOG =require("./Module/Log.js");
-const user = require("./Module/User.js");
 const {JSONCOMMAND, HTMLCOMMAND} = require('./Module/EnumCommand.js');
 const RiotAPI = require('./Module/Api.js');
-const { checkPrime } = require('crypto');
-//const { default: SummonersUpdate } = require('./Module/DB/UpdateUser.js');
+
+const ChampionInfo = require("./Module/ChampionInfo");
+const SpellInfo = require("./Module/SpellInfo");
+const ItemInfo = require("./Module/ItemInfo");
 
 
+<<<<<<< HEAD
+
+http.createServer((req,res) => {
+
+  if(req.method == "GET"){
+    ProcessGETMethod(req,res);
+=======
 //#endregion --Require--
 /**
  * * 2024.04.18 황재민
@@ -41,17 +48,83 @@ const app = http.createServer(async(req, res) =>
   
   if(req.method == "GET"){
     SwitchPath(req, res);
+>>>>>>> origin/develop
   }
-  
-  /**
-   * * POST 요청 받았을 시 처리.
-   */
-  if(req.method == "POST")
-  {
-    ProcessPOSTMethod(req, res); 
+})
+.listen(3000, () => {
+  console.log("서버 시작하였음");
+  console.log("http://localhost:3000");
+});
+
+
+async function ProcessGETMethod(req, res){
+
+  //* Main Html 
+  if(req.url ==='/'){
+    SelectFile(res, 'index.html', "text/html");
+    return;
   }
 
-}).listen(3000, () => console.log("Server Start!!"));
+  //* Summoner 상세정보
+  if(req.url.startsWith("/summoner/")){
+    const parseUrl = url.parse(req.url, true);
+    const query = parseUrl.query;
+
+    //* 쿼리가 있다고 판단한다.
+    if(Object.keys(query).length > 0){
+      let path = "public/HTML/userInfo.html"
+      SelectFile(res, path, GetContentType(path));
+    }
+
+    else{
+      req.url = req.url.replace("/summoner/","");
+      SelectFile(res, req.url, GetContentType(req.url));
+    }
+  }
+
+  else if(req.url.startsWith("/searchuser/","")){
+    const parseUrl = url.parse(req.url, true);
+    const query = parseUrl.query;
+    
+    const server = query["first_search_form_select"];
+    const name = query["userName_input"];
+
+    let obj = await RiotAPI.GetUserInfo(name, res);
+    if(obj != null){
+        
+      /**
+      * *  2024.04.23 황재민
+      * *  asnyc 함수는 항상 promise를 반환한다.
+      * *  async function의 반환값이 암묵적으로 Promise.resolve로 감싸지기 때문이다.
+      */
+
+      const promise1 = RiotAPI.GetUserChampMastery(obj);
+      const promise2 = RiotAPI.GetMatchInfo(obj);
+      //const promise3 = await Promise.all(promise1, promise2).catch(() => obj = null);
+
+      await Promise.all([promise1, promise2]);
+
+      if(obj != null){
+        obj["champions"] = ChampionInfo;
+        obj["spells"] = SpellInfo;
+        obj["items"] = ItemInfo;
+
+        res.writeHead(200);
+        res.end(JSON.stringify(obj));
+      }
+
+      else{
+        res.writeHead(204);
+        res.end();
+      }
+    }
+  }
+
+  //* 기타 다른 파일들 :)
+  else {
+    SelectFile(res, req.url, GetContentType(req.url));
+  }
+}
 
 /**
  * * 2024.04.19 황재민
@@ -64,7 +137,12 @@ const app = http.createServer(async(req, res) =>
  */
 function SelectFile(res, path, contentType, responscode = 200)
 {
-  fs.readFile(PATH + path, (err, data) => {
+  let filePath = path;
+  if(filePath[0] === '/')
+    filePath = filePath.substring(1);
+  
+
+  fs.readFile(filePath, (err, data) => {
     {
       /**
        * * 파일을 읽을 수 없을 때
@@ -72,7 +150,7 @@ function SelectFile(res, path, contentType, responscode = 200)
        */
       if(err)
       {
-        LOG("FS ERR : Failed Read File : " + PATH + path);
+        LOG("FS ERR : Failed Read File : " + path);
         res.writeHead(500, {'Content-Type' : 'text/plain'});
         res.end('500 - Internal Error');
         return;
@@ -84,6 +162,8 @@ function SelectFile(res, path, contentType, responscode = 200)
   })
 }
 
+<<<<<<< HEAD
+=======
 
 
 /**
@@ -164,6 +244,7 @@ function GetHTML(res, name)
 
 
 
+>>>>>>> origin/develop
 /**
  * * 2024.04.23 황재민
  * * 각 파일의 확장자에 맞게 Content-Type을 수정한다.
@@ -172,7 +253,9 @@ function GetHTML(res, name)
  */
 function GetContentType(fileName)
 {
-  let extension = GetExtension(fileName);
+  let split = fileName.split('.');
+  //let extension = GetExtension(fileName);
+  let extension = split[split.length-1];
   let contentType = null;
 
   if(extension == "js" || extension == "mjs")
@@ -183,110 +266,10 @@ function GetContentType(fileName)
     contentType = "text/html";
   else if(extension == "css")
     contentType = "text/css";
+  else if(extension == "png")
+    contentType = "image/png";
   else
     contentType = "Multipart/related";
   return contentType;
 }
 
-
-/**
- * * 2024.04.19 황재민
- * * 요청받은 POST 처리 
- * * jsonData에 require의 jsonData가 쌓인다.
- * * jsonData를 객체로 변환하여 swich문에 따라 분기가 되어 데이터 처리.
- *  - 2024 _ 04 _ 24 v 배성빈 TODO : 데이터 베이스 처리 해야됨. 
- * @param {*} req : requst의 Body는 { command : value , detail : value } JSON으로 구성되어 있다.
- * @param {*} res : response(응답)
- */
-
-async function ProcessPOSTMethod(req, res)
-{
-  let jsonData = "";
-  
-  req.on('data',  (data) => jsonData += data );
-  
-  /**
-   * * GetUserInfo가 끝날때 까지 대기.
-   * * 대기가 끝나면(데이터 완성) res를 통해 응답.
-   */
-  req.on('end', async () => {
-    let reqObj = JSON.parse(jsonData);
-    let obj = null;
-    
-    /**
-    * * 2024.04.18 황재민
-    * * API를 이용해 해당 유저의 정보를 받아오는게 아직 구현 X
-    * * CommandAPI(reqObj.command, reqObj.detail) 이런 식으로 구분해서 처리하면 되지 않을까?
-    * * 현재는 정보를 받아왔다고 임의로 작성 하겠음 :)
-    * *
-    * * 2024.04.20 황재민
-    * * reqObj.command를 구분하여 처리. JSONCOMMAND를 열거형 처럼 사용
-    */  
-    switch(reqObj.command)
-    {
-      case JSONCOMMAND.GET_USER_INFO:
-        {
-          obj = await RiotAPI.GetUserInfo(reqObj.detail, res);
-          console.log(obj);
-
-          if(obj != null)
-          {
-            /**
-            * *  2024.04.23 황재민
-            * *  asnyc 함수는 항상 promise를 반환한다.
-            * *  async function의 반환값이 암묵적으로 Promise.resolve로 감싸지기 때문이다.
-            */
-            const promise1 = RiotAPI.GetUserChampMastery(obj);
-            const promise2 = RiotAPI.GetMatchInfo(obj);
-            const promise3 = null ;
-            /**
-            * * 2024.05.08 배성빈
-            * * 시즌 데이터 + 모스트 챔피언 데이터 호출 후 promise all에 추가하여 하나의 obj로 반환하기.
-            * 
-            */
-
-            await Promise.all(promise1, promise2).catch(() => obj = null);
-          }
-          break;
-        }
-      /**
-       * * 2024.04.24 황재민
-       * * User 정보 갱신
-       * * req.detail에 User.js의 클래스 User를 보내주면 될 듯 합니다.
-       */
-      case JSONCOMMAND.UPDATE_USER_INFO:{
-          obj = reqObj.detail;
-          
-          const promise1 = RiotAPI.GetUserChampMastery(obj);
-          const promise2 = RiotAPI.GetMatchInfo(obj);
-          await Promise.all([promise1, promise2]).catch(() => obj = null);
-        }
-        break;
-      
-      /**
-       * * 2024.04.24 황재민
-       * * Match 정보를 더 요청한다. ex) (0 ~ 20) => (0 ~ 40) 개를 더 요청할 때.
-       * * req.detail User.js의 클래스 User에 property에 call을 추가하여 호출횟수를 보내 주었으면 함. 
-       */
-      case JSONCOMMAND.MORE_MATCH_INFO:{
-          obj = reqObj.detail;
-
-          await RiotAPI.GetMatchInfo(obj, obj.call).catch(() => obj = null);
-        }
-    }
-
-    /**
-     * * 제대로된 데이터를 못가져왔을 경우
-     * * Status Code 204 : 이 요청에 대해 보낼 콘텐츠는 없지만 헤더가 유용 
-     */
-    if(obj === null){
-      res.writeHead(204);
-      res.end();
-    }
-
-    else{
-      res.writeHead(200);
-      res.end(JSON.stringify(obj));
-    }
-  }); 
-}
