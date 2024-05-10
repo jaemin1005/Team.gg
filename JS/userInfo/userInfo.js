@@ -1,7 +1,7 @@
 
 
 //   (location.href = `../index.html`);
-let url = "http://localhost:3000/summoner/";
+let url = "http://localhost:3000/";
 let championData = null;
 let itemData = null;
 let spellData = null;
@@ -12,8 +12,10 @@ let spellData = null;
  * * JSON 데이터 요청하기 (챔피언, 아이템, 스펠)에 관한 정보
  */
 let RequestJSONData = async function(){
-  
-  let res = await fetch(url + "Data.json", {method: 'GET'});
+  let currentUrl = window.location.href;
+  currentUrl = currentUrl.replace("/summoner/", "/searchuser/");
+
+  let res = await fetch(currentUrl, {method: 'GET'});
   let jsonData = await res.json();
   
   /**
@@ -38,8 +40,13 @@ let RequestJSONData = async function(){
  */
 function GetFatchImgData(obj){
   Object.keys(obj).forEach((key) => {
-    fetch(obj[key].imgSrc,{method: "GET"});
+    console.log(obj[key].imgSrc);
+    fetch(url + obj[key].imgSrc,{method: "GET"});
   })
 }
 
-ReqestJSONData();
+async function Start(){
+  RequestJSONData();
+}
+
+Start();
