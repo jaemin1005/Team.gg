@@ -12,7 +12,7 @@ const func = require('./FullName');
 let ReadJSON = async (path, callbackFunc) => {
   await new Promise((res, rej) => {fs.readFile(path, "utf-8", (err, data) => {
       if(err){
-        Log('Error Reading File: ', CHAMPION_JSON_DATA);
+        console.log('Error Reading File: ' + path);
         rej();
       }
 

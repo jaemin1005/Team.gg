@@ -206,8 +206,8 @@ let func = {
       }
     }catch(err)
     {
-      Log(`API ERR : Failed Get Match Info ${err}`);
-      throw new Error();
+      // Log(`API ERR : Failed Get Match Info ${err}`);
+      // throw new Error();
     }
   }
   
