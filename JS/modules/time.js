@@ -50,4 +50,4 @@ class Time {
 
 const time = new Time();
 // module.exports = time;
-export { Time, time };
+export { Time };

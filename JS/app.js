@@ -30,7 +30,6 @@ const main_contents = {
 // * 엔터 키 디바운스
 main_contents.search_form.onkeypress = Debounce.Debounce((e) => {
   if (e.keyCode == 13) {
-    console.log(e);
     checkUser.checkUser(main_contents.search_form_input.value);
   } else {
     return;
