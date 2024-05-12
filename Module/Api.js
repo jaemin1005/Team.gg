@@ -1,4 +1,4 @@
-//#region * Access Database 
+//#region * Access Database
 // const ExportPlayLog = require('../Module/DB/ExportPlayLog.js');
 // const CheckUser = require('../Module/DB/CheckUser.js');
 // const IoDebounce = require('../Module/DB/DebounceOutput.js');
@@ -11,27 +11,35 @@
 // const SummonersUpdate = require('../Module/DB/UpdateUser.js');
 const UserTier = require("../Module/DB/TierDB.js");
 
+// ! 05.12 이종수
+const { Log, LogAPICallCount } = require("./Log.js");
+let apiCallingCnt = 0;
+// ! 05.12 이종수
 //#endregion
 
-
-
-require('dotenv').config();
+require("dotenv").config();
 const PATH = process.env.DirPATH || __dirname;
 const API_KEY = process.env.API_KEY;
-const Log = require("./Log.js");
+// const Log = require("./Log.js");
 
-/** 
+/**
  * * 날짜 : 2024.04.15
  * * 이름 : 황재민
- * * 설명 : 비동기로 API를 fech로 이용하여 해당 정보를 json으로 처리한다. 
-*/
+ * * 설명 : 비동기로 API를 fech로 이용하여 해당 정보를 json으로 처리한다.
+ */
 const getRotations = async () => {
-  try{
-    const res = await fetch("https://kr.api.riotgames.com/lol/platform/v3/champion-rotations?api_key=" + riotKey);
+  try {
+    const res = await fetch(
+      "https://kr.api.riotgames.com/lol/platform/v3/champion-rotations?api_key=" +
+        riotKey
+    );
     const returnObj = await res.json();
+    // ! 05.12 이종수
+    apiCallingCnt++;
+    LogAPICallCount(apiCallingCnt);
+    // ! 05.12 이종수
     console.log(returnObj);
-  }
-  catch(err){
+  } catch (err) {
     console.log(err);
   }
 };
@@ -39,7 +47,7 @@ const getRotations = async () => {
 /**
  * * 2024.04.19 황재민
  * * module로 호출될 객체 :)
- * TODO : 직관성있는 방법 생각해보기. 
+ * TODO : 직관성있는 방법 생각해보기.
  */
 let func = {
   /**
@@ -48,23 +56,21 @@ let func = {
    * * fetch를 통하여 API사용, 백틱을 이용하여 만들어둔 변수를 넣어둔다.
    * * 받아온 데이터를 json하고 returnobj로 넣어줌 :)
    * @param {*} strName : 닉테임 + #태그 되있는 문자열
-   * @returns API 결과 
+   * @returns API 결과
    */
 
-  
-  async GetUserInfo(strName){
+  async GetUserInfo(strName) {
     /**
-     * * strName은 예시로 터검니#000 
-     * * 특수문자가 불가능하기 때문에 #으로 구분하여 닉네임과 태그를 분리한다. 
+     * * strName은 예시로 터검니#000
+     * * 특수문자가 불가능하기 때문에 #으로 구분하여 닉네임과 태그를 분리한다.
      */
-    let userId = strName.split('#');
-    
+    let userId = strName.split("#");
+
     // if(userId.length != 2 && userId[0].length < 2){
     //   return false;
     // }
 
-
-    // * 2024.05.05 배성빈 
+    // * 2024.05.05 배성빈
     // * 입력 받은 유저 이름이 데이터 베이스에 존재하는 지 확인 후 없다면 api호출
     // * 존재한다면 쿼리문을 통해서 객체로 변환하는 작업을 거친 후 반환한다.
     // ! 20240508 issue 16번 방식의 변경으로 주석 처리
@@ -80,13 +86,15 @@ let func = {
     // * gameName 부분은 URI로 인코딩하여 넣어줘야된다.
     let encodingName = encodeURI(userId[0]);
 
-    try{
-      const res = await fetch(`https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`);    
-      
+    try {
+      const res = await fetch(
+        `https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`
+      );
+
       const returnObj = await res.json();
-      
-      return returnObj;  
-    }catch(err){
+
+      return returnObj;
+    } catch (err) {
       Log(`API ERR : Failed Get User Info ${err}`);
       return null;
     }
@@ -99,21 +107,20 @@ let func = {
    * * err가 날 경우 throw 해서 Promise.all 에서 캐치할 수 있도록 함.
    * @param {} obj : GetUserInfo에서 만든 객체.
    */
-  async GetUserChampMastery(obj)
-  {
-    try{
-      const res = await fetch(`https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${obj.puuid}?api_key=${API_KEY}`)
+  async GetUserChampMastery(obj) {
+    try {
+      const res = await fetch(
+        `https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${obj.puuid}?api_key=${API_KEY}`
+      );
       //const res = await fetch(`https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${obj.puuid}?api_key=${API_KEY}`);
       const returnObj = await res.json();
       obj.champInfo = returnObj;
-    }catch(err)
-    {
+    } catch (err) {
       Log(`API ERR : Failed Get Champion Mastery ${err}`);
       throw new Error();
     }
   },
 
-  
   /**
    * * 2024.05.08 배성빈
    * * 조회하기 전 summonerID 가 필요함으로 Summoner-V4 에서 id키를 요청한다.
@@ -121,97 +128,95 @@ let func = {
    * * UserTier를 저장하는 새 DB Table을 제작하여야한다. -- V
    * @param {} obj : GetUserInfo에서 만든 객체.
    */
-  
-  async GetSummonerId(puuid){
-    const idObject = await fetch(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`)
-  
-    const id = await idObject.json()
-  
-    return id.id
+
+  async GetSummonerId(puuid) {
+    const idObject = await fetch(
+      `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`
+    );
+
+    const id = await idObject.json();
+
+    return id.id;
   },
 
+  async GetUserTier(obj) {
+    const id = await GetSummonerId(obj.puuid);
 
-  async GetUserTier(obj){
-  
-    const id = await GetSummonerId(obj.puuid)
-    
-    try{
-      
-      const callTier = await fetch(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`)
-  
-      const tierObj = await callTier.json()
-  
+    try {
+      const callTier = await fetch(
+        `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`
+      );
+
+      const tierObj = await callTier.json();
+
       let isTrue = false;
       let index = 0;
-  
-      while(!isTrue){
-        if(tierObj[index].queueType != "RANKED_SOLO_5x5"){
-          index++
-          continue
+
+      while (!isTrue) {
+        if (tierObj[index].queueType != "RANKED_SOLO_5x5") {
+          index++;
+          continue;
         }
-  
-        let destructuring = {summonerId, tier, rank, leaguePoints} = tierObj[index]
-        
-        let tierDb = new UserTier()
-  
-        tierDb.tierInsert(destructuring)
-  
-        for(let ele in destructuring){
-          obj[ele] = destructuring[ele]
+
+        let destructuring = ({ summonerId, tier, rank, leaguePoints } =
+          tierObj[index]);
+
+        let tierDb = new UserTier();
+
+        tierDb.tierInsert(destructuring);
+
+        for (let ele in destructuring) {
+          obj[ele] = destructuring[ele];
         }
-  
-        isTrue = true
+
+        isTrue = true;
       }
-  
-    }catch(error){
+    } catch (error) {
       console.error(error);
       // throw new Error();
-      
     }
-  
   },
 
   /**
    * * 2024.04.23 황재민
    * * 처음에 유저 번호를 불러왔을떄, startNum~endNum까지 matchId를 가지고온다.
-   * * matchId를 가져오면 해당 id를 가져와서, match의 상세정보를 가져온다. 
+   * * matchId를 가져오면 해당 id를 가져와서, match의 상세정보를 가져온다.
    * * 해당 매치정보를 matchInfo 프로퍼티를 생성하여 배열로 넣는다.
    * @param {*} obj : GetUserInfo에서 만든 객체
    * @param {*} nCall : 프론트엔드에서 전적 더 보기를 클릭했을 떄, nCall이 늘어나면서 다음 10개의 정보를 불러온다.
-  */
-  async GetMatchInfo(obj,nCall = 0)
-  {
-    let startNum = 10 * (nCall);
+   */
+  async GetMatchInfo(obj, nCall = 0) {
+    let startNum = 10 * nCall;
     let endNum = 10 * (nCall + 1);
     obj.matchInfo = [];
-    try{
-      let res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${API_KEY}`);
+    try {
+      let res = await fetch(
+        `https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${API_KEY}`
+      );
       let returnObj = await res.json();
-      
+
       //! #DB_TEST_WITH_API.JS
       // const insertMatchArr = new InsertPlayLog();
       // insertMatchArr.insertPlayLog(returnObj);
 
       // * matchId 를 배열로 하나씩 꺼내와서 API를 이용하여 정보를 꺼내온다.
-      for(const item of returnObj)
-      {
+      for (const item of returnObj) {
         // * 정규표현식 양쪽 끝 따옴표, 끝따옴표 자르기 :)
-        //let matchNum = item.replace(/['"]+/g, ''); 
+        //let matchNum = item.replace(/['"]+/g, '');
         // * 배열로 자르기 :)
         //let matchNum = item.substring(1, item.length -1);
         //! #DB_TEST_WITH_API.JS  - UPDATE DB
-        res = await fetch(`https://asia.api.riotgames.com/lol/match/v5/matches/${item}?api_key=${API_KEY}`);
+        res = await fetch(
+          `https://asia.api.riotgames.com/lol/match/v5/matches/${item}?api_key=${API_KEY}`
+        );
         let matchObj = await res.json();
-        obj.matchInfo[obj.matchInfo.length] = matchObj; 
+        obj.matchInfo[obj.matchInfo.length] = matchObj;
       }
-    }catch(err)
-    {
+    } catch (err) {
       // Log(`API ERR : Failed Get Match Info ${err}`);
       // throw new Error();
     }
-  }
-  
-}
+  },
+};
 
-module.exports = func
-
+module.exports = func;
