@@ -12,7 +12,7 @@
 const UserTier = require("../Module/DB/TierDB.js");
 
 // ! 05.12 이종수
-const { Log, LogAPICallCount } = require("./Log.js");
+const { Log, logAPICallCount } = require("./Log.js");
 let apiCallingCnt = 0;
 // ! 05.12 이종수
 //#endregion
@@ -36,7 +36,7 @@ const getRotations = async () => {
     const returnObj = await res.json();
     // ! 05.12 이종수
     apiCallingCnt++;
-    LogAPICallCount(apiCallingCnt);
+    logAPICallCount(apiCallingCnt);
     // ! 05.12 이종수
     console.log(returnObj);
   } catch (err) {

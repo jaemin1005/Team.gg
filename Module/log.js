@@ -69,9 +69,9 @@ let Log = WriteLog();
 
 // ! 05.12 이종수
 // module.exports = Log;
-const LogAPICallCount = (count) => {
+const logAPICallCount = (count) => {
   Log(`API 호출 횟수: ${count}회`);
 };
 
-module.exports = { Log, LogAPICallCount };
+module.exports = { Log, logAPICallCount };
 // ! 05.12 이종수
