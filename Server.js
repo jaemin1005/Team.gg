@@ -1,29 +1,22 @@
 //* 모듈 분기
-//* 모듈 처리 
-
+//* 모듈 처리
 
 //#region  --Require--
 
-// * 환경 변수의 값이 있으면 해당 변수들에게 환경변수에 적힌 값이 적용된다. 
-require('dotenv').config();
+// * 환경 변수의 값이 있으면 해당 변수들에게 환경변수에 적힌 값이 적용된다.
+require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
-
-const LOG =require("./Module/Log.js");
-const {JSONCOMMAND, HTMLCOMMAND} = require('./Module/EnumCommand.js');
-const RiotAPI = require('./Module/Api.js');
+const RiotAPI = require("./Module/Api.js");
 
 const ChampionInfo = require("./Module/ChampionInfo");
 const SpellInfo = require("./Module/SpellInfo");
 const ItemInfo = require("./Module/ItemInfo");
-const Log = require('./Module/Log.js');
 const func = require('./Module/Api.js');
-
-
 
 /**
  * * 2024.05.10 황재민
@@ -156,14 +149,10 @@ function ReqSummoner(req, res){
 * * SPA로 변경, 쿼리스트링으로 요청하지 않음 
 */
 async function ReqSearchUser(req, res){
-  // const parseUrl = url.parse(req.url, true);
-  // const query = parseUrl.query;
-  
-  // const server = query["first_search_form_select"];
-  // const name = query["userName_input"];
-  
-  const name = req.url.replace("/summoner/","");
 
+  let name = req.url.replace("/summoner/","");
+  name = decodeURI(name);
+  name = name.replace("-", "#");
 
   //* 유저의 puuid, gameName, tagLine의 정보를 받아옴.
   let obj = await RiotAPI.GetUserInfo(name, res);
@@ -175,6 +164,9 @@ async function ReqSearchUser(req, res){
     const promise2 = RiotAPI.GetMatchInfo(obj);
     //* 유저의 프로필 아이콘 번호, 랭크 정보.
     const promise3 = RiotAPI.GetAccountID(obj);
+    //* 유저의 최근 매칭
+    //const promise4 = RiotAPI.GetCurrentGame(obj);
+
 
     await Promise.all([promise1, promise2,promise3]).catch(() => (obj = null));
 
@@ -223,12 +215,9 @@ function ReadResouceFile(path, res){
  * @param {*} contentType : Content - Type
  * @param {*} responscode  : 응답 코드. 200 (요청이 성공적으로 완료되었다는걸 나타냄
  */
-function SelectFile(res, path, contentType, responscode = 200)
-{
+function SelectFile(res, path, contentType, responscode = 200) {
   let filePath = path;
-  if(filePath[0] === '/')
-    filePath = filePath.substring(1);
-  
+  if (filePath[0] === "/") filePath = filePath.substring(1);
 
   fs.readFile(filePath, (err, data) => {
     {
@@ -236,18 +225,17 @@ function SelectFile(res, path, contentType, responscode = 200)
        * * 파일을 읽을 수 없을 때
        * * 응답코드 500을 헤드에 넣어 응답한다. (500 : 서버가 처리방법을 모르는 상황이 발생했음을 나타냄)
        */
-      if(err)
-      {
-        LOG("FS ERR : Failed Read File : " + path);
-        res.writeHead(500, {'Content-Type' : 'text/plain'});
-        res.end('500 - Internal Error');
+      if (err) {
+        Log("FS ERR : Failed Read File : " + path);
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("500 - Internal Error");
         return;
       }
 
-      res.writeHead(responscode, {'Content-Type' : contentType});
+      res.writeHead(responscode, { "Content-Type": contentType });
       res.end(data);
     }
-  })
+  });
 }
 
 
@@ -257,24 +245,19 @@ function SelectFile(res, path, contentType, responscode = 200)
  * @param {*} fileName : 파일 이름
  * @returns : Content-Type
  */
+
 function GetContentType(fileName)
 {
   let split = fileName.split('.');
   let extension = split[split.length-1];
   let contentType = null;
 
-  if(extension == "js" || extension == "mjs")
-    contentType = "text/javascript";
-  else if(extension == "ico")
-    contentType = "image/x-icon";
-  else if(extension == "html" || extension == '/' || extension == '')
+  if (extension == "js" || extension == "mjs") contentType = "text/javascript";
+  else if (extension == "ico") contentType = "image/x-icon";
+  else if (extension == "html" || extension == "/" || extension == "")
     contentType = "text/html";
-  else if(extension == "css")
-    contentType = "text/css";
-  else if(extension == "png")
-    contentType = "image/png";
-  else
-    contentType = "Multipart/related";
+  else if (extension == "css") contentType = "text/css";
+  else if (extension == "png") contentType = "image/png";
+  else contentType = "Multipart/related";
   return contentType;
 }
-

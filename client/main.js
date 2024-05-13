@@ -26,7 +26,9 @@ $search.onkeydown = (e) => {
 
 async function SearchUser(searchValue){
   OnViewInMain("loading");
-  let userData = await RequestUserData(url+reqSummonersUrl+searchValue);
+  let data = searchValue.replace("#", "-");
+  data = encodeURI(data);
+  let userData = await RequestUserData(url+reqSummonersUrl+data);
   console.log(userData);
   OnViewInMain("stat");
 }
