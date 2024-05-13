@@ -1,0 +1,321 @@
+@import "./border.scss", "./colors.scss", "./functions.scss", "./mixins.scss", "./fonts.scss", "./extends.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: min-content;
+  overflow: hidden;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+
+  @include flex_basic_layout(row, flex-start);
+
+  > div:first-child{
+    @include MainContainer(350px, 100%);
+    background-color: $color-user-profile-background; 
+  }
+
+  > div:last-child{
+    @include MainContainer(1570px, 100%);
+    @include flex_basic_layout(column,flex-start);
+    background-color: $color-user-profile-detail-background;
+
+    > #header {
+      @include MainContainer(100%, 117px);
+      
+      //* 폰트 나타내기, 팀 로고
+      > div:first-child {
+        @include MainContainer(0, 100%);
+        width: min-content;
+        font-family: "Poetsen One", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        text-align: center;
+        font-size: $font-size70;
+        color: white;
+        margin-left: 1rem
+      }
+
+    }
+
+    //* Main 주 메뉴
+    > #main{
+      @include MainContainer(100%, 852px);
+      @include flex_basic_layout();
+      > #stat {
+          @include MainContainer(1505px, 790px);
+          display: none;
+          flex-direction: column;
+          justify-content: space-between;
+
+        > div {
+          width: 100%;
+        }
+
+        div {
+          border-radius: $border_radius15
+        }
+
+        //* 첫 번째 행
+        > div:nth-child(1){
+          height: TransPixelToVH(182px);
+          @include flex_basic_layout(row, space-between);
+          min-height: min-content;
+         
+          //* 첫 번째 행 부분에서, 프로필 부분.
+          > div:first-child {
+            @include MainContainer(1005px, 100%);
+            @include flex_basic_layout();
+            background-color: $color-user-profile-background; 
+            > div:first-child{
+              @include MainContainer(958px, 156px);
+              @include flex_basic_layout(row, flex-start);
+              @extend %img_plus_detail;
+            }
+          } 
+
+          > div:last-child {
+            @include MainContainer(486px, 100%);
+            @include flex_basic_layout();
+            background-color: $color-user-profile-background;
+            
+            >div:first-child{
+              @include MainContainer(436px, 156px);
+              @include flex_basic_layout(row, flex-start);
+              @extend %img_plus_detail;
+            }
+          }
+
+        }
+
+        > div:nth-child(2){
+          height: TransPixelToVH(396px);
+          @include flex_basic_layout(row, space-around);
+          background-color: $color-user-profile-background; 
+
+          > div {
+            @include MainContainer(700px, 344px);
+            @include flex_basic_layout(column);
+            background-color: #282830;
+            
+            > div {
+              @include MainContainer(700px, 54px);
+              @include flex_basic_layout(column,flex-start,center);
+              background-color: #282830;
+              border-radius: 0;
+            }
+
+            //* 최근 매칭 컬럼 속성
+            > div:nth-child(1){
+              border-bottom: 1px solid black;
+              display: grid;
+              grid-template-columns: TransPixelToVW(134px) TransPixelToVW(223px) TransPixelToVW(135px) TransPixelToVW(208px) ;
+              grid-template-rows: 100%;
+              
+              > div{
+                text-align: center;
+              }
+
+              > div:nth-child(2){
+                text-align: start;
+              }
+            }
+
+            > div:nth-child(n+2):nth-child(-n+5){
+              border-bottom: 0.5px solid black;
+            }
+
+            > div:nth-child(n+2):nth-child(-n+6){
+              display: grid;
+              grid-template-columns: TransPixelToVW(80px) TransPixelToVW(54px) TransPixelToVW(223px) TransPixelToVW(135px) TransPixelToVW(208px);
+              grid-template-rows: 100%;
+
+
+              > div {
+                width: 100%;
+                height: 100%;
+              }
+
+              > div:nth-child(1){
+                  @include flex_basic_layout();
+                  > img:nth-child(1){
+                    height: 95%;
+                    overflow: hidden;
+                    aspect-ratio: 1/1;
+                    object-fit: contain;
+                    border-radius: $border_circle;
+                  }
+              }
+
+              > div:nth-child(2){
+                padding: 2px;
+                display: grid;
+                grid-template-rows: 1fr 1fr;
+                grid-template-columns: 1fr 1fr;
+                grid-gap: 2px;
+                  >div {
+                    > img {
+                      width: 100%;
+                      overflow: hidden;
+                      aspect-ratio: 1/1;
+                      object-fit: contain;
+                    }
+                  }
+              }
+
+              > div:nth-child(n+3):nth-child(-n+4){
+                @include flex_basic_layout(column,flex-start,flex-start);
+                > div:first-child{
+                  height: 50%;
+                  width: 100%;
+                }
+                > div:last-child{
+                  height: 50%;
+                  width: 100%;
+                }
+              }
+
+              > div:nth-child(3){
+                > div {
+                  @include flex_basic_layout(row, flex-start, center);
+                  margin-left: 2px;
+                }
+              }
+
+              > div:nth-child(4){
+                > div {
+                  @include flex_basic_layout();
+                }
+
+                > div:last-child {
+                  @include flex_basic_layout();
+                  
+                  > div:first-child{
+                    width: 80%;
+                    height: 30%;
+                    background-color: $color-light-gray-bg;
+                    border-radius: $border_radius15;
+
+                    >div:first-child{
+                      width: 55%;
+                      height: 100%;
+                      background-color: $--teal500;
+                      border-radius: $border_radius15;
+                    }
+                  }
+                }
+              }
+
+              
+              > div:nth-child(5){
+                @include flex_basic_layout(row,space-between);
+
+                > div{
+                  @include flex_basic_layout(column, flex-start, flex-start);
+                  width: min-content;
+                  height: 100%;
+                  padding: 0 5px;
+                  
+                  > div{
+                    width: 100%;
+                    @include flex_basic_layout();
+                    height: 50%;
+                  }
+                }
+
+
+                > div:first-child{
+                  @include flex_basic_layout(column,flex-start,flex-start);
+                }
+
+                > div:last-child{
+                  @include flex_basic_layout(column,flex-start,flex-end);
+                }
+              }
+            }
+
+          }
+
+          > .red {
+            border: 0.5px solid #FFC0CB; /* 연한 빨간색 테두리 */
+            box-shadow: 0 0 10px 0.5px #FFC0CB; /* 형광 효과 */
+          }
+
+          > .blue {
+            border: 0.5px solid #87CEEB; /* 하늘색 테두리 */
+            box-shadow: 0 0 10px 0.5px #87CEEB;
+          }
+        }
+
+        > div:nth-child(3){
+          height: TransPixelToVH(182px);
+          @include flex_basic_layout(row, space-between);
+
+          > div:first-child{
+            @include MainContainer(486px, 100%);
+            @include flex_basic_layout();
+            background-color: $color-user-profile-background;
+            
+            >div:first-child{
+              @include MainContainer(436px, 156px);
+              @include flex_basic_layout(row, flex-start);
+              @extend %img_plus_detail;
+            }
+          }
+
+          > div:last-child{
+            @include MainContainer(1005px, 100%);
+            background-color: $color-user-profile-background; 
+          }
+        }
+      }
+    }
+
+    > #foot{
+      @include MainContainer(100%, 105px);
+      @include flex_basic_layout();
+      min-height: 44px;;
+      
+      > #search {
+       width: 90%;
+       height: 44px;
+       margin: 0 auto;
+       padding: 0 1.5rem;
+       border: 2px solid white;
+       border-radius: $border_radius15;
+       background-color: $color-user-profile-background;
+      }
+    }
+  }
+}
+
+
+//* Stat 부분의 Profile, Tier 이미지 설정
+.icon_img{
+  @include MainContainer(156px, 156px, 22px);
+  @include flex_basic_layout();
+  > img:first-child{
+    overflow: hidden;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    border-radius: $border_radius15;
+  }
+}
+
+.recent_match_column{
+
+}
+
+#loading{
+  display: none;
+  width: min-content;
+  height: min-content;
+  > img:first-child{
+    width: TransPixelToVW(722px);
+    object-fit: contain;
+  }
+}

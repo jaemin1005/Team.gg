@@ -1,8 +1,9 @@
 /**
 * * pixel 단위를 vw로 바꾸는 함수.
 */
-
 $_mainViewportWidth: 1920;
+$_mainViewportHeight: 1080;
+
 @function widthOrHeight100($props_val) {
   @return $props_val * 100;
 }
@@ -11,11 +12,41 @@ $_mainViewportWidth: 1920;
   @return $first_gap_val + second_gap_val;
 }
 
-@function TransPixelToVW($pixelValue) {
-  @if ($pixelValue == auto) {
+
+@function TransPixelToVW($pixelValue)
+{
+  @if($pixelValue == auto)
+  {
     @return $pixelValue;
-  } @else {
-    $calcPixel: $_mainViewportWidth * 0.01 * 1px;
+  }
+
+  @if(unit($pixelValue) == "px"){
+    $calcPixel : $_mainViewportWidth * 0.01 * 1px; 
     @return ($pixelValue / $calcPixel) * 1vw;
+  }
+
+  @else
+  {
+    @return $pixelValue;
+  }
+}
+
+@function TransPixelToVH($pixelValue)
+{
+  @if($pixelValue == auto)
+  {
+    @return $pixelValue;
+  }
+  
+
+  @if(unit($pixelValue) == "px")
+  {
+    $calcPixel : $_mainViewportHeight * 0.01 * 1px;
+    @return ($pixelValue / $calcPixel) * 1vh;
+  }
+  
+  @else
+  {
+    @return $pixelValue;
   }
 }

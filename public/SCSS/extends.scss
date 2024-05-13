@@ -1,0 +1,32 @@
+@import "./mixins.scss", "./functions.scss", "./border.scss";
+
+%img_plus_detail {
+  > div:first-child {
+    @include MainContainer(156px, 156px, 22px);
+    @include flex_basic_layout();
+    > img:first-child{
+      overflow: hidden;
+      aspect-ratio: 1/1;
+      object-fit: contain;
+      border-radius: $border_radius15;
+    }
+  }
+
+  > div:last-child {
+    width: min-content;
+    height: 100%;
+    margin-left: TransPixelToVW(24px);
+    @include flex_basic_layout(column,center,flex-start);
+  }
+}
+
+
+%match_column{
+  
+}
+
+
+
+
+
+

@@ -1,10 +1,11 @@
-@use "colors";
+@import "./functions.scss", "./colors.scss";
 
 $font-weight500: 500;
 $font-weight600: 600;
 $font-weight700: "bold";
 
 $font-size10: 0.625rem;
+$font-size13: 0.8rem;
 $font-size15: 0.9375rem;
 $font-size20: 1.25rem;
 $font-size25: 1.5625rem;
@@ -12,13 +13,13 @@ $font-size30: 1.875rem;
 $font-size40: 2.5rem;
 $font-size50: 3.125rem;
 $font-size60: 3.75rem;
-$font-size70: 4.375rem;
+$font-size70: 4.375em;
 
 $line-height25: 1.5625rem;
 
 //* .main_log_container의 폰트 색상, 사이즈, 굵기를 지정
 .main_logo_container {
-  color: colors.$color-white-font;
+  color: $color-white-font;
   font-size: $font-size25;
   font-weight: $font-weight600;
 }
@@ -34,4 +35,46 @@ $line-height25: 1.5625rem;
   > span:first-child {
     font-weight: $font-weight600;
   }
+}
+
+.primary_font_h1{
+  font-size: $font-size30;
+  font-family: "Black Han Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.small_middle_font{
+  font-size: $font-size15;
+  font-family: "Black Han Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  white-space: nowrap;
+  color: $color-light-gray-font;
+};
+
+.small_middle_small_font{
+  font-size: $font-size13;
+  font-family: "Black Han Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.small_small_font{
+  font-size : $font-size10;
+  font-family: "Black Han Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  white-space: nowrap;
+  color: $color-white-font;
+}
+
+.text_align_start{
+  text-align: start;
+}
+
+.text_align_center{
+  text-align: center;
 }

@@ -6,7 +6,7 @@ todo, 색 변수를 또 가르면 ?
 ? -> EX) $h1: $color-black-font -> test_h1 { color: $h1 } ... test_h10 { color: $h1 }
 
  */
-
+$--teal500 : #00BBA3;
 $color-black-bg: black;
 $color-light-gray-bg: rgb(165, 165, 165);
 $color-more-light-gray-bg: rgb(211, 211, 211);
@@ -31,7 +31,7 @@ $color-for-win-record: rgb(103, 138, 235);
 $color-for-lose-record: rgb(255, 68, 68);
 
 $color-user-profile-background: #31313C;
-$color-user-profile-detail-background: #A7A7A7;
+$color-user-profile-detail-background: #212121;
 
 $color-rank-tier-gold : #E6DF8D;
 $color-contents-main : #1C1C1F;
@@ -93,4 +93,12 @@ $color-contents-main : #1C1C1F;
   > div {
     background-color: $color-user-profile-background;
   }
+}
+
+.main_h1_color {
+  color : $color-white-font;
+}
+
+.sub_h1_color{
+  color : $color-light-gray-font;
 }

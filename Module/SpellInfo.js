@@ -1,14 +1,17 @@
 const ReadJSON = require('./ReadJSON');
+const GetVersion = require('./GetVersion');
+
 require('dotenv').config();
 
 //* 환경 변수를 이용하여 PATH 만들기.
-const SPELL_JSON_DATA = process.env.RIOT_DATA_ROOT_PATH + process.env.RIOT_DATA_VERSION + process.env.SPELL_JSON_DATA;
-const SPELL_IMG_PATH = process.env.RIOT_DATA_ROOT_PATH + process.env.RIOT_DATA_VERSION + process.env.SPELL_IMG_PATH;
+const SPELL_JSON_DATA = process.env.SPELL_JSON_DATA;
+const SPELL_IMG_PATH = process.env.SPELL_IMG_PATH;
 const spells = {}
 
 
 let ReturnObj = async () => { 
-  await ReadJSON(SPELL_JSON_DATA, CreateSpellObj);
+  await ReadJSON(GetVersion() + SPELL_JSON_DATA, CreateSpellObj);
+  return spells;
 }
 
 /**
@@ -22,10 +25,9 @@ function CreateSpellObj(obj){
 
   spell.id = id;
   spell.name = name;
-  spell.imgSrc = SPELL_IMG_PATH + `${spell.id}` + ".png";
+  spell.imgSrc = GetVersion() + SPELL_IMG_PATH + `${spell.id}` + ".png";
 
   spells[spell.id] = spell;
 }
 
-ReturnObj();
-module.exports = spells;
+module.exports = ReturnObj;
