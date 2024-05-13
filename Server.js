@@ -1,12 +1,8 @@
 //* 모듈 분기
 //* 모듈 처리
-<<<<<<< HEAD
 
 //#region  --Require--
 
-=======
-//#region  --Require--
->>>>>>> origin/develop
 // * 환경 변수의 값이 있으면 해당 변수들에게 환경변수에 적힌 값이 적용된다.
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
@@ -14,23 +10,18 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
-<<<<<<< HEAD
-const RiotAPI = require("./Module/Api.js");
 
-=======
 // ! 05.12 이종수
 const LOG =require("./Module/Log.js");
 const { JSONCOMMAND, HTMLCOMMAND } = require("./Module/EnumCommand.js");
 const RiotAPI = require("./Module/Api.js");
->>>>>>> origin/develop
+
 const ChampionInfo = require("./Module/ChampionInfo");
 const SpellInfo = require("./Module/SpellInfo");
 const ItemInfo = require("./Module/ItemInfo");
 const func = require('./Module/Api.js');
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/develop
+
 /**
  * * 2024.05.10 황재민
  * * Get으로 리뉴얼 하였음.
@@ -141,19 +132,12 @@ function ReqSummoner(req, res){
 * * SPA로 변경, 쿼리스트링으로 요청하지 않음
 */
 async function ReqSearchUser(req, res){
-<<<<<<< HEAD
 
-  let name = req.url.replace("/summoner/","");
-  name = decodeURI(name);
-  name = name.replace("-", "#");
-
-=======
   // const parseUrl = url.parse(req.url, true);
   // const query = parseUrl.query;
   // const server = query["first_search_form_select"];
   // const name = query["userName_input"];
   const name = req.url.replace("/summoner/","");
->>>>>>> origin/develop
   //* 유저의 puuid, gameName, tagLine의 정보를 받아옴.
   let obj = await RiotAPI.GetUserInfo(name, res);
   if(obj != null){
@@ -163,13 +147,7 @@ async function ReqSearchUser(req, res){
     const promise2 = RiotAPI.GetMatchInfo(obj);
     //* 유저의 프로필 아이콘 번호, 랭크 정보.
     const promise3 = RiotAPI.GetAccountID(obj);
-<<<<<<< HEAD
-    //* 유저의 최근 매칭
-    //const promise4 = RiotAPI.GetCurrentGame(obj);
 
-
-=======
->>>>>>> origin/develop
     await Promise.all([promise1, promise2,promise3]).catch(() => (obj = null));
     if(obj != null){
       res.writeHead(200);
@@ -209,10 +187,7 @@ function ReadResouceFile(path, res){
 function SelectFile(res, path, contentType, responscode = 200) {
   let filePath = path;
   if (filePath[0] === "/") filePath = filePath.substring(1);
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/develop
   fs.readFile(filePath, (err, data) => {
     {
       /**
@@ -225,10 +200,7 @@ function SelectFile(res, path, contentType, responscode = 200) {
         res.end("500 - Internal Error");
         return;
       }
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/develop
       res.writeHead(responscode, { "Content-Type": contentType });
       res.end(data);
     }
@@ -246,10 +218,7 @@ function GetContentType(fileName)
   let split = fileName.split('.');
   let extension = split[split.length-1];
   let contentType = null;
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/develop
   if (extension == "js" || extension == "mjs") contentType = "text/javascript";
   else if (extension == "ico") contentType = "image/x-icon";
   else if (extension == "html" || extension == "/" || extension == "")
@@ -258,8 +227,4 @@ function GetContentType(fileName)
   else if (extension == "png") contentType = "image/png";
   else contentType = "Multipart/related";
   return contentType;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/develop
