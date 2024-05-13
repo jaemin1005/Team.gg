@@ -1,11 +1,10 @@
 //* 모듈 분기
-//* 모듈 처리 
-
+//* 모듈 처리
 
 //#region  --Require--
 
-// * 환경 변수의 값이 있으면 해당 변수들에게 환경변수에 적힌 값이 적용된다. 
-require('dotenv').config();
+// * 환경 변수의 값이 있으면 해당 변수들에게 환경변수에 적힌 값이 적용된다.
+require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 
 const http = require("http");
@@ -13,9 +12,12 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
-const LOG =require("./Module/Log.js");
-const {JSONCOMMAND, HTMLCOMMAND} = require('./Module/EnumCommand.js');
-const RiotAPI = require('./Module/Api.js');
+// ! 05.12 이종수
+const { Log } = require("./Module/Log.js");
+// ! 05.12 이종수
+// const LOG =require("./Module/Log.js");
+const { JSONCOMMAND, HTMLCOMMAND } = require("./Module/EnumCommand.js");
+const RiotAPI = require("./Module/Api.js");
 
 const ChampionInfo = require("./Module/ChampionInfo");
 const SpellInfo = require("./Module/SpellInfo");
@@ -23,7 +25,18 @@ const ItemInfo = require("./Module/ItemInfo");
 const Log = require('./Module/Log.js');
 const func = require('./Module/Api.js');
 
+http
+  .createServer((req, res) => {
+    if (req.method == "GET") {
+      ProcessGETMethod(req, res);
+    }
+  })
+  .listen(3000, () => {
+    console.log("서버 시작하였음");
+    console.log("http://localhost:3000");
+  });
 
+<<<<<<< HEAD
 
 /**
  * * 2024.05.10 황재민
@@ -121,6 +134,65 @@ function ReadFiles(req, res){
 
   //* 일반 문서 파일들
   else{
+=======
+async function ProcessGETMethod(req, res) {
+  //* Main Html
+  if (req.url === "/") {
+    SelectFile(res, "index.html", "text/html");
+    return;
+  }
+
+  //* Summoner 상세정보
+  if (req.url.startsWith("/summoner/")) {
+    const parseUrl = url.parse(req.url, true);
+    const query = parseUrl.query;
+
+    //* 쿼리가 있다고 판단한다.
+    if (Object.keys(query).length > 0) {
+      let path = "public/HTML/userInfo.html";
+      SelectFile(res, path, GetContentType(path));
+    } else {
+      req.url = req.url.replace("/summoner/", "");
+      SelectFile(res, req.url, GetContentType(req.url));
+    }
+  } else if (req.url.startsWith("/searchuser/", "")) {
+    const parseUrl = url.parse(req.url, true);
+    const query = parseUrl.query;
+
+    const server = query["first_search_form_select"];
+    const name = query["userName_input"];
+
+    let obj = await RiotAPI.GetUserInfo(name, res);
+    if (obj != null) {
+      /**
+       * *  2024.04.23 황재민
+       * *  asnyc 함수는 항상 promise를 반환한다.
+       * *  async function의 반환값이 암묵적으로 Promise.resolve로 감싸지기 때문이다.
+       */
+
+      const promise1 = RiotAPI.GetUserChampMastery(obj);
+      const promise2 = RiotAPI.GetMatchInfo(obj);
+      //const promise3 = await Promise.all(promise1, promise2).catch(() => obj = null);
+
+      await Promise.all([promise1, promise2]);
+
+      if (obj != null) {
+        obj["champions"] = ChampionInfo;
+        obj["spells"] = SpellInfo;
+        obj["items"] = ItemInfo;
+
+        res.writeHead(200);
+        res.end(JSON.stringify(obj));
+      } else {
+        res.writeHead(204);
+        res.end();
+      }
+    }
+  }
+
+  //* 기타 다른 파일들 :)
+  else {
+>>>>>>> origin/develop
     SelectFile(res, req.url, GetContentType(req.url));
   }
 }
@@ -223,12 +295,9 @@ function ReadResouceFile(path, res){
  * @param {*} contentType : Content - Type
  * @param {*} responscode  : 응답 코드. 200 (요청이 성공적으로 완료되었다는걸 나타냄
  */
-function SelectFile(res, path, contentType, responscode = 200)
-{
+function SelectFile(res, path, contentType, responscode = 200) {
   let filePath = path;
-  if(filePath[0] === '/')
-    filePath = filePath.substring(1);
-  
+  if (filePath[0] === "/") filePath = filePath.substring(1);
 
   fs.readFile(filePath, (err, data) => {
     {
@@ -236,18 +305,17 @@ function SelectFile(res, path, contentType, responscode = 200)
        * * 파일을 읽을 수 없을 때
        * * 응답코드 500을 헤드에 넣어 응답한다. (500 : 서버가 처리방법을 모르는 상황이 발생했음을 나타냄)
        */
-      if(err)
-      {
-        LOG("FS ERR : Failed Read File : " + path);
-        res.writeHead(500, {'Content-Type' : 'text/plain'});
-        res.end('500 - Internal Error');
+      if (err) {
+        Log("FS ERR : Failed Read File : " + path);
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("500 - Internal Error");
         return;
       }
 
-      res.writeHead(responscode, {'Content-Type' : contentType});
+      res.writeHead(responscode, { "Content-Type": contentType });
       res.end(data);
     }
-  })
+  });
 }
 
 
@@ -257,24 +325,25 @@ function SelectFile(res, path, contentType, responscode = 200)
  * @param {*} fileName : 파일 이름
  * @returns : Content-Type
  */
+<<<<<<< HEAD
 function GetContentType(fileName)
 {
   let split = fileName.split('.');
   let extension = split[split.length-1];
+=======
+function GetContentType(fileName) {
+  let split = fileName.split(".");
+  //let extension = GetExtension(fileName);
+  let extension = split[split.length - 1];
+>>>>>>> origin/develop
   let contentType = null;
 
-  if(extension == "js" || extension == "mjs")
-    contentType = "text/javascript";
-  else if(extension == "ico")
-    contentType = "image/x-icon";
-  else if(extension == "html" || extension == '/' || extension == '')
+  if (extension == "js" || extension == "mjs") contentType = "text/javascript";
+  else if (extension == "ico") contentType = "image/x-icon";
+  else if (extension == "html" || extension == "/" || extension == "")
     contentType = "text/html";
-  else if(extension == "css")
-    contentType = "text/css";
-  else if(extension == "png")
-    contentType = "image/png";
-  else
-    contentType = "Multipart/related";
+  else if (extension == "css") contentType = "text/css";
+  else if (extension == "png") contentType = "image/png";
+  else contentType = "Multipart/related";
   return contentType;
 }
-

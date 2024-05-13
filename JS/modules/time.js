@@ -11,8 +11,8 @@ class Time {
    * * 시간 비교를 위해서 가져온다.
    * @returns : 현재 UTC 기준으로 1970년 1월 1일 0시 0분 0초부터 현재까지 경과된 밀리초를 가져온다
    */
-  GetTime() {
-    return date.now() || new Date.GetTime();
+  static GetTime() {
+    return Date.now();
   }
 
   /**
@@ -49,4 +49,5 @@ class Time {
 }
 
 const time = new Time();
-module.exports = time;
+// module.exports = time;
+export { Time };
