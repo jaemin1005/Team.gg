@@ -310,3 +310,11 @@
 
 }
 
+#loading{
+  width: min-content;
+  height: min-content;
+  > img:first-child{
+    width: TransPixelToVW(722px);
+    object-fit: contain;
+  }
+}
