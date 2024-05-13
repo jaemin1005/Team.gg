@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 3000;
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
-const url = require("url");
+
+
 
 // ! 05.12 이종수
 const LOG =require("./Module/Log.js");
@@ -133,11 +134,13 @@ function ReqSummoner(req, res){
 */
 async function ReqSearchUser(req, res){
 
-  // const parseUrl = url.parse(req.url, true);
-  // const query = parseUrl.query;
-  // const server = query["first_search_form_select"];
-  // const name = query["userName_input"];
-  const name = req.url.replace("/summoner/","");
+
+
+  let name = req.url.replace("/summoner/","");
+  name = decodeURI(name);
+  name = name.replace("-", "#");
+
+
   //* 유저의 puuid, gameName, tagLine의 정보를 받아옴.
   let obj = await RiotAPI.GetUserInfo(name, res);
   if(obj != null){
@@ -147,6 +150,10 @@ async function ReqSearchUser(req, res){
     const promise2 = RiotAPI.GetMatchInfo(obj);
     //* 유저의 프로필 아이콘 번호, 랭크 정보.
     const promise3 = RiotAPI.GetAccountID(obj);
+
+    //* 유저의 최근 매칭
+    //const promise4 = RiotAPI.GetCurrentGame(obj);
+
 
     await Promise.all([promise1, promise2,promise3]).catch(() => (obj = null));
     if(obj != null){
@@ -218,7 +225,6 @@ function GetContentType(fileName)
   let split = fileName.split('.');
   let extension = split[split.length-1];
   let contentType = null;
-
   if (extension == "js" || extension == "mjs") contentType = "text/javascript";
   else if (extension == "ico") contentType = "image/x-icon";
   else if (extension == "html" || extension == "/" || extension == "")
@@ -228,3 +234,4 @@ function GetContentType(fileName)
   else contentType = "Multipart/related";
   return contentType;
 }
+
