@@ -20,3 +20,4 @@ const LOGCOOMAND = Object.freeze({
 })
 
 module.exports = {JSONCOMMAND, HTMLCOMMAND};
+

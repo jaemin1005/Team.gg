@@ -9,7 +9,7 @@ function createSetElement(tagName, attri = {}){
     let element = document.createElement(tagName);
     
     let keys = Object.keys(attri);
-    console.log(keys);
+    //console.log(keys);
     
 
     for(let i =0; i < keys.length; i++){

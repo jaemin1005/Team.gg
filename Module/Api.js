@@ -1,19 +1,4 @@
-//#region * Access Database 
-// const ExportPlayLog = require('../Module/DB/ExportPlayLog.js');
-// const CheckUser = require('../Module/DB/CheckUser.js');
-// const IoDebounce = require('../Module/DB/DebounceOutput.js');
-// const ExportChampionInfo = require('../Module/DB/ExportChampionInfo.js');
-// const ExportIconInfo = require('../Module/DB/ExportIconInfo.js');
-// const ExportUser = require('../Module/DB/ExportUser.js');
-// const InsertPlayLog = require('../Module/DB/InsertPlayLog.js');
-// const InsertUser = require('../Module/DB/InsertUser.js');
-// const RemoveUser = require('../Module/DB/RemoveUser.js');
-// const SummonersUpdate = require('../Module/DB/UpdateUser.js');
 const UserTier = require("../Module/DB/TierDB.js");
-
-//#endregion
-
-
 
 require('dotenv').config();
 const PATH = process.env.DirPATH || __dirname;
@@ -209,8 +194,34 @@ let func = {
       // Log(`API ERR : Failed Get Match Info ${err}`);
       // throw new Error();
     }
+  },
+
+  /**
+   * * 2024.05.10 황재민
+   * * User의 고유 id 번호 (랭크 API 검색할 때 필요), 프로필 아이콘 번호, 랭크를 불러온다.
+   * @param {*} obj : GetUserInfo에서 만들어진 객체 
+   */
+  async GetAccountID(obj){
+    try{
+      //* User 고유 Id, 프로필 아이콘 불러오는 API
+      let res = await fetch(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${obj.puuid}?api_key=${API_KEY}`)
+      let returnObj = await res.json();
+
+      //* Obj에 프로퍼티를 추가한다.
+      Object.keys(returnObj).forEach(key => {
+        obj[key] = returnObj[key];
+      })
+      
+      //* 자기 자신에대한 랭크 정보. 
+      res = await fetch(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${obj.id}?api_key=${API_KEY}`);
+      returnObj = await res.json();
+
+      obj.league = returnObj;
+    } catch(err){
+      Log(`API ERR : GET AccountID ${err}`);
+      throw new Error();
+    } 
   }
-  
 }
 
 module.exports = func
