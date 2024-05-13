@@ -51,12 +51,12 @@ async function ProcessGETMethod(req, res){
 
   //* Main Html 
   if(req.url ==='/'){
-    SelectFile(res, 'mian.html', "text/html");
+    SelectFile(res, 'main.html', "text/html");
     return;
   }
 
-  if(req.url.startsWith("/summoner/")) ReqSummoner(req,res);
-  else if(req.url.startsWith("/searchuser/")) ReqSearchUser(req,res);
+  if(req.url.startsWith("/summoner/")) ReqSearchUser(req,res);
+  //else if(req.url.startsWith("/searchuser/")) ReqSearchUser(req,res);
   else if(req.url.startsWith("/json/")) ReqJSON(req,res);
   else ReadFiles(req,res);
 }
@@ -113,6 +113,7 @@ function ReadFiles(req, res){
 
     else{
       res.setHeader('ETag', process.env.RIOT_DATA_VERSION);
+      res.setHeader('Content-Type', GetContentType(req.url));
       res.setHeader('Cache-Control', 'public, no-transform, max-age=15552000');
       ReadResouceFile(req.url, res);
     }
@@ -124,6 +125,12 @@ function ReadFiles(req, res){
   }
 }
 
+/**
+ * * 2024.05.13 황재민
+ * * 소환사 정보 요청
+ * @param {*} req 클라이언트 요청  
+ * @param {*} res 서버 응답
+ */
 function ReqSummoner(req, res){
   const parseUrl = url.parse(req.url, true);
   const query = parseUrl.query;
@@ -141,15 +148,22 @@ function ReqSummoner(req, res){
 }
 
 /**
+* * 2024.05.11 황재민
 * * 요청한 유저의 정보를 처리하기 위한 조건문
-* * 쿼리스트링으로 유저의 아이디를 받고, 그 아이디를 이용하여 API를 처리한다. 
+* * 쿼리스트링으로 유저의 아이디를 받고, 그 아이디를 이용하여 API를 처리한다
+* *.
+* * 2024.05.13 황재민
+* * SPA로 변경, 쿼리스트링으로 요청하지 않음 
 */
 async function ReqSearchUser(req, res){
-  const parseUrl = url.parse(req.url, true);
-  const query = parseUrl.query;
+  // const parseUrl = url.parse(req.url, true);
+  // const query = parseUrl.query;
   
-  const server = query["first_search_form_select"];
-  const name = query["userName_input"];
+  // const server = query["first_search_form_select"];
+  // const name = query["userName_input"];
+  
+  const name = req.url.replace("/summoner/","");
+
 
   //* 유저의 puuid, gameName, tagLine의 정보를 받아옴.
   let obj = await RiotAPI.GetUserInfo(name, res);
