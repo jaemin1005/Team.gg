@@ -11,7 +11,7 @@ const fs = require("fs");
 const path = require("path");
 
 // ! 05.12 이종수
-const LOG =require("./Module/Log.js");
+const Log =require("./Module/Log.js");
 const { JSONCOMMAND, HTMLCOMMAND } = require("./Module/EnumCommand.js");
 const RiotAPI = require("./Module/Api.js");
 
@@ -67,6 +67,7 @@ async function ReqJSON(req, res){
     try{
       res.setHeader('ETag', process.env.RIOT_DATA_VERSION);
       let resObj = {};
+      resObj.version = process.env.RIOT_DATA_VERSION;
       const promise1 = ChampionInfo().then((res) => resObj["champions"] = res);
       const promise2 = SpellInfo().then((res) => resObj["spells"] = res);
       const promise3 = ItemInfo().then((res) => resObj["items"] = res);
@@ -80,6 +81,13 @@ async function ReqJSON(req, res){
     }
   }
 }
+
+/**
+ * * 2024.05.13 황재민
+ * * 파일 읽어오기
+ * @param {*} req 클라이언트 요청
+ * @param {*} res 서버 응답
+ */
 function ReadFiles(req, res){
   //* Resource 같은 경우 대용량 파일이 대부분이다.
   //* createReadStream을 이용하여 파일을 읽는다.
@@ -93,6 +101,7 @@ function ReadFiles(req, res){
     else{
       res.setHeader('ETag', process.env.RIOT_DATA_VERSION);
       res.setHeader('Content-Type', GetContentType(req.url));
+      //* 캐시를 설정하여 해당 Resouce를 저장한다.
       res.setHeader('Cache-Control', 'public, no-transform, max-age=15552000');
       ReadResouceFile(req.url, res);
     }
@@ -102,6 +111,7 @@ function ReadFiles(req, res){
     SelectFile(res, req.url, GetContentType(req.url));
   }
 }
+
 /**
  * * 2024.05.13 황재민
  * * 소환사 정보 요청
@@ -148,11 +158,11 @@ async function ReqSearchUser(req, res){
     const promise3 = RiotAPI.GetAccountID(obj);
 
     //* 유저의 최근 매칭
-    //const promise4 = RiotAPI.GetCurrentGame(obj);
+    const promise4 = RiotAPI.GetCurrentGame(obj);
 
 
 
-    await Promise.all([promise1, promise2,promise3]).catch(() => (obj = null));
+    await Promise.all([promise1, promise2,promise3,promise4]).catch(() => (obj = null));
     if(obj != null){
       res.writeHead(200);
       res.end(JSON.stringify(obj));

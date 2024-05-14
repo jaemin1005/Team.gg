@@ -22,7 +22,31 @@ require("dotenv").config();
 
 const PATH = process.env.DirPATH || __dirname;
 const API_KEY = process.env.API_KEY;
+const API_KEY_L1 = process.env.API_KEY_L1;
+const API_KEY_L2 = process.env.API_KEY_L2;
 // const Log = require("./Log.js");
+
+
+
+let GetAPIKey = function (){
+  let nKeyCount = 0;
+  
+  return function(){
+    let nCount = nKeyCount % 60;
+
+    if(nCount >= 0 && nCount < 20){
+      return API_KEY;
+    }
+    else if(nCount >= 20 && nCount < 40){
+      return API_KEY_L1;
+    }
+    else{
+      return API_KEY_L2;
+    }
+    nKeyCount++;
+  }
+}();
+
 
 /**
  * * 날짜 : 2024.04.15
@@ -45,6 +69,10 @@ const getRotations = async () => {
     console.log(err);
   }
 };
+
+
+
+
 
 /**
  * * 2024.04.19 황재민
@@ -252,6 +280,41 @@ let func = {
       Log(`API ERR : GET AccountID ${err}`);
       throw new Error();
     } 
+  },
+
+  /**
+   * * 2024.05.13 황재민
+   * * 현재 진행중인 게임 불러오기.
+   * * 진행 중인 게임이 있다면, 각 참가자들의 랭크 승률, 해당 챔피언 승률까지 가지고 온다. 
+   * @param {*} obj : Client에서 검색한 유저의 정보가 담겨있는 객체
+   */
+  async GetCurrentGame(obj){
+    try{
+      let res = await fetch(`https://kr.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${obj.puuid}?api_key=${API_KEY}`);
+      let recentMatchObj = await res.json();
+
+      //* 매칭이 진해중이라면. 현재 모든 참가자의 랭크 승률, 진행하고 있는 챔피언의 승률을 가지고 온다. 
+      if(recentMatchObj.hasOwnProperty("status") !== false){
+
+        const leagueRequest = recentMatchObj.participants.map((participant) => {
+          let summonerId = participant.summonerID;
+          return fetch(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}?api_key=${API_KEY}`)
+          .then(res => res.json())
+          .then(obj => participant.league = obj);
+        });
+
+        await Promise.all(leagueRequest);
+        obj.recentMatch = recentMatchObj;
+      }  
+
+      else{
+        obj.recentMatch = null;
+      }
+
+    }catch(err){
+      Log(`API ERR : GET AccountID ${err}`);
+      throw new Error();
+    }
   }
 }
 
