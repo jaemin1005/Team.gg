@@ -19,10 +19,5 @@ const LOGCOOMAND = Object.freeze({
   IO_ERR : "IO ERR : "
 })
 
-const RIOTGAMETYPE = Object.freeze({
-  420 : 
-})
-
-
 module.exports = {JSONCOMMAND, HTMLCOMMAND};
 

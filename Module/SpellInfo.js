@@ -21,13 +21,13 @@ let ReturnObj = async () => {
  */
 function CreateSpellObj(obj){
   let spell = {};
-  let {id, name} = obj;
+  let {id, name, key} = obj;
 
   spell.id = id;
   spell.name = name;
   spell.imgSrc = GetVersion() + SPELL_IMG_PATH + `${spell.id}` + ".png";
 
-  spells[spell.id] = spell;
+  spells[key] = spell;
 }
 
 module.exports = ReturnObj;

@@ -1,5 +1,3 @@
-import func from "../../Module/Api";
-
 let url = "http://localhost:3000/";
 let jsonDataUrl = url + "json/";
 

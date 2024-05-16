@@ -1,5 +1,6 @@
 import { checkUser } from "./Modules/checkUser.js";
 import { RequestUserData, RequestJSONData } from "./Modules/ReqData.js";
+import { GameQueueType } from "./Modules/GameQueueType.js";
 
 let requestData = await RequestJSONData();
 
@@ -13,6 +14,11 @@ const reqChamionsUrl = "/champions/"
 
 const main = TransDOMArrIntoObj(document.getElementById("main").children);
 const $search = document.getElementById("search");
+const $recentMsg = document.getElementById("recent_match_msg");
+const $recentMatch = document.getElementById("recent_match");
+const $blueTeam = document.getElementById("recent_blue_team");
+const $redTeam = document.getElementById("recent_red_team");
+const $shortChampionMastery = document.getElementById("short_champion_mastery")
 
 ClearViewInMain();
 
@@ -98,16 +104,22 @@ async function StatUIUpdate(data){
   
   for(let league of data.league){
     if(league.queueType === "RANKED_SOLO_5x5"){
+
+      let tierImgPath = `/resources/tier/${(league.tier).toLowerCase()}.webp`
+      fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
       let $leagueInfo = document.getElementById("league_info");
       $leagueInfo.children[0].textContent = league.tier + " " + league.rank;
       $leagueInfo.children[1].textContent = league.leaguePoints + " LP";
     }
   }
 
-  const blueTeam = document.getElementById("recent_blue_team");
-  const redTeam = document.getElementById("recent_red_team");
 
   if(data.recentMatch != null){
+    
+    $recentMsg.style.display = "none";
+    $blueTeam.style.display = "flex";
+    $redTeam.style.display = "flex";
+    
     let redTeamCount = 1;
     let blueTeamCount = 1;
     const recentData = data.recentMatch.participants;
@@ -115,7 +127,7 @@ async function StatUIUpdate(data){
     Object.keys(recentData).forEach(key => {
 
         let participant = recentData[key];
-        let row = participant.teamId == 100 ? blueTeam.children[blueTeamCount++] : redTeam.children[redTeamCount++];
+        let row = participant.teamId == 100 ? $blueTeam.children[blueTeamCount++] : $redTeam.children[redTeamCount++];
 
         let profile_icon = participant.profileIconId;
         let spell_1 = participant.spell1Id;
@@ -126,29 +138,42 @@ async function StatUIUpdate(data){
         let subPerk = participant.perkSubStyle;
         let summonerId = participant.summonerId;
         let league = participant.league;
-        let wins = league.wins;
-        let lossses = league.lossses;
-        let winRate = Math.ceil(wins / (wins + lossses) * 100);
-        
+        let leagueIdx = null;
         
 
-        row.children[0].children[0].src = requestData.champions[championId];
+        for(let i = 0 ; i < league.length ; i++){
+          if(league[i].queueType == GameQueueType[data.recentMatch.gameQueueConfigId]){
+            leagueIdx = i;
+            break;
+          }
+        }
+
+        let wins = leagueIdx != null ? Number(league[leagueIdx].wins) : 0;
+        let losses = leagueIdx != null ? Number(league[leagueIdx].losses) : 0;
+        let winRate = Math.ceil(wins / (wins + losses) * 100);
+
+        row.children[0].children[0].src = requestData.champions[championId].imgSrc;
+        row.children[1].children[0].children[0].src = requestData.spells[spell_1].imgSrc;
+        row.children[1].children[2].children[0].src = requestData.spells[spell_2].imgSrc;
         row.children[2].children[0].textContent = riotId;
-        row.children[3].children[0].textContent = winRate + ` (${wins+lossses})`;
-        row.children[3].children[1].children[0].style.width =  
-
-        
-
-
-
+        row.children[2].children[1].textContent = leagueIdx != null ? league[leagueIdx].tier + " " + league[leagueIdx].rank + " (" + league[leagueIdx].leaguePoints + ")" : "-";
+        row.children[3].children[0].textContent = leagueIdx != null ? `${winRate}%` : "-";
+        row.children[3].children[1].children[0].children[0].style.width = leagueIdx != null ? `${winRate}%` : "-";
     });
   }
 
+  else{
+    $redTeam.style.display = "none";
+    $blueTeam.style.display = "none";
+    $recentMsg.style.display = "block";
+    $recentMsg.textContent = `${data.gameName}#${data.tagLine}은 현재 게임중이 아닙니다.`
+  }
 
 
-
-
-
+  $shortChampionMastery.children[0].children[0].src = requestData.champions[data.champInfo[0].championId].imgSrc;
+  $shortChampionMastery.children[1].children[0].textContent = requestData.champions[data.champInfo[0].championId].name;
+  $shortChampionMastery.children[1].children[1].textContent = data.champInfo[0].championPoints;
 
   await Promise.all([promise1])
 }
+

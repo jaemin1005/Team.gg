@@ -11,13 +11,14 @@ const fs = require("fs");
 const path = require("path");
 
 // ! 05.12 이종수
-const Log =require("./Module/Log.js");
+const {Log, LogAPICallCount} = require("./Module/Log.js");
 const { JSONCOMMAND, HTMLCOMMAND } = require("./Module/EnumCommand.js");
 const RiotAPI = require("./Module/Api.js");
 
 const ChampionInfo = require("./Module/ChampionInfo");
 const SpellInfo = require("./Module/SpellInfo");
 const ItemInfo = require("./Module/ItemInfo");
+const RuneInfo = require("./Module/RuneInfo");
 const func = require('./Module/Api.js');
 
 /**
@@ -33,6 +34,8 @@ http.createServer((req,res) => {
   console.log("서버 시작하였음");
   console.log("http://localhost:3000");
 });
+
+
 /**
  * * 2025.05.10 황재민
  * * Get을 처리하기 위한 함수
@@ -68,10 +71,13 @@ async function ReqJSON(req, res){
       res.setHeader('ETag', process.env.RIOT_DATA_VERSION);
       let resObj = {};
       resObj.version = process.env.RIOT_DATA_VERSION;
+      
       const promise1 = ChampionInfo().then((res) => resObj["champions"] = res);
       const promise2 = SpellInfo().then((res) => resObj["spells"] = res);
       const promise3 = ItemInfo().then((res) => resObj["items"] = res);
-      await Promise.all([promise1,promise2,promise3]);
+      const promise4 = RuneInfo().then((res) => resObj["runes"] = res);
+
+      await Promise.all([promise1,promise2,promise3,promise4]);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(resObj));
@@ -131,6 +137,7 @@ function ReqSummoner(req, res){
     SelectFile(res, req.url, GetContentType(req.url));
   }
 }
+
 /**
 * * 2024.05.11 황재민
 * * 요청한 유저의 정보를 처리하기 위한 조건문
@@ -163,6 +170,8 @@ async function ReqSearchUser(req, res){
 
 
     await Promise.all([promise1, promise2,promise3,promise4]).catch(() => (obj = null));
+    Log("API Call Num : " + RiotAPI.nKeyCount);
+
     if(obj != null){
       res.writeHead(200);
       res.end(JSON.stringify(obj));
@@ -239,6 +248,5 @@ function GetContentType(fileName)
   else if (extension == "png") contentType = "image/png";
   else contentType = "Multipart/related";
   return contentType;
-
 }
 
