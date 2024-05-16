@@ -1,9 +1,13 @@
 import { checkUser } from "./Modules/checkUser.js";
 import { RequestUserData, RequestJSONData } from "./Modules/ReqData.js";
+<<<<<<< HEAD
 import { GameQueueType } from "./Modules/GameQueueType.js";
 
 let requestData = await RequestJSONData();
 
+=======
+import { tagEnum, RecordManager }from "./Modules/userInfo.js"
+>>>>>>> origin/develop
 let url = "http://localhost:3000"
 
 const reqSummonersUrl = "/summoner/" 
@@ -13,6 +17,7 @@ const reqChamionsUrl = "/champions/"
 //const main = [...document.getElementById("main")].forEach()
 
 const main = TransDOMArrIntoObj(document.getElementById("main").children);
+
 const $search = document.getElementById("search");
 const $recentMsg = document.getElementById("recent_match_msg");
 const $recentMatch = document.getElementById("recent_match");
@@ -20,18 +25,55 @@ const $blueTeam = document.getElementById("recent_blue_team");
 const $redTeam = document.getElementById("recent_red_team");
 const $shortChampionMastery = document.getElementById("short_champion_mastery")
 
+let matchData;
+
+
 ClearViewInMain();
 
 
-$search.onkeydown = (e) => {
+
+
+let a = function(){
+  OnViewInMain("match")
+  
+  // let rec = new RecordManager(null, matchData[0])
+  
+  // let key = Object.keys(tagEnum)
+  // console.log(key)
+  // for(let i = 0; i < key.length; i++){
+  //   rec.createElement(key[i], tagEnum[key[i]][0])
+  // }
+  
+  // for (let j = 0; j < key.length; j++) {
+    
+  //   let childTag = tagEnum[key[j]][1];
+
+  //   if (childTag === undefined) {
+  //     continue;
+  //   }
+
+  //   rec.appendTag(key[j], childTag["child"]);
+  // }
+  // rec.printPlayer();
+}
+
+
+
+
+
+$search.onkeydown = async (e) => {
+  
   if(e.keyCode == "13"){  
     let searchValue = checkUser($search.value);
     if(searchValue !== undefined){
-      SearchUser(searchValue);
+      await SearchUser(searchValue);
     }
+    a()
   }
+  
 }
 
+<<<<<<< HEAD
 /**
  * * 2024.05.13 황재민
  * * 검색 이벤트 헨들러임 (검색에 성공할 시)
@@ -39,12 +81,19 @@ $search.onkeydown = (e) => {
  * * 검색한 아이디를 인코딩하여 서버에게 요청한다.
  * @param {*} searchValue : 검색한 아이디
  */
+=======
+
+>>>>>>> origin/develop
 async function SearchUser(searchValue){
   OnViewInMain("loading");
   let data = searchValue.replace("#", "-");
   data = encodeURI(data);
   let userData = await RequestUserData(url+reqSummonersUrl+data);
+<<<<<<< HEAD
   await StatUIUpdate(userData);
+=======
+  matchData = userData.matchInfo
+>>>>>>> origin/develop
   OnViewInMain("stat");
 }
 
@@ -57,7 +106,14 @@ async function SearchUser(searchValue){
 function OnViewInMain(name){
   Object.keys(main).forEach(key => {
     if(key === name){
-      main[name].style.display = "flex";
+      if(name == "match"){
+        main[name].style.display = "grid";
+      }
+      else{
+        main[name].style.display = "flex";
+      }
+      
+      
     }
     else{
       main[key].style.display = "none";
@@ -89,6 +145,7 @@ function TransDOMArrIntoObj(arrElem){
   return obj;
 }
 
+<<<<<<< HEAD
 async function StatUIUpdate(data){
   
   const profileIconPath = url+"/resources/lol/" + requestData.version + "/img/profileicon/" + data.profileIconId + ".png"
@@ -177,3 +234,5 @@ async function StatUIUpdate(data){
   await Promise.all([promise1])
 }
 
+=======
+>>>>>>> origin/develop

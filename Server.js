@@ -10,6 +10,8 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
+
+
 // ! 05.12 이종수
 const {Log, LogAPICallCount} = require("./Module/Log.js");
 const { JSONCOMMAND, HTMLCOMMAND } = require("./Module/EnumCommand.js");
@@ -20,6 +22,7 @@ const SpellInfo = require("./Module/SpellInfo");
 const ItemInfo = require("./Module/ItemInfo");
 const RuneInfo = require("./Module/RuneInfo");
 const func = require('./Module/Api.js');
+
 
 /**
  * * 2024.05.10 황재민
@@ -149,6 +152,7 @@ function ReqSummoner(req, res){
 async function ReqSearchUser(req, res){
 
 
+
   let name = req.url.replace("/summoner/","");
   name = decodeURI(name);
   name = name.replace("-", "#");
@@ -168,10 +172,14 @@ async function ReqSearchUser(req, res){
     const promise4 = RiotAPI.GetCurrentGame(obj);
 
 
+<<<<<<< HEAD
 
     await Promise.all([promise1, promise2,promise3,promise4]).catch(() => (obj = null));
     Log("API Call Num : " + RiotAPI.nKeyCount);
 
+=======
+    await Promise.all([promise1, promise2,promise3]).catch(() => (obj = null));
+>>>>>>> origin/develop
     if(obj != null){
       res.writeHead(200);
       res.end(JSON.stringify(obj));
@@ -210,6 +218,7 @@ function ReadResouceFile(path, res){
 function SelectFile(res, path, contentType, responscode = 200) {
   let filePath = path;
   if (filePath[0] === "/") filePath = filePath.substring(1);
+
   fs.readFile(filePath, (err, data) => {
     {
       /**
