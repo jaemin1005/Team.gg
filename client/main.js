@@ -1,13 +1,9 @@
 import { checkUser } from "./Modules/checkUser.js";
 import { RequestUserData, RequestJSONData } from "./Modules/ReqData.js";
-<<<<<<< HEAD
 import { GameQueueType } from "./Modules/GameQueueType.js";
 
-let requestData = await RequestJSONData();
-
-=======
 import { tagEnum, RecordManager }from "./Modules/userInfo.js"
->>>>>>> origin/develop
+
 let url = "http://localhost:3000"
 
 const reqSummonersUrl = "/summoner/" 
@@ -16,46 +12,47 @@ const reqChamionsUrl = "/champions/"
 //const main = Object.assign([...document.getElementById("main").children]);
 //const main = [...document.getElementById("main")].forEach()
 
+//* Main의 자식들의 ID가 프로퍼티로 구성되어 있는 객체
 const main = TransDOMArrIntoObj(document.getElementById("main").children);
 
+//* Stat 항목에 대한 DOM
 const $search = document.getElementById("search");
 const $recentMsg = document.getElementById("recent_match_msg");
-const $recentMatch = document.getElementById("recent_match");
 const $blueTeam = document.getElementById("recent_blue_team");
 const $redTeam = document.getElementById("recent_red_team");
 const $shortChampionMastery = document.getElementById("short_champion_mastery")
-
-let matchData;
-
-
-ClearViewInMain();
-
+const $recentSearch = document.getElementById("")
+const $leagueInfo = document.getElementById("league_info");
+const recentSearchData = [];
+const requestData = await RequestJSONData();
 
 
+Start();
 
-let a = function(){
-  OnViewInMain("match")
+
+// let a = function(){
+//   OnViewInMain("match")
   
-  // let rec = new RecordManager(null, matchData[0])
+//   // let rec = new RecordManager(null, matchData[0])
   
-  // let key = Object.keys(tagEnum)
-  // console.log(key)
-  // for(let i = 0; i < key.length; i++){
-  //   rec.createElement(key[i], tagEnum[key[i]][0])
-  // }
+//   // let key = Object.keys(tagEnum)
+//   // console.log(key)
+//   // for(let i = 0; i < key.length; i++){
+//   //   rec.createElement(key[i], tagEnum[key[i]][0])
+//   // }
   
-  // for (let j = 0; j < key.length; j++) {
+//   // for (let j = 0; j < key.length; j++) {
     
-  //   let childTag = tagEnum[key[j]][1];
+//   //   let childTag = tagEnum[key[j]][1];
 
-  //   if (childTag === undefined) {
-  //     continue;
-  //   }
+//   //   if (childTag === undefined) {
+//   //     continue;
+//   //   }
 
-  //   rec.appendTag(key[j], childTag["child"]);
-  // }
-  // rec.printPlayer();
-}
+//   //   rec.appendTag(key[j], childTag["child"]);
+//   // }
+//   // rec.printPlayer();
+// }
 
 
 
@@ -68,12 +65,19 @@ $search.onkeydown = async (e) => {
     if(searchValue !== undefined){
       await SearchUser(searchValue);
     }
-    a()
+    // a()
   }
-  
 }
 
-<<<<<<< HEAD
+function Start(){
+  ClearViewInMain();
+}
+
+function AddLocalStoarge(key, value){
+  recentSearchData[recentSearchData.length] = value;
+
+}
+
 /**
  * * 2024.05.13 황재민
  * * 검색 이벤트 헨들러임 (검색에 성공할 시)
@@ -81,19 +85,18 @@ $search.onkeydown = async (e) => {
  * * 검색한 아이디를 인코딩하여 서버에게 요청한다.
  * @param {*} searchValue : 검색한 아이디
  */
-=======
-
->>>>>>> origin/develop
 async function SearchUser(searchValue){
   OnViewInMain("loading");
   let data = searchValue.replace("#", "-");
   data = encodeURI(data);
   let userData = await RequestUserData(url+reqSummonersUrl+data);
-<<<<<<< HEAD
+  
+  if(userData == null){
+    ClearViewInMain();
+    return;
+  }
+
   await StatUIUpdate(userData);
-=======
-  matchData = userData.matchInfo
->>>>>>> origin/develop
   OnViewInMain("stat");
 }
 
@@ -145,7 +148,11 @@ function TransDOMArrIntoObj(arrElem){
   return obj;
 }
 
-<<<<<<< HEAD
+/**
+ * * 2024.05.16 황재민
+ * * Stat관련 HTML, 받안온 데이터를 가지고, Element의 UI를 업데이트 해주는 함수.
+ * @param {*} data : User Data
+ */
 async function StatUIUpdate(data){
   
   const profileIconPath = url+"/resources/lol/" + requestData.version + "/img/profileicon/" + data.profileIconId + ".png"
@@ -157,20 +164,38 @@ async function StatUIUpdate(data){
   $profileDetail.children[0].textContent = data.gameName;
   $profileDetail.children[1].textContent = " #" + data.tagLine;
   
+  //* Profile Icon 이미지를 불러온다.
   let promise1 = fetch(profileIconPath).then(() => {$profileIcon.children[0].src = profileIconPath;});
   
-  for(let league of data.league){
-    if(league.queueType === "RANKED_SOLO_5x5"){
-
-      let tierImgPath = `/resources/tier/${(league.tier).toLowerCase()}.webp`
-      fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
-      let $leagueInfo = document.getElementById("league_info");
-      $leagueInfo.children[0].textContent = league.tier + " " + league.rank;
-      $leagueInfo.children[1].textContent = league.leaguePoints + " LP";
-    }
+  //* 점수에는 솔로랭크 점수만 보여준다.
+  const soloRank = data.league.find(league => league.queueType === "RANKED_SOLO_5x5");
+  if(soloRank){
+    let tierImgPath = `/resources/tier/${(soloRank.tier).toLowerCase()}.webp`
+    fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
+    $leagueInfo.children[0].textContent = league.tier + " " + league.rank;
+    $leagueInfo.children[1].textContent = league.leaguePoints + " LP";
+  }
+  else{
+    let tierImgPath = "/resources/tier/unrank.webp";
+    fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
+    $leagueInfo.children[0].textContent = "unrankded"
+    $leagueInfo.children[1].textContent = "-";
   }
 
+  // for(let league of data.league){
+  //   if(league.queueType === "RANKED_SOLO_5x5"){
 
+  //     let tierImgPath = `/resources/tier/${(league.tier).toLowerCase()}.webp`
+      
+  //     //* 랭크 티어 이미지 요청 후, 이미지 업데이트. 
+  //     fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
+  //     let $leagueInfo = document.getElementById("league_info");
+  //     $leagueInfo.children[0].textContent = league.tier + " " + league.rank;
+  //     $leagueInfo.children[1].textContent = league.leaguePoints + " LP";
+  //   }
+  // }
+
+  //* 현재 진행중인 매칭이 있을 떄
   if(data.recentMatch != null){
     
     $recentMsg.style.display = "none";
@@ -219,6 +244,7 @@ async function StatUIUpdate(data){
     });
   }
 
+  //* 현재 진행중인 매칭이 없을 떄.
   else{
     $redTeam.style.display = "none";
     $blueTeam.style.display = "none";
@@ -226,7 +252,7 @@ async function StatUIUpdate(data){
     $recentMsg.textContent = `${data.gameName}#${data.tagLine}은 현재 게임중이 아닙니다.`
   }
 
-
+  //* 해당 유저의 챔피언 마스터리
   $shortChampionMastery.children[0].children[0].src = requestData.champions[data.champInfo[0].championId].imgSrc;
   $shortChampionMastery.children[1].children[0].textContent = requestData.champions[data.champInfo[0].championId].name;
   $shortChampionMastery.children[1].children[1].textContent = data.champInfo[0].championPoints;
@@ -234,5 +260,3 @@ async function StatUIUpdate(data){
   await Promise.all([promise1])
 }
 
-=======
->>>>>>> origin/develop

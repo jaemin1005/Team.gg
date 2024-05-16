@@ -172,14 +172,9 @@ async function ReqSearchUser(req, res){
     const promise4 = RiotAPI.GetCurrentGame(obj);
 
 
-<<<<<<< HEAD
 
     await Promise.all([promise1, promise2,promise3,promise4]).catch(() => (obj = null));
-    Log("API Call Num : " + RiotAPI.nKeyCount);
-
-=======
-    await Promise.all([promise1, promise2,promise3]).catch(() => (obj = null));
->>>>>>> origin/develop
+    
     if(obj != null){
       res.writeHead(200);
       res.end(JSON.stringify(obj));

@@ -16,6 +16,7 @@
 
   > div:first-child{
     @include MainContainer(350px, 100%);
+    @include flex_basic_layout(column, flex-start, flex-start);
     background-color: $color-user-profile-background; 
   }
 
@@ -308,9 +309,33 @@
   }
 }
 
-.recent_match_column{
 
+.short_menu_column{
+  width: 100%;
+  height: min-content;
+  margin-top: 20px;
+  @include flex_basic_layout(column,flex-start,center);
+
+  > div:first-child{ 
+  font-size: $font-size30;
+  font-family: "Black Han Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  white-space: nowrap;
+  color: $color-white-font;
+  }
 }
+
+.short_menu_column.child{
+  width: 100%;
+  height: min-content;
+  @include flex_basic_layout(row,space-between,center);
+  
+  > div:first-child{
+
+  }
+}
+
 
 #loading{
   display: none;
