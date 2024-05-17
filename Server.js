@@ -49,7 +49,7 @@ http.createServer((req,res) => {
 async function ProcessGETMethod(req, res){
   //* Main Html
   if(req.url ==='/'){
-    SelectFile(res, 'main.html', "text/html");
+    SelectFile(res, 'main.html', GetContentType(req.url));
     return;
   }
   if(req.url.startsWith("/summoner/")) ReqSearchUser(req,res);

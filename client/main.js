@@ -172,8 +172,8 @@ async function StatUIUpdate(data){
   if(soloRank){
     let tierImgPath = `/resources/tier/${(soloRank.tier).toLowerCase()}.webp`
     fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
-    $leagueInfo.children[0].textContent = league.tier + " " + league.rank;
-    $leagueInfo.children[1].textContent = league.leaguePoints + " LP";
+    $leagueInfo.children[0].textContent = soloRank.tier + " " + soloRank.rank;
+    $leagueInfo.children[1].textContent = soloRank.leaguePoints + " LP";
   }
   else{
     let tierImgPath = "/resources/tier/unrank.webp";
