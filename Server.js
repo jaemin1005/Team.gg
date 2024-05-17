@@ -27,9 +27,11 @@ const func = require('./Module/Api.js');
 /**
  * * 2024.05.10 황재민
  * * Get으로 리뉴얼 하였음.
+ * * Log 추가
  */
 http.createServer((req,res) => {
   if(req.method == "GET"){
+    Log("GET Url : " + req.url);
     ProcessGETMethod(req,res);
   }
 })
@@ -170,8 +172,6 @@ async function ReqSearchUser(req, res){
 
     //* 유저의 최근 매칭
     const promise4 = RiotAPI.GetCurrentGame(obj);
-
-
 
     await Promise.all([promise1, promise2,promise3,promise4]).catch(() => (obj = null));
     

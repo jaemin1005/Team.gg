@@ -50,7 +50,7 @@
       @include flex_basic_layout();
       > #stat {
           @include MainContainer(1505px, 790px);
-          display: flex;
+          display: none;
           flex-direction: column;
           justify-content: space-between;
 

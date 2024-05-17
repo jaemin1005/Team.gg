@@ -26,7 +26,7 @@ class Time {
       "-" +
       (this.date.getMonth() + 1).toString().padStart(2, "0") +
       "-" +
-      this.date.getDay().toString().padStart(2, "0") +
+      this.date.getDate().toString().padStart(2, "0") +
       "-LOG.txt"
     );
   }

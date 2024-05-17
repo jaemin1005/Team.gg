@@ -47,6 +47,7 @@ class RiotAPI {
     }
 
     this.nKeyCount++;
+    LogAPICallCount(this.nKeyCount);
     return returnAPIKey;
   }
 
