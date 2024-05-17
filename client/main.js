@@ -1,6 +1,6 @@
 import { checkUser } from "./Modules/checkUser.js";
 import { RequestUserData, RequestJSONData } from "./Modules/ReqData.js";
-import { GameQueueType } from "./Modules/GameQueueType.js";
+import { GameQueueType } from "./Modules/CalcRiotApi.js";
 
 import { tagEnum, RecordManager }from "./Modules/userInfo.js"
 
