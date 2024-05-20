@@ -28,6 +28,10 @@ async function CreateRuneObj(obj){
     let obj = JSON.parse(data);
     obj.forEach(element => {
       element.icon = process.env.RIOT_DATA_ROOT_PATH + RUNE_IMG_PATH + element.icon;
+      element.slots.forEach(slot => {
+        slot["runes"].forEach(rune => rune.icon = process.env.RIOT_DATA_ROOT_PATH + RUNE_IMG_PATH + rune.icon);
+      });
+
       runes[element.id] = element;     
     });
   });

@@ -93,6 +93,8 @@ async function SearchUser(searchValue){
   
   if(userData == null){
     ClearViewInMain();
+    AlamTextUIUpdate(searchValue + "는 존재하지 않는 플레이어 입니다");
+    OnViewInMain("alam_text");
     return;
   }
 
@@ -115,8 +117,6 @@ function OnViewInMain(name){
       else{
         main[name].style.display = "flex";
       }
-      
-      
     }
     else{
       main[key].style.display = "none";
@@ -146,6 +146,10 @@ function TransDOMArrIntoObj(arrElem){
     obj[elem.id] = elem;
   }
   return obj;
+}
+
+function AlamTextUIUpdate(strText){
+  main["alam_text"].textContent = strText;
 }
 
 /**
