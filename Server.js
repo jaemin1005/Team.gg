@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
-
+const runeJson = require('./resources/lol/14.10.1/data/ko_KR/runesReforged.json')
 
 
 // ! 05.12 이종수
@@ -30,6 +30,7 @@ const func = require('./Module/Api.js');
  * * Log 추가
  */
 http.createServer((req,res) => {
+  
   if(req.method == "GET"){
     Log("GET Url : " + req.url);
     ProcessGETMethod(req,res);
@@ -57,7 +58,73 @@ async function ProcessGETMethod(req, res){
   if(req.url.startsWith("/summoner/")) ReqSearchUser(req,res);
   //else if(req.url.startsWith("/searchuser/")) ReqSearchUser(req,res);
   else if(req.url.startsWith("/json/")) ReqJSON(req,res);
+  else if(req.url.startsWith("/champImg")||req.url.startsWith("/itemImg")||req.url.startsWith("/spellImg") || req.url.startsWith("/runeImg")){
+    ReqImage(req,res)
+  }
   else ReadFiles(req,res);
+}
+
+// * 2024 05 19 배성빈
+// * client 이미지 요청 해결
+// * 챔피언 이미지 출력
+function ReqImage(req,res){
+  let imgPath
+  let imgType
+
+  let [empty, requestName, imgName] = req.url.split("/")
+  
+
+  switch(requestName){
+    case "champImg":
+      
+      imgPath = "resources/lol/img/champion/tiles/"+`${imgName}.jpg`
+      imgType = "image/jpg"
+      break
+
+    case "itemImg":
+      imgPath = "resources/lol/14.10.1/img/item/"+ `${imgName}.png`
+      imgType = "image/png"
+      break
+
+    case "spellImg":
+      imgPath = "resources/lol/14.10.1/img/spell/"+ `${imgName}.png`
+      imgType = "image/png"
+      break
+    case "runeImg":
+      let runeName = imgName.split("/")
+      console.log(runeName)
+
+      if(runeName.length == 1){
+        for(let i = 0; i < runeJson.length; i++){
+          if(runeJson[i].id == runeName[0]){
+            console.log(runeJson[i])
+          }
+        }
+      }
+
+      break
+
+    default :
+    res.writeHead(400, {"Content-Type": "text/plain"});
+    res.end("Invalid request");
+    break;
+  }
+
+
+
+  fs.readFile(imgPath, (err, data)=>{
+    if(err){
+      
+      res.writeHead(404, {"Content-Type" : "text/plain"})
+      res.end()
+    }
+    else{
+      
+      res.writeHead(200, {"Content-Type" : imgType})
+      res.end(data)
+    }
+  })
+  
 }
 /**
  * * 2024.05.11 황재민
@@ -195,7 +262,7 @@ function ReadResouceFile(path, res){
       path = path.substring(1);
   const readStream = fs.createReadStream(path);
   readStream.on("error", (err) => {
-    Log("Resource Read Err : " + path );
+    // Log("Resource Read Err : " + path );
     res.statusCode = 500;
     res.end();
   });
@@ -221,7 +288,7 @@ function SelectFile(res, path, contentType, responscode = 200) {
        * * 응답코드 500을 헤드에 넣어 응답한다. (500 : 서버가 처리방법을 모르는 상황이 발생했음을 나타냄)
        */
       if (err) {
-        Log("FS ERR : Failed Read File : " + path);
+        // LOG("FS ERR : Failed Read File : " + path);
         res.writeHead(500, { "Content-Type": "text/plain" });
         res.end("500 - Internal Error");
         return;

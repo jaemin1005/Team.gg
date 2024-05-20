@@ -440,10 +440,12 @@
     }
     // s2-2
     >:nth-child(2){
-      grid-area: 2;
-
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      >:nth-child(1){
+        grid-area: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      }
+      
       
     }
   }
@@ -523,4 +525,26 @@
     }
   }
 
+}
+
+
+.a1, .a2, .a3, .a4, .a5, .b1, .b2, .b3, .b4, .b5{
+  font-size: 15px;
+  color: white;
+}
+
+
+.champ{
+  width: 48px;
+  height: 48px;
+  border-radius: 95%; 
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  
+  >:nth-child(1){
+    width: 100%;
+    height: 100%;
+  }
 }
