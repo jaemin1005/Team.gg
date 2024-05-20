@@ -20,46 +20,36 @@ let apiCallingCnt = 0;
 
 require("dotenv").config();
 
-const PATH = process.env.DirPATH || __dirname;
-const API_KEY = process.env.API_KEY;
 // const Log = require("./Log.js");
 
-/**
- * * 날짜 : 2024.04.15
- * * 이름 : 황재민
- * * 설명 : 비동기로 API를 fech로 이용하여 해당 정보를 json으로 처리한다.
- */
-const getRotations = async () => {
-  try {
-    const res = await fetch(
-      "https://kr.api.riotgames.com/lol/platform/v3/champion-rotations?api_key=" +
-        riotKey
-    );
-    const returnObj = await res.json();
-    // ! 05.12 이종수
-    apiCallingCnt++;
-    LogAPICallCount(apiCallingCnt);
-    // ! 05.12 이종수
-    console.log(returnObj);
-  } catch (err) {
-    console.log(err);
+class RiotAPI {
+  
+  constructor(){
+    this.nKeyCount = 0;
+    this.API_KEY_L1 = process.env.API_KEY_L1;
+    this.API_KEY_L2 = process.env.API_KEY_L2;
+    this.API_KEY_L3 = process.env.API_KEY_L3;
   }
-};
 
-/**
- * * 2024.04.19 황재민
- * * module로 호출될 객체 :)
- * TODO : 직관성있는 방법 생각해보기.
- */
-let func = {
-  /**
-   * * 2024.04.19 황재민
-   * * 매개변수 strName을 이용. strName은 URI로 인코딩해야 된다.
-   * * fetch를 통하여 API사용, 백틱을 이용하여 만들어둔 변수를 넣어둔다.
-   * * 받아온 데이터를 json하고 returnobj로 넣어줌 :)
-   * @param {*} strName : 닉테임 + #태그 되있는 문자열
-   * @returns API 결과
-   */
+
+  GetAPIKey = function(){
+
+    let nCount = this.nKeyCount % 60;
+    let returnAPIKey = null;
+    if(nCount >= 0 && nCount < 20){
+      returnAPIKey = this.API_KEY_L1;
+    }
+    else if(nCount >= 20 && nCount < 40){
+      returnAPIKey = this.API_KEY_L2;
+    }
+    else{
+      returnAPIKey = this.API_KEY_L3;
+    }
+
+    this.nKeyCount++;
+    LogAPICallCount(this.nKeyCount);
+    return returnAPIKey;
+  }
 
   async GetUserInfo(strName) {
     /**
@@ -90,17 +80,16 @@ let func = {
 
     try {
       const res = await fetch(
-        `https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${API_KEY}`
+        `https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${this.GetAPIKey()}`
       );
 
       const returnObj = await res.json();
-
       return returnObj;
     } catch (err) {
       Log(`API ERR : Failed Get User Info ${err}`);
       return null;
     }
-  },
+  }
 
   /**
    * * 2024.04.23 황재민
@@ -112,7 +101,7 @@ let func = {
   async GetUserChampMastery(obj) {
     try {
       const res = await fetch(
-        `https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${obj.puuid}?api_key=${API_KEY}`
+        `https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${obj.puuid}?api_key=${this.GetAPIKey()}`
       );
       //const res = await fetch(`https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${obj.puuid}?api_key=${API_KEY}`);
       const returnObj = await res.json();
@@ -121,7 +110,7 @@ let func = {
       Log(`API ERR : Failed Get Champion Mastery ${err}`);
       throw new Error();
     }
-  },
+  }
 
   /**
    * * 2024.05.08 배성빈
@@ -133,20 +122,20 @@ let func = {
 
   async GetSummonerId(puuid) {
     const idObject = await fetch(
-      `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${API_KEY}`
+      `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${this.GetAPIKey()}`
     );
 
     const id = await idObject.json();
 
     return id.id;
-  },
+  }
 
   async GetUserTier(obj) {
     const id = await GetSummonerId(obj.puuid);
 
     try {
       const callTier = await fetch(
-        `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${API_KEY}`
+        `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${id}?api_key=${this.GetAPIKey()}`
       );
 
       const tierObj = await callTier.json();
@@ -177,7 +166,7 @@ let func = {
       console.error(error);
       // throw new Error();
     }
-  },
+  }
 
   /**
    * * 2024.04.23 황재민
@@ -197,7 +186,7 @@ let func = {
     obj.matchInfo = [];
     try {
       let res = await fetch(
-        `https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${API_KEY}`
+        `https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${this.GetAPIKey()}`
       );
       let returnObj = await res.json();
 
@@ -213,7 +202,7 @@ let func = {
         //let matchNum = item.substring(1, item.length -1);
         //! #DB_TEST_WITH_API.JS  - UPDATE DB
         res = await fetch(
-          `https://asia.api.riotgames.com/lol/match/v5/matches/${item}?api_key=${API_KEY}`
+          `https://asia.api.riotgames.com/lol/match/v5/matches/${item}?api_key=${this.GetAPIKey()}`
         );
         let matchObj = await res.json();
 
@@ -224,7 +213,7 @@ let func = {
       // Log(`API ERR : Failed Get Match Info ${err}`);
       // throw new Error();
     }
-  },
+  }
 
 
   /**
@@ -235,7 +224,7 @@ let func = {
   async GetAccountID(obj){
     try{
       //* User 고유 Id, 프로필 아이콘 불러오는 API
-      let res = await fetch(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${obj.puuid}?api_key=${API_KEY}`)
+      let res = await fetch(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${obj.puuid}?api_key=${this.GetAPIKey()}`)
       let returnObj = await res.json();
 
       //* Obj에 프로퍼티를 추가한다.
@@ -244,7 +233,7 @@ let func = {
       })
       
       //* 자기 자신에대한 랭크 정보. 
-      res = await fetch(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${obj.id}?api_key=${API_KEY}`);
+      res = await fetch(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${obj.id}?api_key=${this.GetAPIKey()}`);
       returnObj = await res.json();
 
       obj.league = returnObj;
@@ -253,6 +242,41 @@ let func = {
       throw new Error();
     } 
   }
+
+  /**
+   * * 2024.05.13 황재민
+   * * 현재 진행중인 게임 불러오기.
+   * * 진행 중인 게임이 있다면, 각 참가자들의 랭크 승률, 해당 챔피언 승률까지 가지고 온다. 
+   * @param {*} obj : Client에서 검색한 유저의 정보가 담겨있는 객체
+   */
+  async GetCurrentGame(obj){
+    try{
+      let res = await fetch(`https://kr.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${obj.puuid}?api_key=${this.GetAPIKey()}`);
+      let recentMatchObj = await res.json();
+
+      //* 매칭이 진해중이라면. 현재 모든 참가자의 랭크 승률, 진행하고 있는 챔피언의 승률을 가지고 온다. 
+      if("status" in recentMatchObj == false){
+
+        const leagueRequest = recentMatchObj.participants.map((participant) => {
+          let summonerId = participant.summonerId;
+          return fetch(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}?api_key=${this.GetAPIKey()}`)
+          .then(res => res.json())
+          .then(obj => participant.league = obj);
+        });
+
+        await Promise.all(leagueRequest);
+        obj.recentMatch = recentMatchObj;
+      }  
+
+      else{
+        obj.recentMatch = null;
+      }
+
+    }catch(err){
+      Log(`API ERR : GET CurrentGame ${err}`);
+      throw new Error();
+    }
+  }
 }
 
-module.exports = func
+module.exports = new RiotAPI();

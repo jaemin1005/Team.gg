@@ -55,7 +55,9 @@ function WriteLog() {
         isWrite = true;
         while (queue.peek() != null && isWrite == true) {
           CreateLogFile(Time.GetLogFileName(), Title);
+
           if (LOG_STATE === "DEBUG") console.log(text);
+          
           let strText = Time.GetLogline() + queue.dequeue() + "\n";
           fs.appendFileSync(Time.GetLogFileName(), strText);
         }

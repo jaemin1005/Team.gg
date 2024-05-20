@@ -11,7 +11,11 @@
 </head>
 <body>
   <div id="root">
-    <div></div>
+    <div>
+      <div id="recent_search_user" class="short_menu_column">
+        <div class="main_h1_color">최근 검색</div>
+      </div>
+    </div>
     <div>
       <div id="header">
         <div>TEAM.GG</div>
@@ -25,7 +29,7 @@
                   <img title="icon" src="resources/default/profile.png", alt="icon">
                 </div>
                 <div id="profile_detail">
-                  <h1 class="primary_font_h1 main_h1_color">Default Name</h1>
+                  <h1 class="primary_font_h1 main_h1_color user_name_font_size">Default Name</h1>
                   <h1 class="primary_font_h1 sub_h1_color"> #000</h1>
                 </div>
               </div>
@@ -33,17 +37,17 @@
             <div id="tier">
               <div>
                 <div>
-                  <img title="tier_icon", src="resources/default/tier.png", alt="tier">
+                  <img id="league_tier_icon" title="tier_icon", src="resources/tier/unrank.webp", alt="tier">
                 </div>
-                <div>
-                  <h1 class="primary_font_h1 main_h1_color">Emerald 1</h1>
-                  <h1 class="primary_font_h1 sub_h1_color">46 LP</h1>
+                <div id="league_info">
+                  <h1 class="primary_font_h1 main_h1_color">Unranked</h1>
+                  <h1 class="primary_font_h1 sub_h1_color">0 Lp</h1>
                 </div>
               </div>
             </div>
           </div>
-          <div>
-            <div class="blue">
+          <div id="recent_match">
+            <div id="recent_blue_team" class="blue">
               <div>
                 <div class="small_middle_font">블루팀</div>
                 <div class="small_middle_font">티어 평균 : IRON 3</div>
@@ -256,7 +260,7 @@
                 </div>
               </div>
             </div>
-            <div class="red">
+            <div id="recent_red_team" class="red">
               <div>
                 <div class="small_middle_font">레드팀</div>
                 <div class="small_middle_font">티어 평균 : IRON 3</div>
@@ -469,16 +473,16 @@
                 </div>
               </div>
             </div>
+            <h1 id="recent_match_msg" class="primary_font_h1"></h1>
           </div>
           <div>
             <div>
-              <div>
+              <div id="short_champion_mastery">
                 <div>
                   <img title="tier_icon", src="resources/default/champion.png", alt="tier">
                 </div>
                 <div>
                   <h1 class="primary_font_h1 main_h1_color">블리츠크랭크</h1>
-                  <h1 class="primary_font_h1 sub_h1_color">1승 50패 32%</h1>
                   <h1 class="primary_font_h1 sub_h1_color">숙련도</h1>
                 </div>
               </div>
@@ -490,9 +494,9 @@
           <img src="resources/default/IMG_3454.GIF" title="loading">
         </div>
         
-        <!-- Test 임시 -->
+        
         <div id="match">
-          <!-- box 1 -->
+          
           
         </div>
       </div>

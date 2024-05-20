@@ -8,8 +8,11 @@ let jsonDataUrl = url + "json/";
  */
 export let RequestUserData = async function(reqUrl){
   let res = await fetch(reqUrl, {method: 'GET'});
-  let jsonData = await res.json();
+  if(res.status != 200){
+    return null;
+  }
 
+  let jsonData = await res.json();
   return jsonData;
 }
 

@@ -13,23 +13,26 @@ const runeJson = require('./resources/lol/14.10.1/data/ko_KR/runesReforged.json'
 
 
 // ! 05.12 이종수
-const LOG =require("./Module/Log.js");
+const {Log, LogAPICallCount} = require("./Module/Log.js");
 const { JSONCOMMAND, HTMLCOMMAND } = require("./Module/EnumCommand.js");
 const RiotAPI = require("./Module/Api.js");
 
 const ChampionInfo = require("./Module/ChampionInfo");
 const SpellInfo = require("./Module/SpellInfo");
 const ItemInfo = require("./Module/ItemInfo");
+const RuneInfo = require("./Module/RuneInfo");
 const func = require('./Module/Api.js');
 
 
 /**
  * * 2024.05.10 황재민
  * * Get으로 리뉴얼 하였음.
+ * * Log 추가
  */
 http.createServer((req,res) => {
   
   if(req.method == "GET"){
+    Log("GET Url : " + req.url);
     ProcessGETMethod(req,res);
   }
 })
@@ -37,6 +40,8 @@ http.createServer((req,res) => {
   console.log("서버 시작하였음");
   console.log("http://localhost:3000");
 });
+
+
 /**
  * * 2025.05.10 황재민
  * * Get을 처리하기 위한 함수
@@ -47,7 +52,7 @@ http.createServer((req,res) => {
 async function ProcessGETMethod(req, res){
   //* Main Html
   if(req.url ==='/'){
-    SelectFile(res, 'main.html', "text/html");
+    SelectFile(res, 'main.html', GetContentType(req.url));
     return;
   }
   if(req.url.startsWith("/summoner/")) ReqSearchUser(req,res);
@@ -137,10 +142,14 @@ async function ReqJSON(req, res){
     try{
       res.setHeader('ETag', process.env.RIOT_DATA_VERSION);
       let resObj = {};
+      resObj.version = process.env.RIOT_DATA_VERSION;
+      
       const promise1 = ChampionInfo().then((res) => resObj["champions"] = res);
       const promise2 = SpellInfo().then((res) => resObj["spells"] = res);
       const promise3 = ItemInfo().then((res) => resObj["items"] = res);
-      await Promise.all([promise1,promise2,promise3]);
+      const promise4 = RuneInfo().then((res) => resObj["runes"] = res);
+
+      await Promise.all([promise1,promise2,promise3,promise4]);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(resObj));
@@ -150,6 +159,13 @@ async function ReqJSON(req, res){
     }
   }
 }
+
+/**
+ * * 2024.05.13 황재민
+ * * 파일 읽어오기
+ * @param {*} req 클라이언트 요청
+ * @param {*} res 서버 응답
+ */
 function ReadFiles(req, res){
   //* Resource 같은 경우 대용량 파일이 대부분이다.
   //* createReadStream을 이용하여 파일을 읽는다.
@@ -163,6 +179,7 @@ function ReadFiles(req, res){
     else{
       res.setHeader('ETag', process.env.RIOT_DATA_VERSION);
       res.setHeader('Content-Type', GetContentType(req.url));
+      //* 캐시를 설정하여 해당 Resouce를 저장한다.
       res.setHeader('Cache-Control', 'public, no-transform, max-age=15552000');
       ReadResouceFile(req.url, res);
     }
@@ -172,6 +189,7 @@ function ReadFiles(req, res){
     SelectFile(res, req.url, GetContentType(req.url));
   }
 }
+
 /**
  * * 2024.05.13 황재민
  * * 소환사 정보 요청
@@ -191,6 +209,7 @@ function ReqSummoner(req, res){
     SelectFile(res, req.url, GetContentType(req.url));
   }
 }
+
 /**
 * * 2024.05.11 황재민
 * * 요청한 유저의 정보를 처리하기 위한 조건문
@@ -219,10 +238,10 @@ async function ReqSearchUser(req, res){
     const promise3 = RiotAPI.GetAccountID(obj);
 
     //* 유저의 최근 매칭
-    //const promise4 = RiotAPI.GetCurrentGame(obj);
+    const promise4 = RiotAPI.GetCurrentGame(obj);
 
-
-    await Promise.all([promise1, promise2,promise3]).catch(() => (obj = null));
+    await Promise.all([promise1, promise2,promise3,promise4]).catch(() => (obj = null));
+    
     if(obj != null){
       res.writeHead(200);
       res.end(JSON.stringify(obj));
