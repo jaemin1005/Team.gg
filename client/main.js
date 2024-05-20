@@ -24,25 +24,27 @@ RequestJSONData();
 let a = function(){
   OnViewInMain("match")
   
-  // let rec = new RecordManager(null, matchData[0])
+  let rec = new RecordManager(null, matchData[0])
+  let key = Object.keys(tagEnum)
+
+
+  for(let i = 0; i < key.length; i++){
+    rec.createElement(key[i], tagEnum[key[i]][0])
+  }
   
-  // let key = Object.keys(tagEnum)
-  // console.log(key)
-  // for(let i = 0; i < key.length; i++){
-  //   rec.createElement(key[i], tagEnum[key[i]][0])
-  // }
-  
-  // for (let j = 0; j < key.length; j++) {
+  for (let j = 0; j < key.length; j++) {
     
-  //   let childTag = tagEnum[key[j]][1];
+    let childTag = tagEnum[key[j]][1];
 
-  //   if (childTag === undefined) {
-  //     continue;
-  //   }
+    if (childTag === undefined) {
+      continue;
+    }
 
-  //   rec.appendTag(key[j], childTag["child"]);
-  // }
-  // rec.printPlayer();
+    rec.appendTag(key[j], childTag["child"]);
+  }
+
+  rec.printMatchInfo()
+  console.log(matchData)
 }
 
 
@@ -72,21 +74,21 @@ async function SearchUser(searchValue){
 }
 
 function OnViewInMain(name){
+  
   Object.keys(main).forEach(key => {
     if(key === name){
       if(name == "match"){
-        main[name].style.display = "grid";
+        main[name].style.display = "flex";
       }
       else{
         main[name].style.display = "flex";
       }
-      
-      
     }
     else{
       main[key].style.display = "none";
     }
   })
+  
 }
 
 function ClearViewInMain(){
