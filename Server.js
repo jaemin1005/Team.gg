@@ -67,65 +67,64 @@ async function ProcessGETMethod(req, res){
 // * 2024 05 19 배성빈
 // * client 이미지 요청 해결
 // * 챔피언 이미지 출력
-// function ReqImage(req,res){
-//   let imgPath
-//   let imgType
+function ReqImage(req,res){
+  let imgPath
+  let imgType
 
-//   let [empty, requestName, imgName] = req.url.split("/")
+  let [empty, requestName, imgName] = req.url.split("/")
   
-
-//   switch(requestName){
-//     case "champImg":
+  switch(requestName){
+    case "champImg":
       
-//       imgPath = "resources/lol/img/champion/tiles/"+`${imgName}.jpg`
-//       imgType = "image/jpg"
-//       break
+      imgPath = "resources/lol/img/champion/tiles/"+`${imgName}.jpg`
+      imgType = "image/jpg"
+      break
 
-//     case "itemImg":
-//       imgPath = "resources/lol/14.10.1/img/item/"+ `${imgName}.png`
-//       imgType = "image/png"
-//       break
+    case "itemImg":
+      imgPath = "resources/lol/14.10.1/img/item/"+ `${imgName}.png`
+      imgType = "image/png"
+      break
 
-//     case "spellImg":
-//       imgPath = "resources/lol/14.10.1/img/spell/"+ `${imgName}.png`
-//       imgType = "image/png"
-//       break
-//     case "runeImg":
-//       let runeName = imgName.split("/")
-//       console.log(runeName)
+    case "spellImg":
+      imgPath = "resources/lol/14.10.1/img/spell/"+ `${imgName}.png`
+      imgType = "image/png"
+      break
+    case "runeImg":
+      let runeName = imgName.split("/")
+      console.log(runeName)
 
-//       if(runeName.length == 1){
-//         for(let i = 0; i < runeJson.length; i++){
-//           if(runeJson[i].id == runeName[0]){
-//             console.log(runeJson[i])
-//           }
-//         }
-//       }
+      if(runeName.length == 1){
+        for(let i = 0; i < runeJson.length; i++){
+          if(runeJson[i].id == runeName[0]){
+            console.log(runeJson[i])
+          }
+        }
+      }
 
-//       break
+      break
 
-//     default :
-//     res.writeHead(400, {"Content-Type": "text/plain"});
-//     res.end("Invalid request");
-//     break;
-//   }
+    default :
+    res.writeHead(400, {"Content-Type": "text/plain"});
+    res.end("Invalid request");
+    break;
+  }
 
 
 
-//   fs.readFile(imgPath, (err, data)=>{
-//     if(err){
+  fs.readFile(imgPath, (err, data)=>{
+    if(err){
       
-//       res.writeHead(404, {"Content-Type" : "text/plain"})
-//       res.end()
-//     }
-//     else{
+      res.writeHead(404, {"Content-Type" : "text/plain"})
+      res.end()
+    }
+    else{
       
-//       res.writeHead(200, {"Content-Type" : imgType})
-//       res.end(data)
-//     }
-//   })
+      res.writeHead(200, {"Content-Type" : imgType})
+      res.end(data)
+    }
+  })
   
-// }
+}
 
 /**
  * * 2024.05.11 황재민
@@ -247,7 +246,7 @@ async function ReqSearchUser(req, res){
     res.writeHead(200);
     res.end(JSON.stringify(obj));
   }
-  //* 해당 유저의 정보가 없음.
+  //* 해당 유저의 정보가 없음.5
   else{
     res.writeHead(204);
     res.end();

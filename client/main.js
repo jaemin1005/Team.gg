@@ -1,6 +1,6 @@
 import { checkUser } from "./Modules/checkUser.js";
 import { RequestUserData, RequestJSONData } from "./Modules/ReqData.js";
-import { GameQueueType } from "./Modules/CalcRiotApi.js";
+import { GameQueueType, RankTierDetail, RankTier, arrRankTierDetail, arrRankTier } from "./Modules/CalcRiotApi.js";
 
 import { tagEnum, RecordManager }from "./Modules/userInfo.js"
 
@@ -204,6 +204,10 @@ async function StatUIUpdate(data){
     
     let redTeamCount = 1;
     let blueTeamCount = 1;
+
+    let blueRankScore = 0;
+    let redRankScore = 0;
+
     const recentData = data.recentMatch.participants;
 
     Object.keys(recentData).forEach(key => {
@@ -234,6 +238,8 @@ async function StatUIUpdate(data){
         let losses = leagueIdx != null ? Number(league[leagueIdx].losses) : 0;
         let winRate = Math.ceil(wins / (wins + losses) * 100);
 
+        let score = leagueIdx != null ? (RankTier[league[leagueIdx].tier] + RankTierDetail[league[leagueIdx].rank]) : 0;
+
         row.children[0].children[0].src = requestData.champions[championId].imgSrc;
         row.children[1].children[0].children[0].src = requestData.spells[spell_1].imgSrc;
         row.children[1].children[2].children[0].src = requestData.spells[spell_2].imgSrc;
@@ -241,7 +247,25 @@ async function StatUIUpdate(data){
         row.children[2].children[1].textContent = leagueIdx != null ? league[leagueIdx].tier + " " + league[leagueIdx].rank + " (" + league[leagueIdx].leaguePoints + ")" : "-";
         row.children[3].children[0].textContent = leagueIdx != null ? `${winRate}%` : "-";
         row.children[3].children[1].children[0].children[0].style.width = leagueIdx != null ? `${winRate}%` : "-";
+
+        if(participant.teamId == 100) blueRankScore += score;
+        else redRankScore += score;
     });
+
+    //* 평균 점수
+    const avgBlueScore = Math.round(blueRankScore/5);
+    const avgRedScore = Math.round(redRankScore/5);
+
+    //* 평균 티어 배열 인덱스
+    const blueTierIdx = Math.floor(avgBlueScore / 5);
+    const redTierIdx = Math.floor(avgRedScore / 5);
+
+    //* 평균 티어 세부점수 인덱스
+    const blueTierDetail = avgBlueScore % 5;
+    const redTierDetail =  avgRedScore % 5;
+
+    $blueTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[blueTierIdx]} ${arrRankTierDetail[blueTierDetail-1]})`;
+    $redTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[redTierIdx]} ${arrRankTierDetail[redTierDetail-1]}`;    
   }
 
   //* 현재 진행중인 매칭이 없을 떄.
