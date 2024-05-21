@@ -51,6 +51,19 @@ class RiotAPI {
     return returnAPIKey;
   }
 
+  /**
+   * * 2024.05.20 황재민
+   * * Riot API 는 잘못된 접근을 할 시, status 프로퍼티가 들어있다
+   * * status의 객체안에 message라는 프로퍼티가 존재, 에레 메세지가 적혀있음.
+   * @param {*} obj 
+   */
+  CheckIncorrectObj(obj){
+    if("status" in obj){
+      throw new Error(`[${obj["status"]["status_code"]}] ` + obj["status"].message);
+    }
+  }
+
+
   async GetUserInfo(strName) {
     /**
      * * strName은 예시로 터검니#000
@@ -82,9 +95,10 @@ class RiotAPI {
       const res = await fetch(
         `https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodingName}/${userId[1]}?api_key=${this.GetAPIKey()}`
       );
-
       const returnObj = await res.json();
+      this.CheckIncorrectObj(returnObj);
       return returnObj;
+
     } catch (err) {
       Log(`API ERR : Failed Get User Info ${err}`);
       return null;
@@ -105,10 +119,12 @@ class RiotAPI {
       );
       //const res = await fetch(`https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${obj.puuid}?api_key=${API_KEY}`);
       const returnObj = await res.json();
+      this.CheckIncorrectObj(returnObj);
       obj.champInfo = returnObj;
+
     } catch (err) {
       Log(`API ERR : Failed Get Champion Mastery ${err}`);
-      throw new Error();
+      obj.champInfo = null;
     }
   }
 
@@ -126,7 +142,6 @@ class RiotAPI {
     );
 
     const id = await idObject.json();
-
     return id.id;
   }
 
@@ -189,7 +204,7 @@ class RiotAPI {
         `https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/${obj.puuid}/ids?start=${startNum}&count=${endNum}&api_key=${this.GetAPIKey()}`
       );
       let returnObj = await res.json();
-
+      this.CheckIncorrectObj(returnObj);
       //! #DB_TEST_WITH_API.JS
       // const insertMatchArr = new InsertPlayLog();
       // insertMatchArr.insertPlayLog(returnObj);
@@ -205,13 +220,13 @@ class RiotAPI {
           `https://asia.api.riotgames.com/lol/match/v5/matches/${item}?api_key=${this.GetAPIKey()}`
         );
         let matchObj = await res.json();
-
+        this.CheckIncorrectObj(matchObj);
         obj.matchInfo[obj.matchInfo.length] = matchObj;
 
       }
     } catch (err) {
-      // Log(`API ERR : Failed Get Match Info ${err}`);
-      // throw new Error();
+      Log(`API ERR : Failed Get Match Info ${err}`);
+      obj.matchInfo = null;
     }
   }
 
@@ -235,11 +250,11 @@ class RiotAPI {
       //* 자기 자신에대한 랭크 정보. 
       res = await fetch(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${obj.id}?api_key=${this.GetAPIKey()}`);
       returnObj = await res.json();
-
+      this.CheckIncorrectObj(returnObj);
       obj.league = returnObj;
     } catch(err){
       Log(`API ERR : GET AccountID ${err}`);
-      throw new Error();
+      obj.league = null;
     } 
   }
 
@@ -253,7 +268,7 @@ class RiotAPI {
     try{
       let res = await fetch(`https://kr.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${obj.puuid}?api_key=${this.GetAPIKey()}`);
       let recentMatchObj = await res.json();
-
+      this.CheckIncorrectObj(recentMatchObj);
       //* 매칭이 진해중이라면. 현재 모든 참가자의 랭크 승률, 진행하고 있는 챔피언의 승률을 가지고 온다. 
       if("status" in recentMatchObj == false){
 
@@ -274,7 +289,7 @@ class RiotAPI {
 
     }catch(err){
       Log(`API ERR : GET CurrentGame ${err}`);
-      throw new Error();
+      obj.recentMatch = null;
     }
   }
 }

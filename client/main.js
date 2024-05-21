@@ -24,36 +24,34 @@ const $shortChampionMastery = document.getElementById("short_champion_mastery")
 const $recentSearch = document.getElementById("")
 const $leagueInfo = document.getElementById("league_info");
 const recentSearchData = [];
+
 const requestData = await RequestJSONData();
-
-
 Start();
 
 
-let a = function(){
-  OnViewInMain("match")
-  let rec = new RecordManager(null, matchData[0])
-  let key = Object.keys(tagEnum)
-
-
-  for(let i = 0; i < key.length; i++){
-    rec.createElement(key[i], tagEnum[key[i]][0])
-  }
+// let a = function(){
+//   OnViewInMain("match")
   
-  for (let j = 0; j < key.length; j++) {
+//   // let rec = new RecordManager(null, matchData[0])
+  
+//   // let key = Object.keys(tagEnum)
+//   // console.log(key)
+//   // for(let i = 0; i < key.length; i++){
+//   //   rec.createElement(key[i], tagEnum[key[i]][0])
+//   // }
+  
+//   // for (let j = 0; j < key.length; j++) {
     
-    let childTag = tagEnum[key[j]][1];
+//   //   let childTag = tagEnum[key[j]][1];
 
-    if (childTag === undefined) {
-      continue;
-    }
+//   //   if (childTag === undefined) {
+//   //     continue;
+//   //   }
 
-    rec.appendTag(key[j], childTag["child"]);
-  }
-  rec.printMatchInfo()
-  console.log(matchData)
-}
-
+//   //   rec.appendTag(key[j], childTag["child"]);
+//   // }
+//   // rec.printPlayer();
+// }
 
 
 
@@ -92,6 +90,7 @@ async function SearchUser(searchValue){
   data = encodeURI(data);
   let userData = await RequestUserData(url+reqSummonersUrl+data);
   
+  //* 유저 데이터가 없을 때
   if(userData == null){
     ClearViewInMain();
     AlamTextUIUpdate(searchValue + "는 존재하지 않는 플레이어 입니다");
@@ -110,11 +109,10 @@ async function SearchUser(searchValue){
  * @param {*} name : 보여줄 Element ID 
  */
 function OnViewInMain(name){
-  
   Object.keys(main).forEach(key => {
     if(key === name){
       if(name == "match"){
-        main[name].style.display = "flex";
+        main[name].style.display = "grid";
       }
       else{
         main[name].style.display = "flex";
@@ -124,7 +122,6 @@ function OnViewInMain(name){
       main[key].style.display = "none";
     }
   })
-  
 }
 
 /**
@@ -149,10 +146,6 @@ function TransDOMArrIntoObj(arrElem){
     obj[elem.id] = elem;
   }
   return obj;
-}
-
-function AlamTextUIUpdate(strText){
-  main["alam_text"].textContent = strText;
 }
 
 /**
@@ -267,3 +260,11 @@ async function StatUIUpdate(data){
   await Promise.all([promise1])
 }
 
+/**
+ * * 2024.05.20 황재민
+ * * 해당 텍스트로 화면에 보여준다.
+ * @param {*} strText 
+ */
+function AlamTextUIUpdate(strText){
+  main["alam_text"].textContent = strText;
+}
