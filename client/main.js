@@ -1,7 +1,6 @@
 import { checkUser } from "./Modules/checkUser.js";
 import { RequestUserData, RequestJSONData } from "./Modules/ReqData.js";
 import { GameQueueType } from "./Modules/CalcRiotApi.js";
-
 import { tagEnum, RecordManager }from "./Modules/userInfo.js"
 
 let url = "http://localhost:3000"
@@ -27,10 +26,18 @@ const recentSearchData = [];
 const requestData = await RequestJSONData();
 
 
+import { createArea } from "./Modules/test/CreateLogArea.js"
+import { TimeManager } from "./Modules/test/TimeManage.js";
+import { PrintInfo } from "./Modules/test/PrintInfo.js";
+import { DomDiv } from "./Modules/test/DomList.js";
+
+
+
 Start();
 
 
-let a = function(){
+let a = () => {
+  
   OnViewInMain("match")
   let rec = new RecordManager(null, matchData[0])
   let key = Object.keys(tagEnum)
@@ -52,21 +59,53 @@ let a = function(){
   }
   rec.printMatchInfo()
   console.log(matchData)
+
+
+
+
+// HTMLElement 생성
+let matchInfo = {}
+
+
+
+function createLogHTMLElement(DomDiv) {
+  let createContainer = new createArea()
+  createContainer.CreateLogArea(DomDiv)
+  let currentArr = createContainer.getCurrentId()
+}
+
+createLogHTMLElement(DomDiv)
 }
 
 
+let SelectMatchInfo = (matchData, gameName)=>{
+  
+  let createLogContainer = new createArea()
+  createLogContainer.CreateLogArea(DomDiv);
 
+  let currentArr = createLogContainer.getCurrentId()
+  
+  let getTime = new TimeManager(matchData.info.gameEndTimestamp, matchData.info.gameDuration)
+
+  let agoTime = getTime.dateCal()
+  let duration = getTime.duration()
+
+
+  let printManger = new PrintInfo(gameName, currentArr, matchData, agoTime, duration)
+
+}
 
 
 
 $search.onkeydown = async (e) => {
   
   if(e.keyCode == "13"){  
-    let searchValue = checkUser($search.value);
-    if(searchValue !== undefined){
-      await SearchUser(searchValue);
-    }
-    // a()
+    // let searchValue = checkUser($search.value);
+    // if(searchValue !== undefined){
+    //   await SearchUser(searchValue);
+    // }
+
+
   }
 }
 
@@ -91,6 +130,8 @@ async function SearchUser(searchValue){
   let data = searchValue.replace("#", "-");
   data = encodeURI(data);
   let userData = await RequestUserData(url+reqSummonersUrl+data);
+
+  console.log(userData)
   
   if(userData == null){
     ClearViewInMain();

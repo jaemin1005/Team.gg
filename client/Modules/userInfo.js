@@ -332,6 +332,7 @@ export const tagEnum = {
 export class RecordManager {
 
   constructor(obj, matchInfo) {
+
     this.obj = obj;
     this.section = document.getElementById("match");
     this.eleData = {};
@@ -341,8 +342,7 @@ export class RecordManager {
     this.BlueChampionEle = ["a1Img", "a2Img", "a3Img", "a4Img", "a5Img"]
     this.RedPostionKey =["b1Name", "b2Name", "b3Name", "b4Name", "b5Name"]
     this.RedChampionEle = ["b1Img", "b2Img", "b3Img", "b4Img", "b5Img"]
-    this.fetchKey = ["championName", "item0", "item1", "item2", "item3", "item4", "item5", "summoner1Id", "summoner2Id",]
-    
+    this.fetchKey = ["championName", "item0", "item1", "item2", "item3", "item4", "item5", "summoner1Id", "summoner2Id"]
     this.fetchKeyWithRune = ["perk"]
 
     this.gameTypeEnum = {

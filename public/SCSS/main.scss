@@ -362,186 +362,74 @@
 
 
 
-
-// 전적  CSS
-#match{
-  width: 100%;
-  height: 100%;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: min-content;
+  overflow: hidden;
 }
-.LogContainer{
-  width: 60%;
-  height: 25%;
-  display: grid;
-  grid-template-columns: 1fr 3fr 3fr;
-  grid-template-areas: "a b c";
-  width: 60%;
-  height: 30%;
-  border: white;
 
-  // 승리, 시간 ...
-  >.sec1{
-    grid-area: a;
+#LogContainer{
+  width: 60vw;
+  height: 25vh;
+  display: grid;
+  grid-template-columns: 1fr 3fr 2fr;
+  grid-template-areas: "result user players";
+  >#ResultSection{
+    grid-area: result;
+    display: flex;
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr;
-    
-    text-align: center;
-    align-content: center;
-    
-    // ! red blue 동적으로 변경할 필요 있음. 
-    // ? main/js -> record manger -> createSetElement 부분 확인 바람
-
-    >:nth-child(1){
-      color: blue;   
-    }
-
   }
 
-  // ? 챔피언 이미지, 아이콘 부분. 
-  >.sec2{
-    grid-area: b;
+  >#UserInfoSection{
+    grid-area: user;
     display: grid;
     grid-template-rows: 2fr 1fr;
-    grid-template-areas: 
-    "1"
-    "2";
-    // s2-1
+    
+    // subSectionTop
     >:nth-child(1){
-      grid-area: 1;
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 3fr;
-      grid-template-areas: "s1 s2 s3 s4" ;
-
-      >:nth-child(1){
-        grid-area: s1;
+      grid-template-columns: 2fr 1fr 1fr 4fr;
+      >:nth-child(2),>:nth-child(3){
+        display: grid;
+        grid-template-rows: 1fr 1fr;
       }
-
-      >:nth-child(2){
-        grid-area: s2;
-        display: flex;
-        flex-direction: column;
-
-        >:nth-child(1){
-          grid-area: d;
-        }
-        >:nth-child(2){
-          grid-area: f;
-        }
-      }
-      >:nth-child(3){
-        grid-area: s3;
-      }
-      >:nth-child(4){
-        grid-area: s4;
-      }
-
     }
-    // s2-2
+
+    // subSectionBottom
     >:nth-child(2){
       >:nth-child(1){
-        grid-area: 2;
+        width: 100%;
+        height: 100%;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
       }
-      
-      
     }
   }
-  >.sec3{
-    grid-area: c;
+
+  >#AllPlayerSection{
+    grid-area: players;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: 
-    "a1 b1"
-    "a2 b2"
-    "a3 b3"
-    "a4 b4"
-    "a5 b5";
-    align-items: center;
-    text-align: center;
     >:nth-child(1){
-      grid-area: a1;
-
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+      >div{
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+      }
     }
     >:nth-child(2){
-      grid-area: a2;
-
       display: grid;
-      grid-template-columns: 1fr 2fr;
-    }
-    >:nth-child(3){
-      grid-area: a3;
-
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-    }
-    >:nth-child(4){
-      grid-area: a4;
-
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-    }
-    >:nth-child(5){
-      grid-area: a5;
-
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-    }
-
-    >:nth-child(6){
-      grid-area: b1;
-
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-    }
-    >:nth-child(7){
-      grid-area: b2;
-
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-    }
-    >:nth-child(8){
-      grid-area: b3;
-
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-    }
-    >:nth-child(9){
-      grid-area: b4;
-
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-    }
-    >:nth-child(10){
-      grid-area: b5;
-
-      display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+      >div{
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+      }
     }
   }
 
-}
 
-
-.a1, .a2, .a3, .a4, .a5, .b1, .b2, .b3, .b4, .b5{
-  font-size: 15px;
-  color: white;
-}
-
-
-.champ{
-  width: 48px;
-  height: 48px;
-  border-radius: 95%; 
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center; 
-  
-  >:nth-child(1){
-    width: 100%;
-    height: 100%;
-  }
 }
