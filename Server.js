@@ -58,9 +58,9 @@ async function ProcessGETMethod(req, res){
   if(req.url.startsWith("/summoner/")) ReqSearchUser(req,res);
   //else if(req.url.startsWith("/searchuser/")) ReqSearchUser(req,res);
   else if(req.url.startsWith("/json/")) ReqJSON(req,res);
-  else if(req.url.startsWith("/champImg")||req.url.startsWith("/itemImg")||req.url.startsWith("/spellImg") || req.url.startsWith("/runeImg")){
-    ReqImage(req,res)
-  }
+  // else if(req.url.startsWith("/champImg")||req.url.startsWith("/itemImg")||req.url.startsWith("/spellImg") || req.url.startsWith("/runeImg")){
+  //   ReqImage(req,res)
+  // }
   else ReadFiles(req,res);
 }
 
@@ -73,7 +73,6 @@ function ReqImage(req,res){
 
   let [empty, requestName, imgName] = req.url.split("/")
   
-
   switch(requestName){
     case "champImg":
       
@@ -126,6 +125,7 @@ function ReqImage(req,res){
   })
   
 }
+
 /**
  * * 2024.05.11 황재민
  * * 가공된 Riot data를 읽어오기 위한 함수
@@ -142,8 +142,10 @@ async function ReqJSON(req, res){
     try{
       res.setHeader('ETag', process.env.RIOT_DATA_VERSION);
       let resObj = {};
-      resObj.version = process.env.RIOT_DATA_VERSION;
       
+      resObj.version = process.env.RIOT_DATA_VERSION;
+      resObj.url = process.env.URL;
+
       const promise1 = ChampionInfo().then((res) => resObj["champions"] = res);
       const promise2 = SpellInfo().then((res) => resObj["spells"] = res);
       const promise3 = ItemInfo().then((res) => resObj["items"] = res);
@@ -236,22 +238,15 @@ async function ReqSearchUser(req, res){
     const promise2 = RiotAPI.GetMatchInfo(obj);
     //* 유저의 프로필 아이콘 번호, 랭크 정보.
     const promise3 = RiotAPI.GetAccountID(obj);
-
     //* 유저의 최근 매칭
     const promise4 = RiotAPI.GetCurrentGame(obj);
 
-    await Promise.all([promise1, promise2,promise3,promise4]).catch(() => (obj = null));
+    await Promise.all([promise1, promise2,promise3,promise4]);
     
-    if(obj != null){
-      res.writeHead(200);
-      res.end(JSON.stringify(obj));
-    }
-    else{
-      res.writeHead(204);
-      res.end();
-    }
+    res.writeHead(200);
+    res.end(JSON.stringify(obj));
   }
-  //* 해당 유저의 정보가 없음.
+  //* 해당 유저의 정보가 없음.5
   else{
     res.writeHead(204);
     res.end();

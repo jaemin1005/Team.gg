@@ -1,6 +1,9 @@
 import { checkUser } from "./Modules/checkUser.js";
 import { RequestUserData, RequestJSONData } from "./Modules/ReqData.js";
-import { GameQueueType } from "./Modules/CalcRiotApi.js";
+
+import { GameQueueType, RankTierDetail, RankTier, arrRankTierDetail, arrRankTier } from "./Modules/CalcRiotApi.js";
+
+
 import { tagEnum, RecordManager }from "./Modules/userInfo.js"
 
 let url = "http://localhost:3000"
@@ -23,6 +26,7 @@ const $shortChampionMastery = document.getElementById("short_champion_mastery")
 const $recentSearch = document.getElementById("")
 const $leagueInfo = document.getElementById("league_info");
 const recentSearchData = [];
+
 const requestData = await RequestJSONData();
 
 
@@ -32,8 +36,6 @@ import { PrintInfo } from "./Modules/test/PrintInfo.js";
 import { DomDiv } from "./Modules/test/DomList.js";
 
 
-
-Start();
 
 
 let a = () => {
@@ -46,13 +48,27 @@ let a = () => {
   for(let i = 0; i < key.length; i++){
     rec.createElement(key[i], tagEnum[key[i]][0])
   }
+Start();
+
+
+// let a = function(){
+//   OnViewInMain("match")
   
-  for (let j = 0; j < key.length; j++) {
+//   // let rec = new RecordManager(null, matchData[0])
+  
+//   // let key = Object.keys(tagEnum)
+//   // console.log(key)
+//   // for(let i = 0; i < key.length; i++){
+//   //   rec.createElement(key[i], tagEnum[key[i]][0])
+//   // }
+  
+//   // for (let j = 0; j < key.length; j++) {
     
-    let childTag = tagEnum[key[j]][1];
+//   //   let childTag = tagEnum[key[j]][1];
+
 
     if (childTag === undefined) {
-      continue;
+      // continue;
     }
 
     rec.appendTag(key[j], childTag["child"]);
@@ -75,8 +91,16 @@ function createLogHTMLElement(DomDiv) {
 }
 
 createLogHTMLElement(DomDiv)
-}
 
+//   //   if (childTag === undefined) {
+//   //     continue;
+//   //   }
+
+
+//   //   rec.appendTag(key[j], childTag["child"]);
+//   // }
+//   // rec.printPlayer();
+// }
 
 let SelectMatchInfo = (matchData, gameName)=>{
   
@@ -133,8 +157,11 @@ async function SearchUser(searchValue){
 
   console.log(userData)
   
+  //* 유저 데이터가 없을 때
   if(userData == null){
     ClearViewInMain();
+    AlamTextUIUpdate(searchValue + "는 존재하지 않는 플레이어 입니다");
+    OnViewInMain("alam_text");
     return;
   }
 
@@ -149,11 +176,10 @@ async function SearchUser(searchValue){
  * @param {*} name : 보여줄 Element ID 
  */
 function OnViewInMain(name){
-  
   Object.keys(main).forEach(key => {
     if(key === name){
       if(name == "match"){
-        main[name].style.display = "flex";
+        main[name].style.display = "grid";
       }
       else{
         main[name].style.display = "flex";
@@ -163,7 +189,6 @@ function OnViewInMain(name){
       main[key].style.display = "none";
     }
   })
-  
 }
 
 /**
@@ -246,6 +271,10 @@ async function StatUIUpdate(data){
     
     let redTeamCount = 1;
     let blueTeamCount = 1;
+
+    let blueRankScore = 0;
+    let redRankScore = 0;
+
     const recentData = data.recentMatch.participants;
 
     Object.keys(recentData).forEach(key => {
@@ -276,6 +305,8 @@ async function StatUIUpdate(data){
         let losses = leagueIdx != null ? Number(league[leagueIdx].losses) : 0;
         let winRate = Math.ceil(wins / (wins + losses) * 100);
 
+        let score = leagueIdx != null ? (RankTier[league[leagueIdx].tier] + RankTierDetail[league[leagueIdx].rank]) : 0;
+
         row.children[0].children[0].src = requestData.champions[championId].imgSrc;
         row.children[1].children[0].children[0].src = requestData.spells[spell_1].imgSrc;
         row.children[1].children[2].children[0].src = requestData.spells[spell_2].imgSrc;
@@ -283,7 +314,25 @@ async function StatUIUpdate(data){
         row.children[2].children[1].textContent = leagueIdx != null ? league[leagueIdx].tier + " " + league[leagueIdx].rank + " (" + league[leagueIdx].leaguePoints + ")" : "-";
         row.children[3].children[0].textContent = leagueIdx != null ? `${winRate}%` : "-";
         row.children[3].children[1].children[0].children[0].style.width = leagueIdx != null ? `${winRate}%` : "-";
+
+        if(participant.teamId == 100) blueRankScore += score;
+        else redRankScore += score;
     });
+
+    //* 평균 점수
+    const avgBlueScore = Math.round(blueRankScore/5);
+    const avgRedScore = Math.round(redRankScore/5);
+
+    //* 평균 티어 배열 인덱스
+    const blueTierIdx = Math.floor(avgBlueScore / 5);
+    const redTierIdx = Math.floor(avgRedScore / 5);
+
+    //* 평균 티어 세부점수 인덱스
+    const blueTierDetail = avgBlueScore % 5;
+    const redTierDetail =  avgRedScore % 5;
+
+    $blueTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[blueTierIdx]} ${arrRankTierDetail[blueTierDetail-1]})`;
+    $redTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[redTierIdx]} ${arrRankTierDetail[redTierDetail-1]}`;    
   }
 
   //* 현재 진행중인 매칭이 없을 떄.
@@ -302,3 +351,11 @@ async function StatUIUpdate(data){
   await Promise.all([promise1])
 }
 
+/**
+ * * 2024.05.20 황재민
+ * * 해당 텍스트로 화면에 보여준다.
+ * @param {*} strText 
+ */
+function AlamTextUIUpdate(strText){
+  main["alam_text"].textContent = strText;
+}
