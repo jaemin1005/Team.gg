@@ -1,3 +1,5 @@
+import { PrintManager } from "./PrintManager.js"
+
 export class PrintAllPlayerSection extends PrintManager {
 
   constructor(parentObj, participant) {
@@ -6,18 +8,30 @@ export class PrintAllPlayerSection extends PrintManager {
     this.participant = participant
   }
 
-  inputContent() {
-    let name = this.getUserName(this.participant)
-    let champURL = this.getChampionImg(this.participant)
+  async inputContent() {
+    let blueDiv = super.getChild(0)
+    let redDiv = super.getChild(1)
 
-    for (let i = 0; i < this.nodeLength; i++) {
-      let child = super.getChild(i)
-
-      if (child.tagName == "P") {
-        super.inputContent(child, name)
+    for (let i = 0; i < blueDiv.children.length; i++) {
+      let playerDiv = blueDiv.children[i]
+      let name = this.getUserName(this.participant[i])
+      let champURL = await this.getChampionImg(this.participant[i])
+      for (let j = 0; j < playerDiv.children.length; j++) {
+        playerDiv.children[j].tagName == "P" ?
+          super.inputContent(playerDiv.children[j], name) :
+          super.inputContent(playerDiv.children[j], { url: champURL, width: 24, height: 24 })
       }
-      else {
-        super.inputContent(child, { url: champURL, width: 24, height: 24 })
+    }
+    
+    for (let i = 0; i < redDiv.children.length; i++) {
+      let playerDiv = redDiv.children[i]
+      console.log(playerDiv)
+      let name = this.getUserName(this.participant[i + 5])
+      let champURL = await this.getChampionImg(this.participant[i + 5])
+      for (let j = 0; j < playerDiv.children.length; j++) {
+        playerDiv.children[j].tagName == "P" ?
+          super.inputContent(playerDiv.children[j], name) :
+          super.inputContent(playerDiv.children[j], { url: champURL, width: 24, height: 24 })
       }
     }
   }

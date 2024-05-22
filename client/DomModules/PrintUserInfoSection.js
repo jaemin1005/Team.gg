@@ -1,3 +1,5 @@
+import { PrintAllPlayerSection } from "./PrintAllPlayerSection.js"
+
 export class PrintUserInfoSection extends PrintAllPlayerSection{
 
   constructor(parentObj, participant) {
@@ -16,6 +18,7 @@ export class PrintUserInfoSection extends PrintAllPlayerSection{
   inputContent(){
     let champImg = this.getChampionImg(this.participant)
     let runeImg = this.getRuneImg(this.participant)
+    let spellImg = this.getItemImg(this.participant)
 
   }
 

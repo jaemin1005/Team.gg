@@ -26,7 +26,7 @@ export class PrintManager {
 
   constructor(parentObj) {
     this.parentObj = parentObj
-    this.nodeLength = parentObj.children.length
+    this.nodeLength = this.parentObj.children.length
   }
   getChild(index) {
     return this.parentObj.children[index]
@@ -38,7 +38,7 @@ export class PrintManager {
   inputContent(child, content) {
     if (child.tagName === "P") {
       child.innerHTML = content
-    } else if (child.tagName === "Img") {
+    } else if (child.tagName === "IMG") {
       let { url, width, height } = content
       child.src = url
       child.width = width

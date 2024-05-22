@@ -1,3 +1,4 @@
+import { PrintManager } from "./PrintManager.js"
 /**
  * * PrintResultSection
  * 2024/05/21 배성빈 : ResultSection 내부에 data들을 삽입하는 클래스.
