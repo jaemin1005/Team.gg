@@ -46,4 +46,12 @@ export class PrintManager {
     }
   }
 
+  async getChampionImg(user) {
+    let imgName = user["championName"]
+    let res = await fetch(`/champImg/${imgName}_0`)
+    let blob = await res.blob()
+    let url = await URL.createObjectURL(blob)
+    return url
+  }
+
 }

@@ -1,72 +1,80 @@
-import { PrintAllPlayerSection } from "./PrintAllPlayerSection.js"
+import { PrintManager } from "./PrintManager.js"
 
-export class PrintUserInfoSection extends PrintAllPlayerSection{
+import { spellChange } from "./spellChange.js"
 
-  constructor(parentObj, participant) {
-    super(parentObj, participant)
+export class PrintUserInfoSection extends PrintManager {
+
+  constructor(parentObj, participant, obj) {
+    super(parentObj, participant, null)
     this.nodeLength = super.getLength()
     this.participant = participant
+    this.childObj = {}
+    this.section;
+    this.gameInfoObject = obj
   }
 
-  searchElement(){
-    this.champ = document.getElementById("UserChampionDiv")
-    this.rune = document.getElementById("UserSpellDiv")
-    this.spell = document.getElementById("UserRuneDiv")
-    this.kda = document.getElementById("UserKda")
+  searchElement() {
+    for (let i = 0; i < this.nodeLength; i++) {
+      let child = super.getChild(i)
+      this.childObj[child.id] = child
+    }
+    this.nodeLength === 1 ?
+      this.section = "BOTTOM" :
+      this.section = "TOP"
   }
 
-  inputContent(){
-    let champImg = this.getChampionImg(this.participant)
-    let runeImg = this.getRuneImg(this.participant)
-    let spellImg = this.getItemImg(this.participant)
-
+  async inputContent() {
+    this.searchElement()
+    this.printChampionImg()
+    this.printKda()
+    this.printSpellImg()
+    this.printRuneImg()
+    this.printItemImg()
   }
 
-  async getRuneImg(user){
-    let mainRuneStyle = user.perks.styles[0].style
-    let mainRune = user.perks.styles[0].selections[0].perk
-    let subRuneStyle = user.perks.styles[1].style
-
-    let res1 = await fetch(`/runeImg/${mainRuneStyle}/${mainRune}`)
-    let res2 = await fetch(`/runeImg/${subRuneStyle}`)
-
-    let blob1 = await res1.blob()
-    let blob2 = await res2.blob()
-
-    let url1 = await URL.createObjectURL(blob1)
-    let url2 = await URL.createObjectURL(blob2)
-
-    return url1,url2
+  async printChampionImg() {
+    let imgTag = document.getElementById('UserChampionDiv').children[0]
+    super.inputContent(imgTag , {url : this.gameInfoObject.champions[this.participant.championId].imgSrc, width : 48, height : 48})
+  }
+  async printKda() {
+    let kda1 = this.participant.kills + "/" + this.participant.deaths + "/" + this.participant.assists
+    let kda2 = (this.participant.kills + this.participant.assists) / this.participant.deaths
+    this.childObj[`UserKda`].children[0].innerHTML = kda1
+    this.childObj[`UserKda`].children[1].innerHTML = kda2
   }
 
+  async printRuneImg() {
+    let mainRuneStyle = this.participant.perks.styles[0].style
+    let mainRune = this.participant.perks.styles[0].selections[0].perk
+    let subRuneStyle = this.participant.perks.styles[1].style
 
-  async getSpellImg(user){
+    super.inputContent(this.childObj[`UserRuneDiv`].children[1], {url : this.gameInfoObject.runes[subRuneStyle].icon, width:32, height : 32})
 
-    let spell1 = user.perks.styles[0].style
-    let spell2 = user.perks.styles[0].selections[0].perk
-
-    let res1 = await fetch(`/spellImg/${spell1}`)
-    let res2 = await fetch(`/spellImg/${spell2}`)
-    
-
-    let blob1 = await res1.blob()
-    let blob2 = await res2.blob()
-
-    let url1 = await URL.createObjectURL(blob1)
-    let url2 = await URL.createObjectURL(blob2)
-
-    return url1,url2    
+    for (let i = 0; i < this.gameInfoObject.runes[mainRuneStyle].slots[0].runes.length; i++) {
+      if (mainRune == this.gameInfoObject.runes[mainRuneStyle].slots[0].runes[i].id) {
+        super.inputContent(this.childObj[`UserRuneDiv`].children[0], {url:this.gameInfoObject.runes[mainRuneStyle].slots[0].runes[i].icon, width:32, height : 32})
+      }
+    }
   }
-
-
-  async getItemImg(user){
-    let imgUrlArr = []
-    for(let i = 0; i < 6; i++){
-      let item = user[`item${i}`]
-      let res = await fetch(`/itemImg/${item}`);
+  async printSpellImg() {
+    let child = this.childObj["UserSpellDiv"].children
+    for (let i = 0; i < child.length; i++) {
+      let spell = this.participant[`summoner${i + 1}Id`]
+      let spellName = spellChange[spell]
+      let res = await fetch(`/spellImg/${spellName}`)
       let blob = await res.blob()
       let url = await URL.createObjectURL(blob)
-      imgUrlArr.push(url)
+      super.inputContent(child[i], { url: url, width: 24, height: 24 })
+    }
+  }
+
+
+  async printItemImg() {
+    let div = document.getElementById(`ItemDiv`)
+    console.log(this.gameInfoObject)
+    for (let i = 0; i < 6; i++) {
+      let item = this.participant[`item${i}`]
+      super.inputContent(div.children[i], {url:this.gameInfoObject.items[item].imgSrc, width : 48 , height : 48})
     }
   }
 }

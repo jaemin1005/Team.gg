@@ -26,10 +26,10 @@ export class PrintResultSection extends PrintManager {
   }
 
   inputContent() {
-    console.log(this.nodeLength)
     for (let i = 0; i < this.nodeLength; i++) {
       let child = super.getChild(i)
       super.inputContent(child, this.arr[i])
     }
   }
+
 }

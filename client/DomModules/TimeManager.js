@@ -1,8 +1,8 @@
 export class TimeManager {
-  constructor(gameEndTimestamp, duration, endOfGameResult) {
+  constructor(gameEndTimestamp, duration) {
     this.gameEndTimestamp = gameEndTimestamp
-    this.timeDuration = duration
-    this.endOfGameResult = endOfGameResult
+    this.durationTime = duration
+    // this.endOfGameResult = endOfGameResult
   }
   dateCal() {
     let time = this.gameEndTimestamp;
@@ -39,19 +39,19 @@ export class TimeManager {
 
   // * 게임 길이 반환
   duration() {
-    let sec = this.duration % 60;
-    let min = Math.floor(this.duration / 60);
+    let sec = this.durationTime % 60;
+    let min = Math.floor(this.durationTime / 60);
     let timeline = `${min}분` + `${sec}초`
     return timeline
   }
 
-  checkWin() {
-    let result = this.endOfGameResult;
-    if (result == "GameComplete") {
-      return true
-    } else {
-      return false
-    }
-  }
+  // checkWin() {
+  //   let result = this.endOfGameResult;
+  //   if (result == "GameComplete") {
+  //     return true
+  //   } else {
+  //     return false
+  //   }
+  // }
 
 }

@@ -10,13 +10,13 @@ import { DomDiv } from "./DomModules/DomDiv.js";
 import { CreateArea } from "./DomModules/CreateArea.js";
 import { TimeManager } from "./DomModules/TimeManager.js";
 import { PrintUserInfoSection } from "./DomModules/PrintUserInfoSection.js";
+import { spellChange } from "./DomModules/spellChange.js";
 
-
-import { tagEnum, RecordManager }from "./Modules/userInfo.js"
+import { tagEnum, RecordManager } from "./Modules/userInfo.js"
 
 let url = "http://localhost:3000"
 
-const reqSummonersUrl = "/summoner/" 
+const reqSummonersUrl = "/summoner/"
 const reqChamionsUrl = "/champions/"
 
 //const main = Object.assign([...document.getElementById("main").children]);
@@ -36,46 +36,71 @@ const $leagueInfo = document.getElementById("league_info");
 const recentSearchData = [];
 const requestData = await RequestJSONData();
 
-
-
-
-
-let SelectMatchInfo = function(matchData, gameName){
+let SelectMatchInfo = async function (matchData, gameName) {
   
   let MatchHTMLContainer = new CreateArea()
-
   MatchHTMLContainer.CreateLogArea(DomDiv)
-
-  let parentHTMLArr = MatchHTMLContainer.getCurrentId()  
-
-  let PrintPlayer = new PrintAllPlayerSection(document.getElementById(`AllPlayerSection`), matchData.info.participants)
-  PrintPlayer.inputContent()
   
-  let getTime = new TimeManager(matchData.info.gameEndTimestamp, matchData.info.gameDuration)
-  let agoTime = getTime.dateCal()
-  let duration = getTime.duration()
+  let PrintPlayer = new PrintAllPlayerSection(document.getElementById(`AllPlayerSection`), matchData.info.participants, gameName, requestData)
+  await PrintPlayer.inputContent()
+  let index = PrintPlayer.getUserIndex()
 
+  let [ago, duration] = timeGetter(matchData.info.gameEndTimestamp, matchData.info.gameDuration)
+  let gameResult = checkWin(matchData.info.teams, index)
+  let queue = queTypeCheck(matchData.info.queueId)
+  let printResult = new PrintResultSection(document.getElementById('ResultSection'), [gameResult, queue, ago, duration])
+  printResult.inputContent()
+  
+  let printUser = new PrintUserInfoSection(document.getElementById('SubSectionTop'), matchData.info.participants[index], requestData)
+  printUser.inputContent()
 }
 
+let checkWin = (teams, index) => {
+  let result;
+  index < 5 ?
+    result = teams[0].win :
+    result = teams[1].win
+
+
+  result === true ?
+    result = "승리" :
+    result = "패배"
+
+  return result
+}
+
+let queTypeCheck = (queueType) => {
+  let queue;
+
+  queueType == 440 ? 
+  queue = "자유랭크" : 
+  queue = "솔로랭크"
+
+  return queue
+}
+
+let timeGetter = (gameEndTimestamp, gameDuration) => {
+  let getTime = new TimeManager(gameEndTimestamp, gameDuration)
+  
+  return [getTime.dateCal(), getTime.duration()]
+}
 
 
 $search.onkeydown = async (e) => {
-  
-  if(e.keyCode == "13"){  
+
+  if (e.keyCode == "13") {
     let searchValue = checkUser($search.value);
-    if(searchValue !== undefined){
+    if (searchValue !== undefined) {
       await SearchUser(searchValue);
     }
-    
-
   }
 }
 
-function Start(){
+function Start() {
   ClearViewInMain();
 }
 
-function AddLocalStoarge(key, value){
+function AddLocalStoarge(key, value) {
   recentSearchData[recentSearchData.length] = value;
 
 }
@@ -87,16 +112,16 @@ function AddLocalStoarge(key, value){
  * * 검색한 아이디를 인코딩하여 서버에게 요청한다.
  * @param {*} searchValue : 검색한 아이디
  */
-async function SearchUser(searchValue){
+async function SearchUser(searchValue) {
   OnViewInMain("loading");
   let data = searchValue.replace("#", "-");
   data = encodeURI(data);
-  let userData = await RequestUserData(url+reqSummonersUrl+data);
+  let userData = await RequestUserData(url + reqSummonersUrl + data);
 
-  console.log(userData)
-  
+
+
   //* 유저 데이터가 없을 때
-  if(userData == null){
+  if (userData == null) {
     ClearViewInMain();
     AlamTextUIUpdate(searchValue + "는 존재하지 않는 플레이어 입니다");
     OnViewInMain("alam_text");
@@ -116,17 +141,17 @@ async function SearchUser(searchValue){
  * * 검색된 Id만 화면에 보여주고, 나머지는 보여주지 않는다.
  * @param {*} name : 보여줄 Element ID 
  */
-function OnViewInMain(name){
+function OnViewInMain(name) {
   Object.keys(main).forEach(key => {
-    if(key === name){
-      if(name == "match"){
+    if (key === name) {
+      if (name == "match") {
         main[name].style.display = "grid";
       }
-      else{
+      else {
         main[name].style.display = "flex";
       }
     }
-    else{
+    else {
       main[key].style.display = "none";
     }
   })
@@ -136,7 +161,7 @@ function OnViewInMain(name){
  * * 2024.05.13 황재민
  * * Main의 모든 자식의 displa를 none으로 설정한다. (초기화면)
  */
-function ClearViewInMain(){
+function ClearViewInMain() {
   Object.keys(main).forEach(key => {
     main[key].style.display = "none";
   })
@@ -148,9 +173,9 @@ function ClearViewInMain(){
  * @param {*} arrElem : element.children
  * @returns children.id를 프로퍼티와 해당 값이 들어가있는데 객체
  */
-function TransDOMArrIntoObj(arrElem){
+function TransDOMArrIntoObj(arrElem) {
   let obj = {};
-  for(let elem of arrElem){
+  for (let elem of arrElem) {
     obj[elem.id] = elem;
   }
   return obj;
@@ -161,9 +186,9 @@ function TransDOMArrIntoObj(arrElem){
  * * Stat관련 HTML, 받안온 데이터를 가지고, Element의 UI를 업데이트 해주는 함수.
  * @param {*} data : User Data
  */
-async function StatUIUpdate(data){
-  
-  const profileIconPath = url+"/resources/lol/" + requestData.version + "/img/profileicon/" + data.profileIconId + ".png"
+async function StatUIUpdate(data) {
+
+  const profileIconPath = url + "/resources/lol/" + requestData.version + "/img/profileicon/" + data.profileIconId + ".png"
 
   const $profileDetail = document.getElementById("profile_detail");
   const $profileIcon = document.getElementById("profile_icon");
@@ -171,19 +196,19 @@ async function StatUIUpdate(data){
 
   $profileDetail.children[0].textContent = data.gameName;
   $profileDetail.children[1].textContent = " #" + data.tagLine;
-  
+
   //* Profile Icon 이미지를 불러온다.
-  let promise1 = fetch(profileIconPath).then(() => {$profileIcon.children[0].src = profileIconPath;});
-  
+  let promise1 = fetch(profileIconPath).then(() => { $profileIcon.children[0].src = profileIconPath; });
+
   //* 점수에는 솔로랭크 점수만 보여준다.
   const soloRank = data.league.find(league => league.queueType === "RANKED_SOLO_5x5");
-  if(soloRank){
+  if (soloRank) {
     let tierImgPath = `/resources/tier/${(soloRank.tier).toLowerCase()}.webp`
     fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
     $leagueInfo.children[0].textContent = soloRank.tier + " " + soloRank.rank;
     $leagueInfo.children[1].textContent = soloRank.leaguePoints + " LP";
   }
-  else{
+  else {
     let tierImgPath = "/resources/tier/unrank.webp";
     fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
     $leagueInfo.children[0].textContent = "unrankded"
@@ -194,7 +219,7 @@ async function StatUIUpdate(data){
   //   if(league.queueType === "RANKED_SOLO_5x5"){
 
   //     let tierImgPath = `/resources/tier/${(league.tier).toLowerCase()}.webp`
-      
+
   //     //* 랭크 티어 이미지 요청 후, 이미지 업데이트. 
   //     fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
   //     let $leagueInfo = document.getElementById("league_info");
@@ -204,12 +229,12 @@ async function StatUIUpdate(data){
   // }
 
   //* 현재 진행중인 매칭이 있을 떄
-  if(data.recentMatch != null){
-    
+  if (data.recentMatch != null) {
+
     $recentMsg.style.display = "none";
     $blueTeam.style.display = "flex";
     $redTeam.style.display = "flex";
-    
+
     let redTeamCount = 1;
     let blueTeamCount = 1;
 
@@ -220,49 +245,50 @@ async function StatUIUpdate(data){
 
     Object.keys(recentData).forEach(key => {
 
-        let participant = recentData[key];
-        let row = participant.teamId == 100 ? $blueTeam.children[blueTeamCount++] : $redTeam.children[redTeamCount++];
+      let participant = recentData[key];
+      let row = participant.teamId == 100 ? $blueTeam.children[blueTeamCount++] : $redTeam.children[redTeamCount++];
 
-        let profile_icon = participant.profileIconId;
-        let spell_1 = participant.spell1Id;
-        let spell_2 = participant.spell2Id;
-        let championId = participant.championId;
-        let riotId = participant.riotId;
-        let primaryPerk = participant.perkStyle;
-        let subPerk = participant.perkSubStyle;
-        let summonerId = participant.summonerId;
-        let league = participant.league;
-        let leagueIdx = null;
-        
+      let profile_icon = participant.profileIconId;
+      let spell_1 = participant.spell1Id;
+      let spell_2 = participant.spell2Id;
+      let championId = participant.championId;
+      let riotId = participant.riotId;
+      let primaryPerk = participant.perkStyle;
+      let subPerk = participant.perkSubStyle;
+      let summonerId = participant.summonerId;
+      let league = participant.league;
+      let leagueIdx = null;
 
-        for(let i = 0 ; i < league.length ; i++){
-          if(league[i].queueType == GameQueueType[data.recentMatch.gameQueueConfigId]){
-            leagueIdx = i;
-            break;
-          }
+
+      for (let i = 0; i < league.length; i++) {
+        if (league[i].queueType == GameQueueType[data.recentMatch.gameQueueConfigId]) {
+          leagueIdx = i;
+          break;
         }
+      }
 
-        let wins = leagueIdx != null ? Number(league[leagueIdx].wins) : 0;
-        let losses = leagueIdx != null ? Number(league[leagueIdx].losses) : 0;
-        let winRate = Math.ceil(wins / (wins + losses) * 100);
+      let wins = leagueIdx != null ? Number(league[leagueIdx].wins) : 0;
+      let losses = leagueIdx != null ? Number(league[leagueIdx].losses) : 0;
+      let winRate = Math.ceil(wins / (wins + losses) * 100);
 
-        let score = leagueIdx != null ? (RankTier[league[leagueIdx].tier] + RankTierDetail[league[leagueIdx].rank]) : 0;
+      let score = leagueIdx != null ? (RankTier[league[leagueIdx].tier] + RankTierDetail[league[leagueIdx].rank]) : 0;
 
-        row.children[0].children[0].src = requestData.champions[championId].imgSrc;
-        row.children[1].children[0].children[0].src = requestData.spells[spell_1].imgSrc;
-        row.children[1].children[2].children[0].src = requestData.spells[spell_2].imgSrc;
-        row.children[2].children[0].textContent = riotId;
-        row.children[2].children[1].textContent = leagueIdx != null ? league[leagueIdx].tier + " " + league[leagueIdx].rank + " (" + league[leagueIdx].leaguePoints + ")" : "-";
-        row.children[3].children[0].textContent = leagueIdx != null ? `${winRate}%` : "-";
-        row.children[3].children[1].children[0].children[0].style.width = leagueIdx != null ? `${winRate}%` : "-";
+      row.children[0].children[0].src = requestData.champions[championId].imgSrc;
+      row.children[1].children[0].children[0].src = requestData.spells[spell_1].imgSrc;
+      row.children[1].children[2].children[0].src = requestData.spells[spell_2].imgSrc;
 
-        if(participant.teamId == 100) blueRankScore += score;
-        else redRankScore += score;
+      row.children[2].children[0].textContent = riotId;
+      row.children[2].children[1].textContent = leagueIdx != null ? league[leagueIdx].tier + " " + league[leagueIdx].rank + " (" + league[leagueIdx].leaguePoints + ")" : "-";
+      row.children[3].children[0].textContent = leagueIdx != null ? `${winRate}%` : "-";
+      row.children[3].children[1].children[0].children[0].style.width = leagueIdx != null ? `${winRate}%` : "-";
+
+      if (participant.teamId == 100) blueRankScore += score;
+      else redRankScore += score;
     });
 
     //* 평균 점수
-    const avgBlueScore = Math.round(blueRankScore/5);
-    const avgRedScore = Math.round(redRankScore/5);
+    const avgBlueScore = Math.round(blueRankScore / 5);
+    const avgRedScore = Math.round(redRankScore / 5);
 
     //* 평균 티어 배열 인덱스
     const blueTierIdx = Math.floor(avgBlueScore / 5);
@@ -270,14 +296,14 @@ async function StatUIUpdate(data){
 
     //* 평균 티어 세부점수 인덱스
     const blueTierDetail = avgBlueScore % 5;
-    const redTierDetail =  avgRedScore % 5;
+    const redTierDetail = avgRedScore % 5;
 
-    $blueTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[blueTierIdx]} ${arrRankTierDetail[blueTierDetail-1]})`;
-    $redTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[redTierIdx]} ${arrRankTierDetail[redTierDetail-1]}`;    
+    $blueTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[blueTierIdx]} ${arrRankTierDetail[blueTierDetail - 1]})`;
+    $redTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[redTierIdx]} ${arrRankTierDetail[redTierDetail - 1]}`;
   }
 
   //* 현재 진행중인 매칭이 없을 떄.
-  else{
+  else {
     $redTeam.style.display = "none";
     $blueTeam.style.display = "none";
     $recentMsg.style.display = "block";
@@ -297,6 +323,6 @@ async function StatUIUpdate(data){
  * * 해당 텍스트로 화면에 보여준다.
  * @param {*} strText 
  */
-function AlamTextUIUpdate(strText){
+function AlamTextUIUpdate(strText) {
   main["alam_text"].textContent = strText;
 }
