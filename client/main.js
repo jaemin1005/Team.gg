@@ -36,6 +36,10 @@ const $leagueInfo = document.getElementById("league_info");
 const recentSearchData = [];
 const requestData = await RequestJSONData();
 
+let staticUserData;
+let viewChecker = "";
+
+
 let SelectMatchInfo = async function (matchData, gameName, number) {
   let MatchHTMLContainer = new CreateArea(number)
   MatchHTMLContainer.CreateLogArea(DomDiv)
@@ -84,15 +88,37 @@ let timeGetter = (gameEndTimestamp, gameDuration) => {
   return [getTime.dateCal(), getTime.duration()]
 }
 
+let buttonEvent = ()=>{
+  document.getElementById('swap').addEventListener('click', (e)=>{
+    viewChecker === "Match" ? 
+    (async()=>{
+      let searchValue = await checkUser($search.value);
+      if (searchValue !== undefined) {
+      viewChecker = "Live"
+      SearchUser(searchValue);
+      }
+    })(): 
+    (async ()=>{
+      
+      for (let i = 0; i < 10; i++) {
+        SelectMatchInfo(staticUserData.matchInfo[i], staticUserData.gameName, i)
+      }
+      OnViewInMain("match");
+      viewChecker = "Match"
+    })()
 
-$search.onkeydown = async (e) => {
+  })
+}
 
+$search.onkeydown = async (e)=>{
   if (e.keyCode == "13") {
     let searchValue = checkUser($search.value);
     if (searchValue !== undefined) {
+      viewChecker = "Live"
       await SearchUser(searchValue);
     }
   }
+  buttonEvent()
 }
 
 function Start() {
@@ -127,15 +153,9 @@ async function SearchUser(searchValue) {
     return;
   }
 
-  // await StatUIUpdate(userData);
-  // OnViewInMain("stat");
-  for (let i = 0; i < 10; i++) {
-    SelectMatchInfo(userData.matchInfo[i], userData.gameName, i)
-  }
-
-
-
-  OnViewInMain("match");
+  await StatUIUpdate(userData);
+  OnViewInMain("stat");
+  staticUserData = userData
 }
 
 /**

@@ -29,4 +29,8 @@ export class CreateArea {
   getCurrentId() {
     return this.currentId
   }
+
+  testCreateButton(){
+    
+  }
 }

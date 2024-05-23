@@ -1,3 +1,23 @@
+/**
+ * * TimeManager
+ * 2024/05/21 배성빈 : 유닉스 시간, ms를 지난 시간과 진행 시간의 형태로 변환해주는 클래스.
+ * ! 해당 클래스는 직접적인 인스턴스를 허용하지 않으며, 오로지 자식 클래스의 생성자에서 super을 통해 인스턴스 할 수 있다.
+ * #role 
+ * ? constructor
+ * @param {*} parentObj : 유닉스 시간, ms
+ *
+ * ? member variable
+ * gamedurationTime -> 진행시간
+ * gameEndTimestamp -> 게임이 종료된 유닉스 시간
+ * ? Method 
+ * datecal -> endtimestamp를 통해 지난 날짜를 계산하여 문자열로 반환.
+ * duration -> ms를 분 초로 변환하여 문자열로 반환.
+ * 
+*/
+
+
+
+
 export class TimeManager {
   constructor(gameEndTimestamp, duration) {
     this.gameEndTimestamp = gameEndTimestamp

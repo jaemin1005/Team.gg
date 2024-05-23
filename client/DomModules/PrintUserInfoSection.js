@@ -1,31 +1,34 @@
+/**
+ * * PrintUserInfoSection
+ * 2024/05/23 배성빈 : PrintAllPlayerSection을 통해 반환된 사용자 인덱스를 받아와 모든 출력을 진행함. 
+ * #role 
+ * ? constructor
+ * @param {*} parentObj : 
+ * @param {*} participant
+ * @param {*} obj
+ * @param {*} number
+ *
+ * ? member variable
+ * gamedurationTime -> 진행시간
+ * gameEndTimestamp -> 게임이 종료된 유닉스 시간
+ * ? Method 
+ * datecal -> endtimestamp를 통해 지난 날짜를 계산하여 문자열로 반환.
+ * duration -> ms를 분 초로 변환하여 문자열로 반환.
+ * 
+*/
+
 import { PrintManager } from "./PrintManager.js"
-
-import { spellChange } from "./spellChange.js"
-
 export class PrintUserInfoSection extends PrintManager {
 
   constructor(parentObj, participant, obj, number) {
     super(parentObj, participant, null)
     this.nodeLength = super.getLength()
     this.participant = participant
-    this.childObj = {}
-    this.section;
     this.gameInfoObject = obj
     this.matchNumber = number
   }
 
-  searchElement() {
-    for (let i = 0; i < this.nodeLength; i++) {
-      let child = super.getChild(i)
-      this.childObj[child.class] = child
-    }
-    this.nodeLength === 1 ?
-      this.section = "BOTTOM" :
-      this.section = "TOP"
-  }
-
   async inputContent() {
-    this.searchElement()
     this.printChampionImg()
     this.printKda()
     this.printSpellImg()
