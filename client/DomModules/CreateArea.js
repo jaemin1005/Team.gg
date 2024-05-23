@@ -1,8 +1,9 @@
 export class CreateArea {
 
-  constructor() {
+  constructor(number) {
     this.currentId = {}
     this.root = document.getElementById("match")
+    this.matchNum = number
   }
   CreateLogArea(Root, current = this.root) {
     let keys = Object.keys(Root)
@@ -19,7 +20,7 @@ export class CreateArea {
       }
       else {
         let newTag = document.createElement("div")
-        newTag.setAttribute("id", keys[i])
+        newTag.setAttribute("class", `${keys[i]}`+" "+`${this.matchNum}`)
         current.appendChild(newTag)
         this.CreateLogArea(Root[keys[i]], newTag)
       }

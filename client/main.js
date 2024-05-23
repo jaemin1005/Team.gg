@@ -36,22 +36,22 @@ const $leagueInfo = document.getElementById("league_info");
 const recentSearchData = [];
 const requestData = await RequestJSONData();
 
-let SelectMatchInfo = async function (matchData, gameName) {
+let SelectMatchInfo = async function (matchData, gameName, number) {
   
-  let MatchHTMLContainer = new CreateArea()
+  let MatchHTMLContainer = new CreateArea(number)
   MatchHTMLContainer.CreateLogArea(DomDiv)
   
-  let PrintPlayer = new PrintAllPlayerSection(document.getElementById(`AllPlayerSection`), matchData.info.participants, gameName, requestData)
+  let PrintPlayer = new PrintAllPlayerSection(document.getElementsByClassName(`AllPlayerSection ${number}`)[0], matchData.info.participants, gameName, requestData)
   await PrintPlayer.inputContent()
   let index = PrintPlayer.getUserIndex()
 
   let [ago, duration] = timeGetter(matchData.info.gameEndTimestamp, matchData.info.gameDuration)
   let gameResult = checkWin(matchData.info.teams, index)
   let queue = queTypeCheck(matchData.info.queueId)
-  let printResult = new PrintResultSection(document.getElementById('ResultSection'), [gameResult, queue, ago, duration])
+  let printResult = new PrintResultSection(document.getElementsByClassName(`ResultSection ${number}`)[0], [gameResult, queue, ago, duration])
   printResult.inputContent()
   
-  let printUser = new PrintUserInfoSection(document.getElementById('SubSectionTop'), matchData.info.participants[index], requestData)
+  let printUser = new PrintUserInfoSection(document.getElementsByClassName(`SubSectionTop ${number}`)[0], matchData.info.participants[index], requestData, number)
   printUser.inputContent()
 }
 
@@ -131,7 +131,9 @@ async function SearchUser(searchValue) {
   // await StatUIUpdate(userData);
   // OnViewInMain("stat");
 
-  SelectMatchInfo(userData.matchInfo[0], userData.gameName)
+  SelectMatchInfo(userData.matchInfo[0], userData.gameName,0)
+  SelectMatchInfo(userData.matchInfo[1], userData.gameName, 1)
+  SelectMatchInfo(userData.matchInfo[2], userData.gameName, 2)
   OnViewInMain("match");
 }
 
