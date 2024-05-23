@@ -14,3 +14,5 @@ resources/lol
 test.html
 lol
 *.txt
+node_modules/*
+build

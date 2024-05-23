@@ -15,6 +15,7 @@ const reqChamionsUrl = "/champions/"
 //* Main의 자식들의 ID가 프로퍼티로 구성되어 있는 객체
 const main = TransDOMArrIntoObj(document.getElementById("main").children);
 
+//#region --Stat DOM--
 //* Stat 항목에 대한 DOM
 const $search = document.getElementById("search");
 const $recentMsg = document.getElementById("recent_match_msg");
@@ -23,40 +24,13 @@ const $redTeam = document.getElementById("recent_red_team");
 const $shortChampionMastery = document.getElementById("short_champion_mastery")
 const $recentSearch = document.getElementById("")
 const $leagueInfo = document.getElementById("league_info");
-const recentSearchData = [];
+//#endregion --Stat DOM--
 
+const recentSearchData = [];
 const requestData = await RequestJSONData();
 Start();
 
-
-// let a = function(){
-//   OnViewInMain("match")
-  
-//   // let rec = new RecordManager(null, matchData[0])
-  
-//   // let key = Object.keys(tagEnum)
-//   // console.log(key)
-//   // for(let i = 0; i < key.length; i++){
-//   //   rec.createElement(key[i], tagEnum[key[i]][0])
-//   // }
-  
-//   // for (let j = 0; j < key.length; j++) {
-    
-//   //   let childTag = tagEnum[key[j]][1];
-
-//   //   if (childTag === undefined) {
-//   //     continue;
-//   //   }
-
-//   //   rec.appendTag(key[j], childTag["child"]);
-//   // }
-//   // rec.printPlayer();
-// }
-
-
-
-
-
+//* search 버튼 이벤트
 $search.onkeydown = async (e) => {
   
   if(e.keyCode == "13"){  
@@ -150,18 +124,20 @@ function TransDOMArrIntoObj(arrElem){
 
 /**
  * * 2024.05.16 황재민
- * * Stat관련 HTML, 받안온 데이터를 가지고, Element의 UI를 업데이트 해주는 함수.
+ * * Stat관련 HTML, CSS 받아온 데이터를 가지고 UI를 업데이트 해주는 함수.
  * @param {*} data : User Data
  */
 async function StatUIUpdate(data){
   
+  //* 프로필 아이콘 경로
   const profileIconPath = url+"/resources/lol/" + requestData.version + "/img/profileicon/" + data.profileIconId + ".png"
 
   const $profileDetail = document.getElementById("profile_detail");
   const $profileIcon = document.getElementById("profile_icon");
 
-
+  //* 게임 아이디
   $profileDetail.children[0].textContent = data.gameName;
+  //* 게임 태그 
   $profileDetail.children[1].textContent = " #" + data.tagLine;
   
   //* Profile Icon 이미지를 불러온다.
@@ -182,22 +158,10 @@ async function StatUIUpdate(data){
     $leagueInfo.children[1].textContent = "-";
   }
 
-  // for(let league of data.league){
-  //   if(league.queueType === "RANKED_SOLO_5x5"){
-
-  //     let tierImgPath = `/resources/tier/${(league.tier).toLowerCase()}.webp`
-      
-  //     //* 랭크 티어 이미지 요청 후, 이미지 업데이트. 
-  //     fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
-  //     let $leagueInfo = document.getElementById("league_info");
-  //     $leagueInfo.children[0].textContent = league.tier + " " + league.rank;
-  //     $leagueInfo.children[1].textContent = league.leaguePoints + " LP";
-  //   }
-  // }
-
   //* 현재 진행중인 매칭이 있을 떄
   if(data.recentMatch != null){
-    
+
+    //* 블루팀, 레드팀의 레이아웃을 보여준다.
     $recentMsg.style.display = "none";
     $blueTeam.style.display = "flex";
     $redTeam.style.display = "flex";
@@ -213,6 +177,7 @@ async function StatUIUpdate(data){
     Object.keys(recentData).forEach(key => {
 
         let participant = recentData[key];
+        //* 팀에 따라 줄을 나눠준다.
         let row = participant.teamId == 100 ? $blueTeam.children[blueTeamCount++] : $redTeam.children[redTeamCount++];
 
         let profile_icon = participant.profileIconId;
@@ -220,8 +185,8 @@ async function StatUIUpdate(data){
         let spell_2 = participant.spell2Id;
         let championId = participant.championId;
         let riotId = participant.riotId;
-        let primaryPerk = participant.perkStyle;
-        let subPerk = participant.perkSubStyle;
+        let primaryPerk = participant.perks.perkStyle;
+        let subPerk = participant.perks.perkSubStyle;
         let summonerId = participant.summonerId;
         let league = participant.league;
         let leagueIdx = null;
@@ -234,6 +199,9 @@ async function StatUIUpdate(data){
           }
         }
 
+        /**
+         * * 실질적인 레이아웃 구성을 하는 곳
+         */
         let wins = leagueIdx != null ? Number(league[leagueIdx].wins) : 0;
         let losses = leagueIdx != null ? Number(league[leagueIdx].losses) : 0;
         let winRate = Math.ceil(wins / (wins + losses) * 100);
@@ -242,7 +210,9 @@ async function StatUIUpdate(data){
 
         row.children[0].children[0].src = requestData.champions[championId].imgSrc;
         row.children[1].children[0].children[0].src = requestData.spells[spell_1].imgSrc;
+        row.children[1].children[1].children[0].src = requestData.runes[primaryPerk].icon;
         row.children[1].children[2].children[0].src = requestData.spells[spell_2].imgSrc;
+        row.children[1].children[3].children[0].src = requestData.runes[subPerk].icon;
         row.children[2].children[0].textContent = riotId;
         row.children[2].children[1].textContent = leagueIdx != null ? league[leagueIdx].tier + " " + league[leagueIdx].rank + " (" + league[leagueIdx].leaguePoints + ")" : "-";
         row.children[3].children[0].textContent = leagueIdx != null ? `${winRate}%` : "-";
@@ -264,7 +234,8 @@ async function StatUIUpdate(data){
     const blueTierDetail = avgBlueScore % 5;
     const redTierDetail =  avgRedScore % 5;
 
-    $blueTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[blueTierIdx]} ${arrRankTierDetail[blueTierDetail-1]})`;
+    //* 계산딘 평균 점수 해당 팀 컬럼에 반영.
+    $blueTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[blueTierIdx]} ${arrRankTierDetail[blueTierDetail-1]}`;
     $redTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[redTierIdx]} ${arrRankTierDetail[redTierDetail-1]}`;    
   }
 

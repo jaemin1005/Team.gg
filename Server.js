@@ -2,7 +2,6 @@
 //* 모듈 처리
 
 //#region  --Require--
-
 // * 환경 변수의 값이 있으면 해당 변수들에게 환경변수에 적힌 값이 적용된다.
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
@@ -22,7 +21,7 @@ const SpellInfo = require("./Module/SpellInfo");
 const ItemInfo = require("./Module/ItemInfo");
 const RuneInfo = require("./Module/RuneInfo");
 const func = require('./Module/Api.js');
-
+//#endregion --Require--
 
 /**
  * * 2024.05.10 황재민
@@ -64,67 +63,67 @@ async function ProcessGETMethod(req, res){
   else ReadFiles(req,res);
 }
 
-// * 2024 05 19 배성빈
-// * client 이미지 요청 해결
-// * 챔피언 이미지 출력
-function ReqImage(req,res){
-  let imgPath
-  let imgType
+// // * 2024 05 19 배성빈
+// // * client 이미지 요청 해결
+// // * 챔피언 이미지 출력
+// function ReqImage(req,res){
+//   let imgPath
+//   let imgType
 
-  let [empty, requestName, imgName] = req.url.split("/")
+//   let [empty, requestName, imgName] = req.url.split("/")
   
-  switch(requestName){
-    case "champImg":
+//   switch(requestName){
+//     case "champImg":
       
-      imgPath = "resources/lol/img/champion/tiles/"+`${imgName}.jpg`
-      imgType = "image/jpg"
-      break
+//       imgPath = "resources/lol/img/champion/tiles/"+`${imgName}.jpg`
+//       imgType = "image/jpg"
+//       break
 
-    case "itemImg":
-      imgPath = "resources/lol/14.10.1/img/item/"+ `${imgName}.png`
-      imgType = "image/png"
-      break
+//     case "itemImg":
+//       imgPath = "resources/lol/14.10.1/img/item/"+ `${imgName}.png`
+//       imgType = "image/png"
+//       break
 
-    case "spellImg":
-      imgPath = "resources/lol/14.10.1/img/spell/"+ `${imgName}.png`
-      imgType = "image/png"
-      break
-    case "runeImg":
-      let runeName = imgName.split("/")
-      console.log(runeName)
+//     case "spellImg":
+//       imgPath = "resources/lol/14.10.1/img/spell/"+ `${imgName}.png`
+//       imgType = "image/png"
+//       break
+//     case "runeImg":
+//       let runeName = imgName.split("/")
+//       console.log(runeName)
 
-      if(runeName.length == 1){
-        for(let i = 0; i < runeJson.length; i++){
-          if(runeJson[i].id == runeName[0]){
-            console.log(runeJson[i])
-          }
-        }
-      }
+//       if(runeName.length == 1){
+//         for(let i = 0; i < runeJson.length; i++){
+//           if(runeJson[i].id == runeName[0]){
+//             console.log(runeJson[i])
+//           }
+//         }
+//       }
 
-      break
+//       break
 
-    default :
-    res.writeHead(400, {"Content-Type": "text/plain"});
-    res.end("Invalid request");
-    break;
-  }
+//     default :
+//     res.writeHead(400, {"Content-Type": "text/plain"});
+//     res.end("Invalid request");
+//     break;
+//   }
 
 
 
-  fs.readFile(imgPath, (err, data)=>{
-    if(err){
+//   fs.readFile(imgPath, (err, data)=>{
+//     if(err){
       
-      res.writeHead(404, {"Content-Type" : "text/plain"})
-      res.end()
-    }
-    else{
+//       res.writeHead(404, {"Content-Type" : "text/plain"})
+//       res.end()
+//     }
+//     else{
       
-      res.writeHead(200, {"Content-Type" : imgType})
-      res.end(data)
-    }
-  })
+//       res.writeHead(200, {"Content-Type" : imgType})
+//       res.end(data)
+//     }
+//   })
   
-}
+// }
 
 /**
  * * 2024.05.11 황재민
@@ -300,7 +299,6 @@ function SelectFile(res, path, contentType, responscode = 200) {
  * @param {*} fileName : 파일 이름
  * @returns : Content-Type
  */
-
 function GetContentType(fileName)
 {
   let split = fileName.split('.');
