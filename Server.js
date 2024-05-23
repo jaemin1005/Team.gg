@@ -57,9 +57,9 @@ async function ProcessGETMethod(req, res){
   if(req.url.startsWith("/summoner/")) ReqSearchUser(req,res);
   //else if(req.url.startsWith("/searchuser/")) ReqSearchUser(req,res);
   else if(req.url.startsWith("/json/")) ReqJSON(req,res);
-  // else if(req.url.startsWith("/champImg")||req.url.startsWith("/itemImg")||req.url.startsWith("/spellImg") || req.url.startsWith("/runeImg")){
-  //   ReqImage(req,res)
-  // }
+  else if(req.url.startsWith("/champImg")||req.url.startsWith("/itemImg")||req.url.startsWith("/spellImg") || req.url.startsWith("/runeImg")){
+    ReqImage(req,res)
+  }
   else ReadFiles(req,res);
 }
 
