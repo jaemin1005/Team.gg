@@ -5,12 +5,13 @@
   "main": "Api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon Server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "better-sqlite3": "^9.6.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "nodemon": "^3.1.0"
   }
 }

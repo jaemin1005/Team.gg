@@ -1,23 +1,13 @@
 import { checkUser } from "./Modules/checkUser.js";
 import { RequestUserData, RequestJSONData } from "./Modules/ReqData.js";
+import { GameQueueType } from "./Modules/CalcRiotApi.js";
 
-import { GameQueueType, RankTierDetail, RankTier, arrRankTierDetail, arrRankTier } from "./Modules/CalcRiotApi.js";
+import { tagEnum, RecordManager } from "./Modules/userInfo.js";
 
-import { PrintManager } from "./DomModules/PrintManager.js";
-import { PrintAllPlayerSection } from "./DomModules/PrintAllPlayerSection.js";
-import { PrintResultSection } from "./DomModules/PrintResultSection.js";
-import { DomDiv } from "./DomModules/DomDiv.js";
-import { CreateArea } from "./DomModules/CreateArea.js";
-import { TimeManager } from "./DomModules/TimeManager.js";
-import { PrintUserInfoSection } from "./DomModules/PrintUserInfoSection.js";
-import { spellChange } from "./DomModules/spellChange.js";
+let url = "http://localhost:3000";
 
-import { tagEnum, RecordManager } from "./Modules/userInfo.js"
-
-let url = "http://localhost:3000"
-
-const reqSummonersUrl = "/summoner/"
-const reqChamionsUrl = "/champions/"
+const reqSummonersUrl = "/summoner/";
+const reqChamionsUrl = "/champions/";
 
 //const main = Object.assign([...document.getElementById("main").children]);
 //const main = [...document.getElementById("main")].forEach()
@@ -30,81 +20,131 @@ const $search = document.getElementById("search");
 const $recentMsg = document.getElementById("recent_match_msg");
 const $blueTeam = document.getElementById("recent_blue_team");
 const $redTeam = document.getElementById("recent_red_team");
-const $shortChampionMastery = document.getElementById("short_champion_mastery")
-const $recentSearch = document.getElementById("")
+const $shortChampionMastery = document.getElementById("short_champion_mastery");
+const $recentSearch = document.getElementById("");
 const $leagueInfo = document.getElementById("league_info");
 const recentSearchData = [];
 const requestData = await RequestJSONData();
 
-let SelectMatchInfo = async function (matchData, gameName) {
-  
-  let MatchHTMLContainer = new CreateArea()
-  MatchHTMLContainer.CreateLogArea(DomDiv)
-  
-  let PrintPlayer = new PrintAllPlayerSection(document.getElementById(`AllPlayerSection`), matchData.info.participants, gameName, requestData)
-  await PrintPlayer.inputContent()
-  let index = PrintPlayer.getUserIndex()
+Start();
 
-  let [ago, duration] = timeGetter(matchData.info.gameEndTimestamp, matchData.info.gameDuration)
-  let gameResult = checkWin(matchData.info.teams, index)
-  let queue = queTypeCheck(matchData.info.queueId)
-  let printResult = new PrintResultSection(document.getElementById('ResultSection'), [gameResult, queue, ago, duration])
-  printResult.inputContent()
-  
-  let printUser = new PrintUserInfoSection(document.getElementById('SubSectionTop'), matchData.info.participants[index], requestData)
-  printUser.inputContent()
-}
+let a = function () {
+  OnViewInMain("match");
+  let rec = new RecordManager(null, matchData[0]);
+  let key = Object.keys(tagEnum);
 
-let checkWin = (teams, index) => {
-  let result;
-  index < 5 ?
-    result = teams[0].win :
-    result = teams[1].win
+  for (let i = 0; i < key.length; i++) {
+    rec.createElement(key[i], tagEnum[key[i]][0]);
+  }
 
+  for (let j = 0; j < key.length; j++) {
+    let childTag = tagEnum[key[j]][1];
 
-  result === true ?
-    result = "승리" :
-    result = "패배"
+    if (childTag === undefined) {
+      continue;
+    }
 
-  return result
-}
-
-let queTypeCheck = (queueType) => {
-  let queue;
-
-  queueType == 440 ? 
-  queue = "자유랭크" : 
-  queue = "솔로랭크"
-
-  return queue
-}
-
-let timeGetter = (gameEndTimestamp, gameDuration) => {
-  let getTime = new TimeManager(gameEndTimestamp, gameDuration)
-  
-  return [getTime.dateCal(), getTime.duration()]
-}
-
-
+    rec.appendTag(key[j], childTag["child"]);
+  }
+  rec.printMatchInfo();
+  console.log(matchData);
+};
 $search.onkeydown = async (e) => {
-
   if (e.keyCode == "13") {
+    let input_value = $search.value;
+
+    if (input_value.includes(`#`)) {
+      let input_key = trimming(input_value);
+      if (input_value.length <= 24) {
+        AddLocalStorage(input_key, input_value);
+        searchHistory(input_key);
+      } else {
+        return;
+      }
+    } else {
+      return;
+    }
     let searchValue = checkUser($search.value);
     if (searchValue !== undefined) {
       await SearchUser(searchValue);
     }
   }
-}
+};
+
+const trimming = (input_value) => {
+  let key = input_value.split(`#`)[0];
+  const value = input_value.split(`#`)[1];
+  let trimmedName = ``;
+  for (let i = 0; i < key.length; i++) {
+    if (key[i] == " ") {
+    } else {
+      trimmedName += key[i];
+    }
+  }
+  return `${trimmedName}#${value}`.toLowerCase();
+};
 
 function Start() {
   ClearViewInMain();
 }
 
-function AddLocalStoarge(key, value) {
-  recentSearchData[recentSearchData.length] = value;
-
+function AddLocalStorage(key, value) {
+  localStorage.setItem(key, value);
+  // recentSearchData[recentSearchData.length] = value;
 }
 
+const searchHistory = () => {
+  const user_name_values = [];
+  const searchUserHistory = document.querySelector(`.search_history`);
+  Object.values(localStorage).forEach((userName) => {
+    user_name_values.push(userName);
+  });
+  searchUserHistory.innerHTML = ``;
+  user_name_values.forEach((user) => {
+    searchUserHistory.innerHTML += `<div class = "user_history_container">
+                                      <i class="fa-solid fa-circle-info"></i>
+                                      <div class="span_container">
+                                        <span class="user_name">${user}</span>
+                                      </div>
+                                      <i class="fa-regular fa-circle-xmark"></i>
+                                    </div>
+                                `;
+  });
+
+  document.querySelectorAll(`.fa-circle-xmark`).forEach((element) => {
+    element.onclick = () => {
+      const parent_container = element.parentElement;
+      const container_span = trimming(parent_container.children[1].innerText);
+      parent_container.remove();
+      localStorage.removeItem(container_span);
+    };
+  });
+
+  document.querySelectorAll(`.user_name`).forEach((element) => {
+    element.onclick = async () => {
+      const container_span = trimming(
+        element.parentElement.parentElement.children[1].innerText
+      );
+      let searchValue = checkUser(container_span);
+      if (searchValue !== undefined) {
+        await SearchUser(searchValue);
+      }
+    };
+  });
+};
+searchHistory();
+
+const searchUserHistory = document.querySelector(`.search_history`);
+
+// * 검색 기록 전체 삭제
+document.querySelector(`.delete_button`).onclick = () => {
+  Array.from(searchUserHistory.children).forEach((element) => {
+    element.remove();
+    localStorage.clear();
+  });
+};
+
+//
 /**
  * * 2024.05.13 황재민
  * * 검색 이벤트 헨들러임 (검색에 성공할 시)
@@ -118,9 +158,6 @@ async function SearchUser(searchValue) {
   data = encodeURI(data);
   let userData = await RequestUserData(url + reqSummonersUrl + data);
 
-
-
-  //* 유저 데이터가 없을 때
   if (userData == null) {
     ClearViewInMain();
     AlamTextUIUpdate(searchValue + "는 존재하지 않는 플레이어 입니다");
@@ -128,33 +165,28 @@ async function SearchUser(searchValue) {
     return;
   }
 
-  // await StatUIUpdate(userData);
-  // OnViewInMain("stat");
-
-  SelectMatchInfo(userData.matchInfo[0], userData.gameName)
-  OnViewInMain("match");
+  await StatUIUpdate(userData);
+  OnViewInMain("stat");
 }
 
 /**
  * * 2024.05.13 황재민
  * * Main의 자식 중 elementID로 검색
  * * 검색된 Id만 화면에 보여주고, 나머지는 보여주지 않는다.
- * @param {*} name : 보여줄 Element ID 
+ * @param {*} name : 보여줄 Element ID
  */
 function OnViewInMain(name) {
-  Object.keys(main).forEach(key => {
+  Object.keys(main).forEach((key) => {
     if (key === name) {
       if (name == "match") {
-        main[name].style.display = "grid";
-      }
-      else {
+        main[name].style.display = "flex";
+      } else {
         main[name].style.display = "flex";
       }
-    }
-    else {
+    } else {
       main[key].style.display = "none";
     }
-  })
+  });
 }
 
 /**
@@ -162,9 +194,9 @@ function OnViewInMain(name) {
  * * Main의 모든 자식의 displa를 none으로 설정한다. (초기화면)
  */
 function ClearViewInMain() {
-  Object.keys(main).forEach(key => {
+  Object.keys(main).forEach((key) => {
     main[key].style.display = "none";
-  })
+  });
 }
 
 /**
@@ -181,37 +213,52 @@ function TransDOMArrIntoObj(arrElem) {
   return obj;
 }
 
+function AlamTextUIUpdate(strText) {
+  main["alam_text"].textContent = strText;
+}
+
 /**
  * * 2024.05.16 황재민
  * * Stat관련 HTML, 받안온 데이터를 가지고, Element의 UI를 업데이트 해주는 함수.
  * @param {*} data : User Data
  */
 async function StatUIUpdate(data) {
-
-  const profileIconPath = url + "/resources/lol/" + requestData.version + "/img/profileicon/" + data.profileIconId + ".png"
+  const profileIconPath =
+    url +
+    "/resources/lol/" +
+    requestData.version +
+    "/img/profileicon/" +
+    data.profileIconId +
+    ".png";
 
   const $profileDetail = document.getElementById("profile_detail");
   const $profileIcon = document.getElementById("profile_icon");
-
 
   $profileDetail.children[0].textContent = data.gameName;
   $profileDetail.children[1].textContent = " #" + data.tagLine;
 
   //* Profile Icon 이미지를 불러온다.
-  let promise1 = fetch(profileIconPath).then(() => { $profileIcon.children[0].src = profileIconPath; });
+  let promise1 = fetch(profileIconPath).then(() => {
+    $profileIcon.children[0].src = profileIconPath;
+  });
 
   //* 점수에는 솔로랭크 점수만 보여준다.
-  const soloRank = data.league.find(league => league.queueType === "RANKED_SOLO_5x5");
+  const soloRank = data.league.find(
+    (league) => league.queueType === "RANKED_SOLO_5x5"
+  );
   if (soloRank) {
-    let tierImgPath = `/resources/tier/${(soloRank.tier).toLowerCase()}.webp`
-    fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
+    let tierImgPath = `/resources/tier/${soloRank.tier.toLowerCase()}.webp`;
+    fetch(tierImgPath).then(
+      () => (document.getElementById("league_tier_icon").src = tierImgPath)
+    );
     $leagueInfo.children[0].textContent = soloRank.tier + " " + soloRank.rank;
     $leagueInfo.children[1].textContent = soloRank.leaguePoints + " LP";
-  }
-  else {
+  } else {
     let tierImgPath = "/resources/tier/unrank.webp";
-    fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
-    $leagueInfo.children[0].textContent = "unrankded"
+    fetch(tierImgPath).then(
+      () => (document.getElementById("league_tier_icon").src = tierImgPath)
+    );
+    $leagueInfo.children[0].textContent = "unrankded";
     $leagueInfo.children[1].textContent = "-";
   }
 
@@ -220,7 +267,7 @@ async function StatUIUpdate(data) {
 
   //     let tierImgPath = `/resources/tier/${(league.tier).toLowerCase()}.webp`
 
-  //     //* 랭크 티어 이미지 요청 후, 이미지 업데이트. 
+  //     //* 랭크 티어 이미지 요청 후, 이미지 업데이트.
   //     fetch(tierImgPath).then(() => document.getElementById("league_tier_icon").src = tierImgPath);
   //     let $leagueInfo = document.getElementById("league_info");
   //     $leagueInfo.children[0].textContent = league.tier + " " + league.rank;
@@ -230,23 +277,20 @@ async function StatUIUpdate(data) {
 
   //* 현재 진행중인 매칭이 있을 떄
   if (data.recentMatch != null) {
-
     $recentMsg.style.display = "none";
     $blueTeam.style.display = "flex";
     $redTeam.style.display = "flex";
 
     let redTeamCount = 1;
     let blueTeamCount = 1;
-
-    let blueRankScore = 0;
-    let redRankScore = 0;
-
     const recentData = data.recentMatch.participants;
 
-    Object.keys(recentData).forEach(key => {
-
+    Object.keys(recentData).forEach((key) => {
       let participant = recentData[key];
-      let row = participant.teamId == 100 ? $blueTeam.children[blueTeamCount++] : $redTeam.children[redTeamCount++];
+      let row =
+        participant.teamId == 100
+          ? $blueTeam.children[blueTeamCount++]
+          : $redTeam.children[redTeamCount++];
 
       let profile_icon = participant.profileIconId;
       let spell_1 = participant.spell1Id;
@@ -259,9 +303,11 @@ async function StatUIUpdate(data) {
       let league = participant.league;
       let leagueIdx = null;
 
-
       for (let i = 0; i < league.length; i++) {
-        if (league[i].queueType == GameQueueType[data.recentMatch.gameQueueConfigId]) {
+        if (
+          league[i].queueType ==
+          GameQueueType[data.recentMatch.gameQueueConfigId]
+        ) {
           leagueIdx = i;
           break;
         }
@@ -269,37 +315,29 @@ async function StatUIUpdate(data) {
 
       let wins = leagueIdx != null ? Number(league[leagueIdx].wins) : 0;
       let losses = leagueIdx != null ? Number(league[leagueIdx].losses) : 0;
-      let winRate = Math.ceil(wins / (wins + losses) * 100);
+      let winRate = Math.ceil((wins / (wins + losses)) * 100);
 
-      let score = leagueIdx != null ? (RankTier[league[leagueIdx].tier] + RankTierDetail[league[leagueIdx].rank]) : 0;
-
-      row.children[0].children[0].src = requestData.champions[championId].imgSrc;
-      row.children[1].children[0].children[0].src = requestData.spells[spell_1].imgSrc;
-      row.children[1].children[2].children[0].src = requestData.spells[spell_2].imgSrc;
-
+      row.children[0].children[0].src =
+        requestData.champions[championId].imgSrc;
+      row.children[1].children[0].children[0].src =
+        requestData.spells[spell_1].imgSrc;
+      row.children[1].children[2].children[0].src =
+        requestData.spells[spell_2].imgSrc;
       row.children[2].children[0].textContent = riotId;
-      row.children[2].children[1].textContent = leagueIdx != null ? league[leagueIdx].tier + " " + league[leagueIdx].rank + " (" + league[leagueIdx].leaguePoints + ")" : "-";
-      row.children[3].children[0].textContent = leagueIdx != null ? `${winRate}%` : "-";
-      row.children[3].children[1].children[0].children[0].style.width = leagueIdx != null ? `${winRate}%` : "-";
-
-      if (participant.teamId == 100) blueRankScore += score;
-      else redRankScore += score;
+      row.children[2].children[1].textContent =
+        leagueIdx != null
+          ? league[leagueIdx].tier +
+            " " +
+            league[leagueIdx].rank +
+            " (" +
+            league[leagueIdx].leaguePoints +
+            ")"
+          : "-";
+      row.children[3].children[0].textContent =
+        leagueIdx != null ? `${winRate}%` : "-";
+      row.children[3].children[1].children[0].children[0].style.width =
+        leagueIdx != null ? `${winRate}%` : "-";
     });
-
-    //* 평균 점수
-    const avgBlueScore = Math.round(blueRankScore / 5);
-    const avgRedScore = Math.round(redRankScore / 5);
-
-    //* 평균 티어 배열 인덱스
-    const blueTierIdx = Math.floor(avgBlueScore / 5);
-    const redTierIdx = Math.floor(avgRedScore / 5);
-
-    //* 평균 티어 세부점수 인덱스
-    const blueTierDetail = avgBlueScore % 5;
-    const redTierDetail = avgRedScore % 5;
-
-    $blueTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[blueTierIdx]} ${arrRankTierDetail[blueTierDetail - 1]})`;
-    $redTeam.children[0].children[1].textContent = `티어 평균 : ${arrRankTier[redTierIdx]} ${arrRankTierDetail[redTierDetail - 1]}`;
   }
 
   //* 현재 진행중인 매칭이 없을 떄.
@@ -307,22 +345,16 @@ async function StatUIUpdate(data) {
     $redTeam.style.display = "none";
     $blueTeam.style.display = "none";
     $recentMsg.style.display = "block";
-    $recentMsg.textContent = `${data.gameName}#${data.tagLine}은 현재 게임중이 아닙니다.`
+    $recentMsg.textContent = `${data.gameName}#${data.tagLine}은 현재 게임중이 아닙니다.`;
   }
 
   //* 해당 유저의 챔피언 마스터리
-  $shortChampionMastery.children[0].children[0].src = requestData.champions[data.champInfo[0].championId].imgSrc;
-  $shortChampionMastery.children[1].children[0].textContent = requestData.champions[data.champInfo[0].championId].name;
-  $shortChampionMastery.children[1].children[1].textContent = data.champInfo[0].championPoints;
+  $shortChampionMastery.children[0].children[0].src =
+    requestData.champions[data.champInfo[0].championId].imgSrc;
+  $shortChampionMastery.children[1].children[0].textContent =
+    requestData.champions[data.champInfo[0].championId].name;
+  $shortChampionMastery.children[1].children[1].textContent =
+    data.champInfo[0].championPoints;
 
-  await Promise.all([promise1])
-}
-
-/**
- * * 2024.05.20 황재민
- * * 해당 텍스트로 화면에 보여준다.
- * @param {*} strText 
- */
-function AlamTextUIUpdate(strText) {
-  main["alam_text"].textContent = strText;
+  await Promise.all([promise1]);
 }
