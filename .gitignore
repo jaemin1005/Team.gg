@@ -14,5 +14,10 @@ resources/lol
 test.html
 lol
 *.txt
+<<<<<<< HEAD
 node_modules
 build
+=======
+node_modules/*
+build
+>>>>>>> origin/develop

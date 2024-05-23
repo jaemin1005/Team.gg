@@ -2,7 +2,6 @@
 //* 모듈 처리
 
 //#region  --Require--
-
 // * 환경 변수의 값이 있으면 해당 변수들에게 환경변수에 적힌 값이 적용된다.
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
@@ -21,8 +20,7 @@ const SpellInfo = require("./Module/SpellInfo");
 const ItemInfo = require("./Module/ItemInfo");
 const RuneInfo = require("./Module/RuneInfo");
 const func = require('./Module/Api.js');
-
-//#endregion
+//#endregion --Require--
 
 /**
  * * 2024.05.10 황재민
@@ -294,7 +292,6 @@ function SelectFile(res, path, contentType, responscode = 200) {
  * @param {*} fileName : 파일 이름
  * @returns : Content-Type
  */
-
 function GetContentType(fileName)
 {
   let split = fileName.split('.');
