@@ -37,10 +37,9 @@ const recentSearchData = [];
 const requestData = await RequestJSONData();
 
 let SelectMatchInfo = async function (matchData, gameName, number) {
-  
   let MatchHTMLContainer = new CreateArea(number)
   MatchHTMLContainer.CreateLogArea(DomDiv)
-  
+
   let PrintPlayer = new PrintAllPlayerSection(document.getElementsByClassName(`AllPlayerSection ${number}`)[0], matchData.info.participants, gameName, requestData)
   await PrintPlayer.inputContent()
   let index = PrintPlayer.getUserIndex()
@@ -48,9 +47,9 @@ let SelectMatchInfo = async function (matchData, gameName, number) {
   let [ago, duration] = timeGetter(matchData.info.gameEndTimestamp, matchData.info.gameDuration)
   let gameResult = checkWin(matchData.info.teams, index)
   let queue = queTypeCheck(matchData.info.queueId)
-  let printResult = new PrintResultSection(document.getElementsByClassName(`ResultSection ${number}`)[0], [gameResult, queue, ago, duration])
+  let printResult = new PrintResultSection(document.getElementsByClassName(`ResultSection ${number}`)[0], [gameResult, `${queue}/${duration}`,ago])
   printResult.inputContent()
-  
+
   let printUser = new PrintUserInfoSection(document.getElementsByClassName(`SubSectionTop ${number}`)[0], matchData.info.participants[index], requestData, number)
   printUser.inputContent()
 }
@@ -72,16 +71,16 @@ let checkWin = (teams, index) => {
 let queTypeCheck = (queueType) => {
   let queue;
 
-  queueType == 440 ? 
-  queue = "자유랭크" : 
-  queue = "솔로랭크"
+  queueType == 440 ?
+    queue = "자유랭크" :
+    queue = "솔로랭크"
 
   return queue
 }
 
 let timeGetter = (gameEndTimestamp, gameDuration) => {
   let getTime = new TimeManager(gameEndTimestamp, gameDuration)
-  
+
   return [getTime.dateCal(), getTime.duration()]
 }
 
@@ -130,10 +129,12 @@ async function SearchUser(searchValue) {
 
   // await StatUIUpdate(userData);
   // OnViewInMain("stat");
+  for (let i = 0; i < 10; i++) {
+    SelectMatchInfo(userData.matchInfo[i], userData.gameName, i)
+  }
 
-  SelectMatchInfo(userData.matchInfo[0], userData.gameName,0)
-  SelectMatchInfo(userData.matchInfo[1], userData.gameName, 1)
-  SelectMatchInfo(userData.matchInfo[2], userData.gameName, 2)
+
+
   OnViewInMain("match");
 }
 
@@ -148,6 +149,9 @@ function OnViewInMain(name) {
     if (key === name) {
       if (name == "match") {
         main[name].style.display = "grid";
+        main[name].style.overflow = "scroll"
+        main[name].style.overflowX = "hidden"
+        main[name].style.height= "80%"; 
       }
       else {
         main[name].style.display = "flex";

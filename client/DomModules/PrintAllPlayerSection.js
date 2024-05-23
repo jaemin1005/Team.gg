@@ -51,7 +51,7 @@ export class PrintAllPlayerSection extends PrintManager {
   getUserName(user) {
     let name;
     user["riotIdGameName"].length > 5 ?
-      name = user["riotIdGameName"].substr(0, 5) + "..." :
+      name = user["riotIdGameName"].substr(0, 4) + "..." :
       name = user["riotIdGameName"]
     return name
   }

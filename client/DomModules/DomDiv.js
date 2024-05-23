@@ -1,7 +1,7 @@
 export const DomDiv = {
   LogContainer: {
 
-    ResultSection: ["p", 4],
+    ResultSection: ["p", 3],
 
     UserInfoSection: {
 

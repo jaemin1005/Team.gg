@@ -36,13 +36,13 @@ export class PrintUserInfoSection extends PrintManager {
 
   async printChampionImg() {
     let imgTag = document.getElementsByClassName(`UserChampionDiv ${this.matchNumber}`)[0].children[0]
-    super.inputContent(imgTag , {url : this.gameInfoObject.champions[this.participant.championId].imgSrc, width : 48, height : 48})
+    super.inputContent(imgTag, { url: this.gameInfoObject.champions[this.participant.championId].imgSrc, width: 64, height: 64 })
   }
   async printKda() {
     let kda1 = this.participant.kills + "/" + this.participant.deaths + "/" + this.participant.assists
     let kda2 = (this.participant.kills + this.participant.assists) / this.participant.deaths
     super.inputContent(document.getElementsByClassName(`UserKda ${this.matchNumber}`)[0].children[0], kda1)
-    super.inputContent(document.getElementsByClassName(`UserKda ${this.matchNumber}`)[0].children[1], kda2.toFixed(2))
+    super.inputContent(document.getElementsByClassName(`UserKda ${this.matchNumber}`)[0].children[1], kda2.toFixed(2) + " KDA")
   }
 
   async printRuneImg() {
@@ -50,23 +50,24 @@ export class PrintUserInfoSection extends PrintManager {
     let mainRune = this.participant.perks.styles[0].selections[0].perk
     let subRuneStyle = this.participant.perks.styles[1].style
 
-    super.inputContent(this.childObj[`UserRuneDiv ${this.matchNumber}`].children[1], {url : this.gameInfoObject.runes[subRuneStyle].icon, width:24, height : 24})
+    let mainRuneTag = document.getElementsByClassName(`UserRuneDiv ${this.matchNumber}`)[0].children[0]
+    let subRuneTag = document.getElementsByClassName(`UserRuneDiv ${this.matchNumber}`)[0].children[1]
+
+    super.inputContent(subRuneTag, { url: this.gameInfoObject.runes[subRuneStyle].icon, width: 24, height: 24 })
 
     for (let i = 0; i < this.gameInfoObject.runes[mainRuneStyle].slots[0].runes.length; i++) {
       if (mainRune == this.gameInfoObject.runes[mainRuneStyle].slots[0].runes[i].id) {
-        super.inputContent(this.childObj[`UserRuneDiv ${this.matchNumber}`].children[0], {url:this.gameInfoObject.runes[mainRuneStyle].slots[0].runes[i].icon, width:32, height : 32})
+        super.inputContent(mainRuneTag, { url: this.gameInfoObject.runes[mainRuneStyle].slots[0].runes[i].icon, width: 28, height: 28 })
       }
     }
   }
   async printSpellImg() {
-    let child = this.childObj[`UserSpellDiv ${this.matchNumber}`].children
-    for (let i = 0; i < child.length; i++) {
+    let spellDiv = document.getElementsByClassName(`UserSpellDiv ${this.matchNumber}`)[0]
+
+
+    for (let i = 0; i < spellDiv.children.length; i++) {
       let spell = this.participant[`summoner${i + 1}Id`]
-      let spellName = spellChange[spell]
-      let res = await fetch(`/spellImg/${spellName}`)
-      let blob = await res.blob()
-      let url = await URL.createObjectURL(blob)
-      super.inputContent(child[i], { url: url, width: 28, height: 28 })
+      super.inputContent(spellDiv.children[i], { url: this.gameInfoObject.spells[spell].imgSrc, width: 24, height: 24 })
     }
   }
 
@@ -76,14 +77,29 @@ export class PrintUserInfoSection extends PrintManager {
     console.log(this.gameInfoObject)
     for (let i = 0; i < 6; i++) {
       let item = this.participant[`item${i}`]
-      super.inputContent(div.children[i], {url:this.gameInfoObject.items[item].imgSrc, width : 32 , height : 32})
+      super.inputContent(div.children[i], { url: this.gameInfoObject.items[item].imgSrc, width: 32, height: 32 })
     }
   }
 
-  async changeCssLayout(){
+  async changeCssLayout() {
     let div = document.getElementsByClassName(`ResultSection ${this.matchNumber}`)[0]
-    div.children[0].innerHTML === "승리" ? 
-    document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.border = "1px solid #87CEEB" : 
-    document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.border = "1px solid #eb8787"  
+    div.children[0].innerHTML === "승리" ?
+      (() => {
+        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderLeft = "10px solid rgba(79, 79, 179, 0.5)";
+        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.backgroundColor = "rgba(33,58,150,0.15)";
+        
+        // document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderTopRightRadius = "10px";
+        // document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderBottomRightRadius = "10px";
+
+      })() :
+      (() => {
+        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderLeft = "10px solid rgba(235, 135, 135, 0.5)";
+        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.backgroundColor = "rgba(227,70,70,0.15)"
+        div.children[0].style.color = "rgb(227,70,70)"
+        // document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderTopRightRadius = "10px";
+        // document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderBottomRightRadius = "10px";
+      })()
+
+    div.style.borde
   }
 }

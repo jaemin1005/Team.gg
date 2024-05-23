@@ -195,8 +195,8 @@ class RiotAPI {
   async GetMatchInfo(obj,nCall = 0)
   {
     // * 05/11 배성빈 수정 : 향상된 사용자 경험을 위해 가져올 matchInfo를 10 -> 5 으로 변경하였다.
-    let startNum = 5 * (nCall);
-    let endNum = 5 * (nCall + 1);
+    let startNum = 10 * (nCall);
+    let endNum = 10 * (nCall + 1);
 
     obj.matchInfo = [];
     try {

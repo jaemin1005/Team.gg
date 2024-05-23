@@ -31,5 +31,4 @@ export class PrintResultSection extends PrintManager {
       super.inputContent(child, this.arr[i])
     }
   }
-
 }
