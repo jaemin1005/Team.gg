@@ -5,7 +5,7 @@ import { GameQueueType, RankTierDetail, RankTier, arrRankTierDetail, arrRankTier
 import { PrintManager } from "./DomModules/PrintManager.js";
 import { PrintAllPlayerSection } from "./DomModules/PrintAllPlayerSection.js";
 import { PrintResultSection } from "./DomModules/PrintResultSection.js";
-import { DomDiv } from "./DomModules/DomDiv.js";
+import { DomElementContainer } from "./DomModules/DomElementContainer.js";
 import { CreateArea } from "./DomModules/CreateArea.js";
 import { TimeManager } from "./DomModules/TimeManager.js";
 import { PrintUserInfoSection } from "./DomModules/PrintUserInfoSection.js";
@@ -32,9 +32,13 @@ const $leagueInfo = document.getElementById("league_info");
 const recentSearchData = [];
 const requestData = await RequestJSONData();
 
+
+// * 배성빈 2024/05/27 수정
+
+
 let SelectMatchInfo = async function (matchData, gameName, number) {
-  let MatchHTMLContainer = new CreateArea(number).CreateLogArea(DomDiv)
-  
+  let MatchHTMLContainer = new CreateArea(number).CreateLogArea(DomElementContainer)
+
   let PrintPlayer = new PrintAllPlayerSection(document.getElementsByClassName(`AllPlayerSection ${number}`)[0], matchData.info.participants, gameName, requestData)
   await PrintPlayer.inputContent()
   let index = PrintPlayer.getUserIndex()
@@ -42,7 +46,7 @@ let SelectMatchInfo = async function (matchData, gameName, number) {
   let [ago, duration] = timeGetter(matchData.info.gameEndTimestamp, matchData.info.gameDuration)
   let gameResult = checkWin(matchData.info.teams, index)
   let queue = queTypeCheck(matchData.info.queueId)
-  let printResult = new PrintResultSection(document.getElementsByClassName(`ResultSection ${number}`)[0], [gameResult, `${queue}/${duration}`,ago])
+  let printResult = new PrintResultSection(document.getElementsByClassName(`ResultSection ${number}`)[0], [gameResult, `${queue}/${duration}`, ago])
   printResult.inputContent()
   let printUser = new PrintUserInfoSection(document.getElementsByClassName(`SubSectionTop ${number}`)[0], matchData.info.participants[index], requestData, number)
   printUser.inputContent()
@@ -51,10 +55,10 @@ let SelectMatchInfo = async function (matchData, gameName, number) {
 
 let checkWin = (teams, index) => {
   let result;
+
   index < 5 ?
     result = teams[0].win :
     result = teams[1].win
-
 
   result === true ?
     result = "승리" :
@@ -62,6 +66,7 @@ let checkWin = (teams, index) => {
 
   return result
 }
+
 
 let queTypeCheck = (queueType) => {
   let queue;
@@ -76,6 +81,7 @@ let timeGetter = (gameEndTimestamp, gameDuration) => {
 
   return [getTime.dateCal(), getTime.duration()]
 }
+
 
 $search.onkeydown = async (e) => {
   if (e.keyCode == "13") {
@@ -116,12 +122,12 @@ async function SearchUser(searchValue) {
     return;
   }
 
-  // await StatUIUpdate(userData);
-  // OnViewInMain("stat");
+  await StatUIUpdate(userData);
+  OnViewInMain("stat");
   for (let i = 0; i < 10; i++) {
     SelectMatchInfo(userData.matchInfo[i], userData.gameName, i)
   }
-  OnViewInMain("match");
+  // OnViewInMain("match");
 }
 
 /**
@@ -141,6 +147,7 @@ function OnViewInMain(name) {
       }
       else {
         main[name].style.display = "flex";
+        // main[name].style.height = "80%";
       }
     }
     else {
