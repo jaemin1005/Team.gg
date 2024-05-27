@@ -2,26 +2,26 @@ import { PrintManager } from "./PrintManager.js"
 
 export class PrintAllPlayerSection extends PrintManager {
 
-  constructor(parentObj, participant, gameName, obj) {
+  constructor(parentObj, participant, clientName, obj) {
     super(parentObj)
-    this.nodeLength = super.getLength()
     this.participant = participant
-    this.gameName = gameName
-    this.userIndex;
+    this.clientName = clientName
     this.gameInfoObject = obj
+
+    this.userIndex;
+    this.blueDiv = super.getChild(0)
+    this.redDiv = super.getChild(1)
   }
 
   async inputContent() {
-    let blueDiv = super.getChild(0)
-    let redDiv = super.getChild(1)
 
-    for (let i = 0; i < blueDiv.children.length; i++) {
-      let playerDiv = blueDiv.children[i]
+    for (let i = 0; i < this.blueDiv.children.length; i++) {
+      let playerDiv = this.blueDiv.children[i]
       let name = this.getUserName(this.participant[i])
       let id = this.participant[i].championId
       let src = this.gameInfoObject.champions[id].imgSrc
 
-      if (name == this.gameName) {
+      if (name == this.clientName) {
         this.userIndex = i
       }
 
@@ -32,14 +32,16 @@ export class PrintAllPlayerSection extends PrintManager {
       }
     }
 
-    for (let i = 0; i < redDiv.children.length; i++) {
-      let playerDiv = redDiv.children[i]
+    for (let i = 0; i < this.redDiv.children.length; i++) {
+      let playerDiv = this.redDiv.children[i]
       let name = this.getUserName(this.participant[i + 5])
       let id = this.participant[i + 5].championId
       let src = this.gameInfoObject.champions[id].imgSrc
-      if (name == this.gameName) {
+
+      if (name == this.clientName) {
         this.userIndex = i + 5
       }
+
       for (let j = 0; j < playerDiv.children.length; j++) {
         playerDiv.children[j].tagName == "P" ?
           super.inputContent(playerDiv.children[j], name) :
@@ -55,8 +57,6 @@ export class PrintAllPlayerSection extends PrintManager {
       name = user["riotIdGameName"]
     return name
   }
-
-
 
   getUserIndex() {
     return this.userIndex
