@@ -2,7 +2,7 @@ export class CreateArea {
 
   constructor(number) {
     this.currentId = {}
-    this.root = document.getElementById("match")
+    this.root = document.getElementById("stat")
     this.matchNum = number
   }
   CreateLogArea(Root, current = this.root) {
