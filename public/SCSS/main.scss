@@ -5,7 +5,6 @@
   padding: 0;
   box-sizing: border-box;
   min-height: min-content;
-  overflow: hidden;
 }
 
 #root {
@@ -29,6 +28,7 @@
       @include MainContainer(100%, 117px);
       display: grid;
       grid-template-columns: 8fr 1fr;
+
       //* 폰트 나타내기, 팀 로고
       >div:first-child {
         @include MainContainer(0, 100%);
@@ -49,6 +49,13 @@
     >#main {
       @include MainContainer(100%, 852px);
       @include flex_basic_layout();
+      flex-direction: column;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+
+    #main::-webkit-scrollbar {
+      width: 0px;
     }
 
     >#foot {
@@ -125,16 +132,17 @@
 
 
 #stat {
-  @include MainContainer(1505px, 790px);
   display: none;
+  @include MainContainer(1505px, 800px);
+  height: max-content;
+  overflow-y: scroll;
+  overflow-x: hidden;
   flex-direction: column;
   justify-content: space-between;
 
   >div {
     width: 100%;
   }
-
-
 
   //* 첫 번째 행
   >div:nth-child(1) {
@@ -175,7 +183,7 @@
     background-color: $color-user-profile-background;
 
     >div {
-      @include MainContainer(700px, 344px);
+      // @include MainContainer(700px, 344px);
       @include flex_basic_layout(column);
       background-color: #282830;
 
@@ -377,17 +385,11 @@
 }
 
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  min-height: min-content;
-  overflow: hidden;
-}
 
 
-#match::-webkit-scrollbar{
-    width: 0px;
+
+#stat::-webkit-scrollbar {
+  width: 0px;
 }
 
 .LogContainer {
@@ -441,8 +443,8 @@
     >:nth-child(1) {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 4fr;
-      
-      
+
+
       >:nth-child(1) {
         align-self: center;
         margin: auto;
@@ -463,19 +465,21 @@
       }
 
       >:nth-child(4) {
-          
+
         display: grid;
         grid-template-rows: 1fr 1fr;
         text-align: center;
         align-items: center;
-        background-color: rgba(79,87,112,0.15);
+        background-color: rgba(79, 87, 112, 0.15);
         border-radius: 5px;
         width: 80%;
-        >p:nth-child(1){
+
+        >p:nth-child(1) {
           color: #ffffff;
           font-size: 18px;
         }
-        >p:nth-child(2){
+
+        >p:nth-child(2) {
           color: #A9A9A9;
           font-size: 14px;
         }
@@ -487,6 +491,7 @@
       height: 80%;
       width: 90%;
       margin: auto;
+
       >:nth-child(1) {
         width: 100%;
         height: 100%;
@@ -494,10 +499,11 @@
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
         border-right: 1px solid rgb(111, 109, 109);
         border-right-width: 0.5px;
-        
+
 
         align-items: center;
-        >img{
+
+        >img {
           border-radius: 10px;
         }
       }
@@ -519,7 +525,8 @@
         display: grid;
         grid-template-columns: 1fr 2fr;
         align-items: center;
-        >img{
+
+        >img {
           border-radius: 5px;
         }
       }
