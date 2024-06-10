@@ -2,12 +2,22 @@
 
 %img_plus_detail {
   > div:first-child {
-    @include MainContainer(156px, 156px, 22px);
-    @include flex_basic_layout();
+    // @include MainContainer(156px, 156px, 122px);
+    // @include flex_basic_layout();
+    width: 5.125vw;
+    height: 14.4444444444vh;
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
     > img:first-child{
       overflow: hidden;
       aspect-ratio: 1/1;
-      object-fit: contain;
+      // object-fit: contain;
       border-radius: $border_radius15;
     }
   }
