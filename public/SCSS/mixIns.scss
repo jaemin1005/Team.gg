@@ -8,6 +8,7 @@
   $align-items: center
 ) {
   display: flex;
+  margin-bottom: 10px;
   flex-direction: $direction;
   justify-content: $justify-content;
   align-items: $align-items;

@@ -138,9 +138,9 @@ async function SearchUser(searchValue) {
 
   await StatUIUpdate(userData);
   OnViewInMain("stat");
-  // for (let i = 0; i < 10; i++) {
-  //   SelectMatchInfo(userData.matchInfo[i], userData.gameName, i)
-  // }
+  for (let i = 0; i < 10; i++) {
+    SelectMatchInfo(userData.matchInfo[i], userData.gameName, i)
+  }
   // OnViewInMain("match");
 }
 

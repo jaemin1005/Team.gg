@@ -21,7 +21,7 @@ export class CreateArea {
 
   constructor(number) {
     this.currentId = {}
-    this.root = document.getElementById("main")
+    this.root = document.getElementById("stat")
     this.matchNum = number
   }
 
