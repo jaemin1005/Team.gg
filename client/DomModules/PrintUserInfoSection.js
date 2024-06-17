@@ -20,8 +20,8 @@
 import { PrintManager } from "./PrintManager.js"
 export class PrintUserInfoSection extends PrintManager {
 
-  constructor(parentObj, participant, obj, number) {
-    super(parentObj)
+  constructor(participant, obj, number) {
+    super(null)
     this.participant = participant
     this.gameInfoObject = obj
     this.matchNumber = number
@@ -34,6 +34,7 @@ export class PrintUserInfoSection extends PrintManager {
     this.printRuneImg()
     this.printItemImg()
     this.changeCssLayout()
+
   }
 
   printChampionImg() {
@@ -88,15 +89,24 @@ export class PrintUserInfoSection extends PrintManager {
 
   changeCssLayout() {
     let div = document.getElementsByClassName(`ResultSection ${this.matchNumber}`)[0]
+
+    let winTeamBorderStyle = "10px solid rgba(79, 79, 179, 0.5)"
+    let winTeamBackgroundColor = "rgba(33,58,150,0.15)"
+    let winTeamFontColor = "rgb(33,58,150)"
+
+    let loseTeamBorderStyle = "10px solid rgba(235, 135, 135, 0.5)"
+    let lostTeamBackgroundColor = "rgba(227,70,70,0.15)"
+    let loseTeamFontColor ="rgb(227,70,70)"
+
     div.children[0].innerHTML === "승리" ?
       (() => {
-        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderLeft = "10px solid rgba(79, 79, 179, 0.5)";
-        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.backgroundColor = "rgba(33,58,150,0.15)";
-        div.children[0].style.color = "rgb(33,58,150)"
+        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderLeft = winTeamBorderStyle;
+        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.backgroundColor = winTeamBackgroundColor;
+        div.children[0].style.color = winTeamFontColor
       })() : (() => {
-        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderLeft = "10px solid rgba(235, 135, 135, 0.5)";
-        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.backgroundColor = "rgba(227,70,70,0.15)"
-        div.children[0].style.color = "rgb(227,70,70)"
+        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.borderLeft = loseTeamBorderStyle;
+        document.getElementsByClassName(`LogContainer ${this.matchNumber}`)[0].style.backgroundColor = lostTeamBackgroundColor
+        div.children[0].style.color = loseTeamFontColor
       })()
 
 

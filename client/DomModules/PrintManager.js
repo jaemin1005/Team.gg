@@ -26,13 +26,23 @@ export class PrintManager {
 
   constructor(parentObj) {
     this.parentObj = parentObj
-    this.nodeLength = this.parentObj.children.length
+    if(parentObj !== undefined && parentObj !== null ){
+      this.nodeLength = this.parentObj.children.length
+    }
   }
-  getChild(index) {
-    return this.parentObj.children[index]
+  getChild(index = 0) { 
+    if(this.parentObj.children[index] !== undefined){
+      return this.parentObj.children[index]
+    }else{
+      return false
+    } 
   }
   getLength() {
-    return this.nodeLength
+    try{
+      return this.nodeLength
+    }catch(error){
+      console.error(error)
+    }    
   }
 
   inputContent(child, content) {

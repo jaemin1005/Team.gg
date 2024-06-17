@@ -37,18 +37,28 @@ const requestData = await RequestJSONData();
 
 
 let SelectMatchInfo = async function (matchData, gameName, number) {
+  
   let MatchHTMLContainer = new CreateArea(number).CreateLogArea(DomElementContainer)
-
-  let PrintPlayer = new PrintAllPlayerSection(document.getElementsByClassName(`AllPlayerSection ${number}`)[0], matchData.info.participants, gameName, requestData)
+  
+  let allPlayerSectionDiv = document.getElementsByClassName(`AllPlayerSection ${number}`)[0]
+  let resultSectionDiv = document.getElementsByClassName(`ResultSection ${number}`)[0]
+  
+  let PrintPlayer = new PrintAllPlayerSection(allPlayerSectionDiv, matchData.info.participants, gameName, requestData)
   await PrintPlayer.inputContent()
+
   let index = PrintPlayer.getUserIndex()
 
   let [ago, duration] = timeGetter(matchData.info.gameEndTimestamp, matchData.info.gameDuration)
+  
   let gameResult = checkWin(matchData.info.teams, index)
   let queue = queTypeCheck(matchData.info.queueId)
-  let printResult = new PrintResultSection(document.getElementsByClassName(`ResultSection ${number}`)[0], [gameResult, `${queue}/${duration}`, ago])
+  
+  
+  let printResult = new PrintResultSection(resultSectionDiv, [gameResult, `${queue}/${duration}`, ago])
+  
   printResult.inputContent()
-  let printUser = new PrintUserInfoSection(document.getElementsByClassName(`SubSectionTop ${number}`)[0], matchData.info.participants[index], requestData, number)
+
+  let printUser = new PrintUserInfoSection(matchData.info.participants[index], requestData, number)
   printUser.inputContent()
 }
 
@@ -70,9 +80,13 @@ let checkWin = (teams, index) => {
 
 let queTypeCheck = (queueType) => {
   let queue;
+
   queueType == 440 ?
     queue = "자유랭크" :
-    queue = "솔로랭크"
+  queueType == 420 ?
+    queue = "솔로랭크" : 
+    queue = "일반게임"
+
   return queue
 }
 
@@ -124,9 +138,9 @@ async function SearchUser(searchValue) {
 
   await StatUIUpdate(userData);
   OnViewInMain("stat");
-  for (let i = 0; i < 10; i++) {
-    SelectMatchInfo(userData.matchInfo[i], userData.gameName, i)
-  }
+  // for (let i = 0; i < 10; i++) {
+  //   SelectMatchInfo(userData.matchInfo[i], userData.gameName, i)
+  // }
   // OnViewInMain("match");
 }
 
@@ -332,8 +346,11 @@ async function StatUIUpdate(data) {
    * * 해당 텍스트로 화면에 보여준다.
    * @param {*} strText 
    */
-  function AlamTextUIUpdate(strText) {
-    main["alam_text"].textContent = strText;
-  }
 
+  
+}
+
+
+function AlamTextUIUpdate(strText) {
+  main["alam_text"].textContent = strText;
 }
