@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+    <link rel="stylesheet" href="public/SCSS/userInfo.css" />
+  </head>
+  <body>
+    <div class="main_container">
+      <!-- * 헤더 -->
+      <header class="contents_header">
+        <nav class="header_navigator">
+          <div class="main_logo_container">
+            <span class="main_logo">Team.gg</span>
+          </div>
+          <!-- * 헤더 검색창 -->
+          <div class="search_bar_container">
+            <form action="" name="form_userName" class="search_form">
+              <div class="form_contents_container">
+                <div class="form_contents_container_first_div">
+                  <select
+                    aria-label="label for the select"
+                    name="second_search_form_select"
+                    class="form_contents_container_first_div_select"
+                  >
+                    <optgroup label="location">
+                      <option value="asia" selected>Asia</option>
+                      <option value="europe">EU</option>
+                      <option value="NA">NA</option>
+                      <option value="SA">SA</option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                <div class="form_contents_container_second_div">
+                  <span class="border_line">|</span>
+                </div>
+                <div class="form_contents_container_third_div">
+                  <input
+                    type="text"
+                    name="userName_input"
+                    class="search_form_input"
+                    placeholder="nickname#number"
+                  />
+                </div>
+                <div class="form_contents_container_fourth_div">
+                  <i class="fa-solid fa-magnifying-glass search_form_icon"></i>
+                </div>
+              </div>
+            </form>
+          </div>
+        </nav>
+      </header>
+      <!-- * 메인 섹션 -->
+      <main class="contents_main">
+        <!-- * 섹션 비율 5:5 -->
+        <div class="sections_container">
+          <section class="left_section">
+            <div class="left_section_container">
+              <div id="user_name_container" class="user_name_container">
+                <div>
+                  <img id="profileImg" title="profile-img">
+                </div>
+                <div>
+                  <div>
+                    <div class="tier_info">
+                      <p>S12 Gold 4</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p id = "playerName"></p>
+                    <p id = "update"></p>
+                  </div>
+                </div>
+              </div>
+              <!-- <hr class="left_section_border_line" /> -->
+
+              <div id="user_tier_container" class="user_tier_container">
+                <div>
+                  <img id="tierImg" title="tier_Img">
+                </div> 
+                <div>
+                  <div>
+                    <div>Gold 4</div>
+                    <div>31p</div>
+                  </div>
+                  <div>승률</div>
+                </div>
+              </div>
+
+              <div class="user_champion_list">
+                <div>
+                  <div>
+                    <img title="champion_img">
+                  </div>        
+                  <div>이름</div>
+                  <div>
+                    <div>1.00 KDA</div>
+                    <div>1.0 / 1.0 / 0</div>
+                  </div>
+                  <div>
+                    <div>100%</div>
+                    <div>1 게임</div>
+                  </div>
+                </div>
+              </div>
+              <div class="board_for_user"></div>
+            </div>
+          </section>
+          <section class="right_section" id = "recordContainer">
+            <!-- <div class="right_section_left_container", id="innerCon">
+              <div class="game_record", id="logLabel">
+                <div class="main_game_record"></div>
+                <div class="shadow_game_record"></div> -->
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+  </body>
+  
+  <script
+    src="https://kit.fontawesome.com/c22cf359ff.js"
+    crossorigin="anonymous"
+  ></script>
+  <script src="../JS/userInfo/userInfo.js" defer></script>
+
+  <!-- <script src="../../JS/modules/createRecordArea.js" defer></script> -->
+  <!-- uobj -->
+
+
+</html>
